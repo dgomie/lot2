@@ -1,6 +1,6 @@
 {
-  "name": "Next.js PWA",
-  "short_name": "NextPWA",
+  "name": "Legion of Tones",
+  "short_name": "LOT",
   "description": "A Progressive Web App built with Next.js",
   "start_url": "/",
   "display": "standalone",
