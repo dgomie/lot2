@@ -1,9 +1,9 @@
-// filepath: /Users/dannygomez/projects/lot/src/app/signup/page.js
 'use client';
 import { useState } from 'react';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import styles from './signup.module.css';
+import { doc, setDoc } from 'firebase/firestore';
+import styles from './page.module.css';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -13,7 +13,16 @@ export default function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Save user information to Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        uid: user.uid,
+        createdAt: new Date(),
+      });
+
       // Redirect to home page or dashboard after successful signup
       window.location.href = '/';
     } catch (error) {
