@@ -14,7 +14,7 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       // Redirect to home page or dashboard after successful login
-      window.location.href = '/';
+      window.location.href = '/dashboard';
     } catch (error) {
       setError(error.message);
     }

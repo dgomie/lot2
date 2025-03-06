@@ -24,7 +24,7 @@ export default function Signup() {
       });
 
       // Redirect to home page or dashboard after successful signup
-      window.location.href = '/';
+      window.location.href = '/dashboard';
     } catch (error) {
       setError(error.message);
     }
