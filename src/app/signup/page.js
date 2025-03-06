@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { auth, db } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import styles from './page.module.css';
+import styles from './signup.module.css';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
