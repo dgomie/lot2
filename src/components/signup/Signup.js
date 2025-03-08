@@ -10,6 +10,7 @@ export default function Signup() {
     email: '',
     password: '',
     confirmPassword: '',
+    username: '',
   });
   const [error, setError] = useState('');
 
@@ -23,7 +24,7 @@ export default function Signup() {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const { email, password, confirmPassword } = formData;
+    const { email, password, confirmPassword, username } = formData;
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -38,6 +39,7 @@ export default function Signup() {
       await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         uid: user.uid,
+        username: username,
         createdAt: new Date(),
       });
 
@@ -52,6 +54,18 @@ export default function Signup() {
     <div className={styles.container}>
       <h1 className={styles.title}>Signup</h1>
       <form onSubmit={handleSignup}>
+        <div className={styles.inputGroup}>
+          <label htmlFor="username" className={styles.label}>Username:</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            className={styles.input}
+          />
+        </div>
         <div className={styles.inputGroup}>
           <label htmlFor="email" className={styles.label}>Email:</label>
           <input
