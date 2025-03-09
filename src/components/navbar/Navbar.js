@@ -2,11 +2,24 @@
 
 import React, { useContext } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AuthContext } from '../../context/AuthContext';
+import { auth } from '../../firebase';
+import { signOut } from 'firebase/auth';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
   const { currentUser } = useContext(AuthContext);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
 
   return (
     <nav className={styles.navbar}>
@@ -19,7 +32,9 @@ const Navbar = () => {
           <>
             <Link href="/dashboard">Dashboard</Link>
             <Link href="/profile">Profile</Link>
-            <button className={styles.logoutButton}>Logout</button>
+            <button className={styles.logoutButton} onClick={handleLogout}>
+              Logout
+            </button>
           </>
         ) : (
           <>
