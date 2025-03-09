@@ -4,9 +4,7 @@ import { auth, db } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import styles from './Signup.module.css';
-import Image from 'next/image';
-import visibleOn from '../../../public/img/visible-on.svg';
-import visibleOff from '../../../public/img/visible-off.svg';
+import Input from '../input/Input';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -73,85 +71,48 @@ export default function Signup() {
     <div className={styles.container}>
       <h1 className={styles.title}>Signup</h1>
       <form onSubmit={handleSignup}>
-        <div className={styles.inputGroup}>
-          <label htmlFor="username" className={styles.label}>
-            Username:
-          </label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label htmlFor="email" className={styles.label}>
-            Email:
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label htmlFor="password" className={styles.label}>
-            Password:
-          </label>
-          <div className={styles.passwordWrapper}>
-            <input
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className={styles.input}
-            />
-            <span className={styles.eyeIcon} onClick={toggleShowPassword}>
-              <Image
-                src={showPassword ? visibleOff : visibleOn}
-                alt="Toggle visibility"
-                width={24}
-                height={24}
-              />
-            </span>
-          </div>
-        </div>
-        <div className={styles.inputGroup}>
-          <label htmlFor="confirmPassword" className={styles.label}>
-            Confirm Password:
-          </label>
-          <div className={styles.passwordWrapper}>
-            <input
-              type={showConfirmPassword ? 'text' : 'password'}
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              className={styles.input}
-            />
-            <span
-              className={styles.eyeIcon}
-              onClick={toggleShowConfirmPassword}
-            >
-              <Image
-                src={showConfirmPassword ? visibleOff : visibleOn}
-                alt="Toggle visibility"
-                width={24}
-                height={24}
-              />
-            </span>
-          </div>
-        </div>
+        <Input
+          id="username"
+          name="username"
+          type="text"
+          value={formData.username}
+          onChange={handleChange}
+          label="Username:"
+          required
+        />
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          label="Email:"
+          required
+        />
+        <Input
+          id="password"
+          name="password"
+          type={showPassword ? 'text' : 'password'}
+          value={formData.password}
+          onChange={handleChange}
+          label="Password:"
+          required
+          showToggle
+          toggleVisibility={toggleShowPassword}
+          isVisible={showPassword}
+        />
+        <Input
+          id="confirmPassword"
+          name="confirmPassword"
+          type={showConfirmPassword ? 'text' : 'password'}
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          label="Confirm Password:"
+          required
+          showToggle
+          toggleVisibility={toggleShowConfirmPassword}
+          isVisible={showConfirmPassword}
+        />
         {error && <p className={styles.error}>{error}</p>}
         <button type="submit" className={styles.button}>
           Signup

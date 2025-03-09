@@ -1,0 +1,29 @@
+.inputGroup {
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+.inputWrapper {
+  position: relative;
+}
+
+.input {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 20px;
+  color: black;
+  background-color: lightgray;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
