@@ -25,14 +25,16 @@ const Login = () => {
     e.preventDefault();
     const { email, password } = formData;
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await userCredential.user.getIdToken();
+      // Store the ID token in local storage
+      localStorage.setItem('token', idToken);
       // Redirect to home page or dashboard after successful login
       window.location.href = '/dashboard';
     } catch (error) {
       setError(error.message);
     }
   };
-
   const toggleShowPassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
