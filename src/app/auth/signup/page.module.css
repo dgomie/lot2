@@ -1,0 +1,12 @@
+.text {
+    text-align: center;
+}
+
+.link {
+    color: var(--aquamarine100);
+    font-weight: bold;
+}
+
+.link:hover {
+    color: var(--navyblue100);
+}
