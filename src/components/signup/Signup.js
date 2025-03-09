@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import styles from './Signup.module.css';
 import Input from '../input/Input';
+import Button from '../button/Button';
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -114,9 +115,11 @@ export default function Signup() {
           isVisible={showConfirmPassword}
         />
         {error && <p className={styles.error}>{error}</p>}
-        <button type="submit" className={styles.button}>
-          Signup
-        </button>
+        <div className={styles.ButtonContainer}>
+          <Button type="submit" className={styles.button}>
+            Signup
+          </Button>
+        </div>
       </form>
     </div>
   );
