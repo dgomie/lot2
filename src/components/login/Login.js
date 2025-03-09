@@ -9,6 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -19,6 +20,10 @@ const Login = () => {
     } catch (error) {
       setError(error.message);
     }
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -37,10 +42,13 @@ const Login = () => {
         <Input
           id="password"
           name="password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           label="Password:"
+          showToggle
+          toggleVisibility={toggleShowPassword}
+          isVisible={showPassword}
           required
         />
         {error && <p className={styles.error}>{error}</p>}
