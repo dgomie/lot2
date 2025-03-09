@@ -1,24 +1,21 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { AuthContext } from '../context/AuthContext';
 
 const withAuth = (WrappedComponent) => {
   const WithAuth = (props) => {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(true);
+    const { currentUser, loading } = useContext(AuthContext);
 
     useEffect(() => {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        // Redirect to login page if no token is found
+      if (!loading && !currentUser) {
         router.push('/auth/login');
-      } else {
-        setIsLoading(false);
       }
-    }, [router]);
+    }, [loading, currentUser, router]);
 
-    if (isLoading) {
+    if (loading || !currentUser) {
       return <div>Loading...</div>; // You can replace this with a loading spinner or any other loading indicator
     }
 
