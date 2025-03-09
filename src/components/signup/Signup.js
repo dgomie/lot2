@@ -71,56 +71,56 @@ export default function Signup() {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Signup</h1>
-      <form onSubmit={handleSignup}>
-        <Input
-          id="username"
-          name="username"
-          type="text"
-          value={formData.username}
-          onChange={handleChange}
-          label="Username:"
-          required
-        />
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          label="Email:"
-          required
-        />
-        <Input
-          id="password"
-          name="password"
-          type={showPassword ? 'text' : 'password'}
-          value={formData.password}
-          onChange={handleChange}
-          label="Password:"
-          required
-          showToggle
-          toggleVisibility={toggleShowPassword}
-          isVisible={showPassword}
-        />
-        <Input
-          id="confirmPassword"
-          name="confirmPassword"
-          type={showConfirmPassword ? 'text' : 'password'}
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          label="Confirm Password:"
-          required
-          showToggle
-          toggleVisibility={toggleShowConfirmPassword}
-          isVisible={showConfirmPassword}
-        />
-        {error && <p className={styles.error}>{error}</p>}
-        <div className={styles.ButtonContainer}>
-          <Button type="submit" className={styles.button}>
+      <div className={styles.formContainer}>
+        <form onSubmit={handleSignup}>
+          <Input
+            id="username"
+            name="username"
+            type="text"
+            value={formData.username}
+            onChange={handleChange}
+            label="Username:"
+            required
+          />
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            label="Email:"
+            required
+          />
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            value={formData.password}
+            onChange={handleChange}
+            label="Password:"
+            required
+            showToggle
+            toggleVisibility={toggleShowPassword}
+            isVisible={showPassword}
+          />
+          <Input
+            id="confirmPassword"
+            name="confirmPassword"
+            type={showConfirmPassword ? 'text' : 'password'}
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            label="Confirm Password:"
+            required
+            showToggle
+            toggleVisibility={toggleShowConfirmPassword}
+            isVisible={showConfirmPassword}
+          />
+          {error && <p className={styles.error}>{error}</p>}
+          <Button type="submit" className={styles.button} variant="green">
             Signup
           </Button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
