@@ -6,13 +6,24 @@ import Input from '../input/Input';
 import Button from '../button/Button';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    const { email, password } = formData;
     try {
       await signInWithEmailAndPassword(auth, email, password);
       // Redirect to home page or dashboard after successful login
@@ -34,8 +45,8 @@ const Login = () => {
           id="email"
           name="email"
           type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={handleChange}
           label="Email:"
           required
         />
@@ -43,8 +54,8 @@ const Login = () => {
           id="password"
           name="password"
           type={showPassword ? 'text' : 'password'}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={handleChange}
           label="Password:"
           showToggle
           toggleVisibility={toggleShowPassword}

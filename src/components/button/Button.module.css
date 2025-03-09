@@ -7,6 +7,7 @@
   font-weight: bold;
   width: 100%;
   transition: background-color 0.3s ease, opacity 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .red {
@@ -39,7 +40,7 @@
 }
 
 .green {
-  background-color: green;
+  background-color: var(--lightblue100);
   color: white;
 }
 
