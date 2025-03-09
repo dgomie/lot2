@@ -1,0 +1,27 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #333;
+  color: #fff;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.links a {
+  margin-left: 1rem;
+  color: #fff;
+  text-decoration: none;
+}
+
+.logoutButton {
+  margin-left: 1rem;
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+}
