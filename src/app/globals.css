@@ -1,5 +1,5 @@
 :root {
-  --background: linear-gradient(135deg, #25A18E 0%, #7AE582 100%); /* Smooth gradient transition */
+  --background: #FAF9F6; 
   --foreground: hsl(0, 0%, 9%);
   --lightgreen100: #7AE582;
   --aquamarine100: #25A18E;

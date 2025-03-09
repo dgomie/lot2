@@ -3,8 +3,9 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: #333;
-  color: #fff;
+  background-color: transparent;
+  box-shadow: 0 0 .2rem 0 black;
+  color: black;
 }
 
 .logo {
@@ -14,7 +15,7 @@
 
 .links a {
   margin-left: 1rem;
-  color: #fff;
+  color: black;
   text-decoration: none;
 }
 
@@ -22,6 +23,6 @@
   margin-left: 1rem;
   background: none;
   border: none;
-  color: #fff;
+  color: black;
   cursor: pointer;
 }
