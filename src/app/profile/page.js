@@ -3,6 +3,7 @@
 import React, { useContext } from 'react';
 import withAuth from '../../hoc/withAuth';
 import { AuthContext } from '../../context/AuthContext';
+import styles from './profile.module.css'
 import ProfileCard from '@/components/profileCard/ProfileCard';
 import profileData from '@/data/profileData';
 
@@ -21,13 +22,14 @@ const Profile = () => {
   }
 
   return (
-    <div>
+    <div className={styles.mainContainer}>
       <h1>Profile</h1>
       {currentUser ? (
         <>
           <p>Username: {currentUser.username}</p>
           <p>Email: {currentUser.email}</p>
-          {/* Map the profileData array to ProfileCard components */}
+   
+        <div className={styles.categories}>
           {profileData.map((item, index) => (
             <ProfileCard
               key={index}
@@ -36,6 +38,7 @@ const Profile = () => {
               iconUrl={item.iconUrl}
             />
           ))}
+          </div>
         </>
       ) : (
         <p>Please log in to view your profile.</p>

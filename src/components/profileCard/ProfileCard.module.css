@@ -4,15 +4,22 @@
     justify-content: center;
     align-items: center;
     border-radius: 15px;
-    width: 20%;
+    width: auto;
     box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
-    padding: .7rem
+    padding: .7rem;
+    margin: .3rem;
+    transition: box-shadow 0.4s ease, opacity 0.4s ease;
+}
+
+.mainContainer:hover {
+    box-shadow: 6.8px 13.6px 13.6px hsl(0deg 0% 0% / 0.29);
 }
 
 .title {
     font-size: 1.2rem;
     margin: .5rem 0 .5rem;
     color: gray;
+    text-align: center;
 }
 
 .number {
