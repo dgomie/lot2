@@ -1,0 +1,20 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    width: 20%;
+    box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
+    padding: .7rem
+}
+
+.title {
+    font-size: 1.2rem;
+    margin: .5rem 0 .5rem;
+    color: gray;
+}
+
+.number {
+    font-size: 1.5rem;
+}

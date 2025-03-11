@@ -3,12 +3,21 @@
 import React, { useContext } from 'react';
 import withAuth from '../../hoc/withAuth';
 import { AuthContext } from '../../context/AuthContext';
+import ProfileCard from '@/components/profileCard/ProfileCard';
+import profileData from '@/data/profileData';
 
 const Profile = () => {
   const { currentUser, loading } = useContext(AuthContext);
 
   if (loading) {
     return <div>Loading...</div>;
+  }
+
+  const mockUserData = {
+    legionsJoined: 2,
+    treasuresWon: 1,
+    songsShared: 12,
+    votesCast: 24
   }
 
   return (
@@ -18,7 +27,15 @@ const Profile = () => {
         <>
           <p>Username: {currentUser.username}</p>
           <p>Email: {currentUser.email}</p>
-          {/* Add more profile details here */}
+          {/* Map the profileData array to ProfileCard components */}
+          {profileData.map((item, index) => (
+            <ProfileCard
+              key={index}
+              title={item.title}
+              numValue={mockUserData[item.id]}
+              iconUrl={item.iconUrl}
+            />
+          ))}
         </>
       ) : (
         <p>Please log in to view your profile.</p>
