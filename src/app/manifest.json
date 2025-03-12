@@ -1,7 +1,7 @@
 {
   "name": "Legion of Tones",
   "short_name": "LOT",
-  "description": "A Progressive Web App built with Next.js",
+  "description": "Music for the Masses",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
