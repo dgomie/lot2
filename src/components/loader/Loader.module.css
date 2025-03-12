@@ -15,7 +15,7 @@
 
 /* From Uiverse.io by satyamchaudharydev */
 .loading {
-  --speed-of-animation: .9s;
+  --speed-of-animation: 0.9s;
   --gap: 6px;
   /* --first-color: #4c86f9;
   --second-color: #49a84c;
