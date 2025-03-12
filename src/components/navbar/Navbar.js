@@ -12,7 +12,7 @@ import Image from 'next/image';
 const Navbar = () => {
   const { currentUser } = useContext(AuthContext);
   const router = useRouter();
-  const iconSize = 35;
+  const iconSize = 30;
 
   const handleLogout = async () => {
     try {
@@ -62,7 +62,7 @@ const Navbar = () => {
             width={iconSize}
             height={iconSize}
           />
-          <div className={styles.iconContainer}>Home</div>
+          Home
         </Link>
         {currentUser ? (
           <>
@@ -74,7 +74,7 @@ const Navbar = () => {
                 width={iconSize}
                 height={iconSize}
               />
-              <div className={styles.iconContainer}>Dashboard</div>
+              Dashboard
             </Link>
             <Link href="/profile">
               <Image
@@ -84,7 +84,7 @@ const Navbar = () => {
                 width={iconSize}
                 height={iconSize}
               />
-              <div className={styles.iconContainer}>Profile</div>
+              Profile
             </Link>
             <div onClick={handleLogout}>
               <Image
@@ -94,7 +94,7 @@ const Navbar = () => {
                 width={iconSize}
                 height={iconSize}
               />
-              <div className={styles.iconContainer}>Logout</div>
+              Logout
             </div>
           </>
         ) : (
@@ -107,7 +107,7 @@ const Navbar = () => {
                 width={iconSize}
                 height={iconSize}
               />
-              <div className={styles.iconContainer}>Login</div>
+              Login
             </Link>
           </>
         )}

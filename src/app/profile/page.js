@@ -27,11 +27,13 @@ const Profile = () => {
     <div className={styles.mainContainer}>
       {currentUser ? (
         <>
+        <div className={styles.profileHeader}>
           <ProfileHeader
             username={currentUser.username}
             createdAt={currentUser.metadata.creationTime}
             profileImg={'/img/mock-profile-img.png'}
           />
+          </div>
           <div className={styles.categories}>
             {profileData.map((item, index) => (
               <ProfileCard

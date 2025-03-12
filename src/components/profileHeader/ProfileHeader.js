@@ -28,8 +28,8 @@ const ProfileHeader = ({ username, createdAt, profileImg }) => {
           className={styles.profileImg}
           src={imageUrl}
           alt="Profile Image"
-          width={200}
-          height={200}
+          width={180}
+          height={180}
           onClick={() => document.getElementById('fileInput').click()}
         />
         <Image

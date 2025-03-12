@@ -3,7 +3,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1rem;
+    padding: .5rem;
+    max-height: 88vh;
+}
+
+.profileHeader {
+    margin: 0 0 1rem 0;
 }
 
 .categories {
