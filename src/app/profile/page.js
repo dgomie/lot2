@@ -30,6 +30,7 @@ const Profile = () => {
           <ProfileHeader
             username={currentUser.username}
             createdAt={currentUser.metadata.creationTime}
+            profileImg={'/img/mock-profile-img.png'}
           />
           <div className={styles.categories}>
             {profileData.map((item, index) => (
