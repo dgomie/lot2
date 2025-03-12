@@ -12,6 +12,7 @@ import Image from 'next/image';
 const Navbar = () => {
   const { currentUser } = useContext(AuthContext);
   const router = useRouter();
+  const iconSize = 35;
 
   const handleLogout = async () => {
     try {
@@ -23,28 +24,95 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={styles.navbar}>
-      <Link href="/" className={styles.logo}>
-        <Image src={'/img/navlogo.svg'} alt="Legion of Tones logo" width={200} height={50}/>
-      </Link>
-      <div className={styles.links}>
-        <Link href="/">Home</Link>
+    <>
+      <nav className={styles.navbar}>
+        <Link href="/" className={styles.logo}>
+          <Image
+            src={'/img/navlogo.svg'}
+            alt="Legion of Tones logo"
+            width={200}
+            height={50}
+          />
+        </Link>
+        <div className={styles.links}>
+          <Link href="/">Home</Link>
+          {currentUser ? (
+            <>
+              <Link href="/dashboard">Dashboard</Link>
+              <Link href="/profile">Profile</Link>
+              <button className={styles.logoutButton} onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/auth/login">Login</Link>
+              <Link href="/auth/signup">Sign Up</Link>
+            </>
+          )}
+        </div>
+      </nav>
+
+      <div className={styles.bottomNav}>
+        <Link href="/">
+          <Image
+            className={styles.bottomNavIcon}
+            src={'/img/home.svg'}
+            alt="Home Icon"
+            width={iconSize}
+            height={iconSize}
+          />
+          <div className={styles.iconContainer}>Home</div>
+        </Link>
         {currentUser ? (
           <>
-            <Link href="/dashboard">Dashboard</Link>
-            <Link href="/profile">Profile</Link>
-            <button className={styles.logoutButton} onClick={handleLogout}>
-              Logout
-            </button>
+            <Link href="/dashboard">
+              <Image
+                className={styles.bottomNavIcon}
+                src={'/img/music-library.svg'}
+                alt="Dashboard Icon"
+                width={iconSize}
+                height={iconSize}
+              />
+              <div className={styles.iconContainer}>Dashboard</div>
+            </Link>
+            <Link href="/profile">
+              <Image
+                className={styles.bottomNavIcon}
+                src={'/img/person.svg'}
+                alt="Profile Icon"
+                width={iconSize}
+                height={iconSize}
+              />
+              <div className={styles.iconContainer}>Profile</div>
+            </Link>
+            <div onClick={handleLogout}>
+              <Image
+                className={styles.bottomNavIcon}
+                src={'/img/logout.svg'}
+                alt="Logout Icon"
+                width={iconSize}
+                height={iconSize}
+              />
+              <div className={styles.iconContainer}>Logout</div>
+            </div>
           </>
         ) : (
           <>
-            <Link href="/auth/login">Login</Link>
-            <Link href="/auth/signup">Sign Up</Link>
+            <Link href="/auth/login">
+              <Image
+                className={styles.bottomNavIcon}
+                src={'/img/login.svg'}
+                alt="Login Icon"
+                width={iconSize}
+                height={iconSize}
+              />
+              <div className={styles.iconContainer}>Login</div>
+            </Link>
           </>
         )}
       </div>
-    </nav>
+    </>
   );
 };
 
