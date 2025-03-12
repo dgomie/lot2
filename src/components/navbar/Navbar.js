@@ -7,6 +7,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { auth } from '../../firebase';
 import { signOut } from 'firebase/auth';
 import styles from './Navbar.module.css';
+import Image from 'next/image';
 
 const Navbar = () => {
   const { currentUser } = useContext(AuthContext);
@@ -24,7 +25,7 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <Link href="/" className={styles.logo}>
-        Legion of Tones
+        <Image src={'/img/navlogo.svg'} alt="Legion of Tones logo" width={200} height={50}/>
       </Link>
       <div className={styles.links}>
         <Link href="/">Home</Link>
