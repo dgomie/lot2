@@ -3,6 +3,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '../context/AuthContext';
+import Loader from '@/components/loader/Loader';
 
 const withAuth = (WrappedComponent) => {
   const WithAuth = (props) => {
@@ -16,7 +17,7 @@ const withAuth = (WrappedComponent) => {
     }, [loading, currentUser, router]);
 
     if (loading || !currentUser) {
-      return <div>Loading...</div>; // You can replace this with a loading spinner or any other loading indicator
+      return <Loader />
     }
 
     return <WrappedComponent {...props} />;

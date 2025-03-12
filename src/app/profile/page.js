@@ -3,23 +3,24 @@
 import React, { useContext } from 'react';
 import withAuth from '../../hoc/withAuth';
 import { AuthContext } from '../../context/AuthContext';
-import styles from './profile.module.css'
+import styles from './profile.module.css';
 import ProfileCard from '@/components/profileCard/ProfileCard';
 import profileData from '@/data/profileData';
+import Loader from '@/components/loader/Loader';
 
 const Profile = () => {
   const { currentUser, loading } = useContext(AuthContext);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
 
   const mockUserData = {
     legionsJoined: 2,
     treasuresWon: 1,
     songsShared: 12,
-    votesCast: 24
-  }
+    votesCast: 24,
+  };
 
   return (
     <div className={styles.mainContainer}>
@@ -28,16 +29,16 @@ const Profile = () => {
         <>
           <p>Username: {currentUser.username}</p>
           <p>Email: {currentUser.email}</p>
-   
-        <div className={styles.categories}>
-          {profileData.map((item, index) => (
-            <ProfileCard
-              key={index}
-              title={item.title}
-              numValue={mockUserData[item.id]}
-              iconUrl={item.iconUrl}
-            />
-          ))}
+
+          <div className={styles.categories}>
+            {profileData.map((item, index) => (
+              <ProfileCard
+                key={index}
+                title={item.title}
+                numValue={mockUserData[item.id]}
+                iconUrl={item.iconUrl}
+              />
+            ))}
           </div>
         </>
       ) : (
