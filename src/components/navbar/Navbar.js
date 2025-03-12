@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <Link href="/" className={styles.logo}>
-        MyApp
+        Legion of Tones
       </Link>
       <div className={styles.links}>
         <Link href="/">Home</Link>
