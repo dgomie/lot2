@@ -4,6 +4,7 @@ import React, { useContext } from 'react';
 import withAuth from '../../hoc/withAuth';
 import { AuthContext } from '../../context/AuthContext';
 import styles from './profile.module.css';
+import ProfileHeader from '@/components/profileHeader/ProfileHeader';
 import ProfileCard from '@/components/profileCard/ProfileCard';
 import profileData from '@/data/profileData';
 import Loader from '@/components/loader/Loader';
@@ -24,12 +25,12 @@ const Profile = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <h1>Profile</h1>
       {currentUser ? (
         <>
-          <p>Username: {currentUser.username}</p>
-          <p>Email: {currentUser.email}</p>
-
+          <ProfileHeader
+            username={currentUser.username}
+            createdAt={currentUser.metadata.creationTime}
+          />
           <div className={styles.categories}>
             {profileData.map((item, index) => (
               <ProfileCard
