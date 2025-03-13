@@ -20,7 +20,7 @@ const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
       // Validate file size (100 KB or less)
       const maxSize = 500 * 1024; // 100 KB in bytes
       if (file.size > maxSize) {
-        alert('Image size must be 100 KB or less.');
+        alert('Image size must be 500 KB or less.');
         return;
       }
 
