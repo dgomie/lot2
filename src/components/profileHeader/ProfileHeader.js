@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import styles from './ProfileHeader.module.css';
 import Image from 'next/image';
-import uploadProfileImage from '../../utils/uploadProfileImage';
+import { uploadProfileImage } from '@/firebase';
 import EditIcon from '../../../public/img/edit.svg';
 
-const ProfileHeader = ({ username, createdAt, profileImg }) => {
+const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
   const [imageUrl, setImageUrl] = useState(profileImg);
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-      const url = await uploadProfileImage(file);
-      setImageUrl(url);
+    if (file && userId) {
+      try {
+        const url = await uploadProfileImage(file, userId);
+        setImageUrl(url);
+      } catch (error) {
+        console.error('Error uploading profile image:', error);
+      }
+    } else {
+      console.error('File or userId is missing');
     }
   };
 

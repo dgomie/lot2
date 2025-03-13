@@ -1,7 +1,17 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
-import { getFirestore, doc, setDoc } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  updateDoc,
+  getDoc,
+} from 'firebase/firestore';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -21,20 +31,58 @@ const storage = getStorage(app);
 
 // Authentication functions
 const signupUser = async (email, password, username) => {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+  const userCredential = await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
   const user = userCredential.user;
   await setDoc(doc(db, 'users', user.uid), {
     email: user.email,
     uid: user.uid,
     username: username,
     createdAt: new Date(),
+    profileImg: null,
   });
   return user;
 };
 
 const loginUser = async (email, password) => {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
+  const userCredential = await signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
   return userCredential.user;
 };
 
-export { auth, db, storage, signupUser, loginUser };
+const uploadProfileImage = async (file, userId) => {
+  if (!userId) {
+    throw new Error('User ID is required to upload profile image');
+  }
+  const storageRef = ref(storage, `profileImages/${userId}/${file.name}`);
+  await uploadBytes(storageRef, file);
+  const url = await getDownloadURL(storageRef);
+
+  // Update the user's profile image URL in Firestore
+  const userDocRef = doc(db, 'users', userId);
+  await updateDoc(userDocRef, { profileImg: url });
+
+  return url;
+};
+
+const getUserProfile = async (userId) => {
+  const userDocRef = doc(db, 'users', userId);
+  const userDoc = await getDoc(userDocRef);
+  return userDoc.exists() ? userDoc.data() : null;
+};
+
+export {
+  auth,
+  db,
+  storage,
+  signupUser,
+  loginUser,
+  uploadProfileImage,
+  getUserProfile,
+};
