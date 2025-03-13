@@ -10,6 +10,20 @@ const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file && userId) {
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/png'];
+      if (!validTypes.includes(file.type)) {
+        alert('Only JPEG and PNG images are allowed.');
+        return;
+      }
+
+      // Validate file size (100 KB or less)
+      const maxSize = 500 * 1024; // 100 KB in bytes
+      if (file.size > maxSize) {
+        alert('Image size must be 100 KB or less.');
+        return;
+      }
+
       try {
         const url = await uploadProfileImage(file, userId);
         setImageUrl(url);
