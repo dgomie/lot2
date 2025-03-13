@@ -11,7 +11,13 @@ import {
   updateDoc,
   getDoc,
 } from 'firebase/firestore';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -60,12 +66,26 @@ const uploadProfileImage = async (file, userId) => {
   if (!userId) {
     throw new Error('User ID is required to upload profile image');
   }
+
+  // Get the current profile image URL
+  const userDocRef = doc(db, 'users', userId);
+  const userDoc = await getDoc(userDocRef);
+  const currentProfileImg = userDoc.exists() ? userDoc.data().profileImg : null;
+
+  // Delete the old profile image if it exists
+  if (currentProfileImg) {
+    const oldImageRef = ref(storage, currentProfileImg);
+    await deleteObject(oldImageRef).catch((error) => {
+      console.error('Error deleting old profile image:', error);
+    });
+  }
+
+  // Upload the new profile image
   const storageRef = ref(storage, `profileImages/${userId}/${file.name}`);
   await uploadBytes(storageRef, file);
   const url = await getDownloadURL(storageRef);
 
   // Update the user's profile image URL in Firestore
-  const userDocRef = doc(db, 'users', userId);
   await updateDoc(userDocRef, { profileImg: url });
 
   return url;
