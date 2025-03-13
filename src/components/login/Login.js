@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { auth } from '../../firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { loginUser } from '../../firebase';
 import styles from './Login.module.css';
 import Input from '../input/Input';
 import Button from '../button/Button';
@@ -25,16 +24,15 @@ const Login = () => {
     e.preventDefault();
     const { email, password } = formData;
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const idToken = await userCredential.user.getIdToken();
-      // Store the ID token in local storage
+      const user = await loginUser(email, password);
+      const idToken = await user.getIdToken();
       localStorage.setItem('token', idToken);
-      // Redirect to home page or dashboard after successful login
       window.location.href = '/dashboard';
     } catch (error) {
       setError(error.message);
     }
   };
+
   const toggleShowPassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };

@@ -1,8 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { auth, db } from '../../firebase';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { signupUser } from '../../firebase';
 import styles from './Signup.module.css';
 import Input from '../input/Input';
 import Button from '../button/Button';
@@ -36,22 +34,7 @@ export default function Signup() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
-
-      // Save user information to Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        email: user.email,
-        uid: user.uid,
-        username: username,
-        createdAt: new Date(),
-      });
-
-      // Redirect to home page or dashboard after successful signup
+      const user = await signupUser(email, password, username);
       window.location.href = '/dashboard';
     } catch (error) {
       setError(error.message);
