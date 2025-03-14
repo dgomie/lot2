@@ -16,7 +16,11 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         const userDoc = await getDoc(doc(db, 'users', user.uid));
         if (userDoc.exists()) {
-          setCurrentUser({ ...user, username: userDoc.data().username });
+          setCurrentUser({
+            ...user,
+            username: userDoc.data().username,
+            profileImg: userDoc.data().profileImg,
+          });
         } else {
           setCurrentUser(user);
         }

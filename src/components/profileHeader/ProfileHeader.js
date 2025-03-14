@@ -3,9 +3,11 @@ import styles from './ProfileHeader.module.css';
 import Image from 'next/image';
 import { uploadProfileImage } from '@/firebase';
 import EditIcon from '../../../public/img/edit.svg';
+import Loader from '@/components/loader/Loader'; // Import the Loader component
 
 const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
   const [imageUrl, setImageUrl] = useState(profileImg);
+  const [loading, setLoading] = useState(false); // Add loading state
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -17,18 +19,21 @@ const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
         return;
       }
 
-      // Validate file size (100 KB or less)
-      const maxSize = 500 * 1024; // 100 KB in bytes
+      // Validate file size (500 KB or less)
+      const maxSize = 500 * 1024; // 500 KB in bytes
       if (file.size > maxSize) {
         alert('Image size must be 500 KB or less.');
         return;
       }
 
+      setLoading(true); // Set loading to true before starting the upload
       try {
         const url = await uploadProfileImage(file, userId);
         setImageUrl(url);
       } catch (error) {
         console.error('Error uploading profile image:', error);
+      } finally {
+        setLoading(false); // Set loading to false after the upload is complete
       }
     } else {
       console.error('File or userId is missing');
@@ -44,6 +49,11 @@ const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
   return (
     <div className={styles.mainContainer}>
       <div style={{ position: 'relative' }}>
+        {loading && (
+          <div className={styles.loaderOverlay}>
+            <Loader /> 
+          </div>
+        )}
         <Image
           className={styles.profileImg}
           src={imageUrl}

@@ -1,46 +1,59 @@
 .mainContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 1rem;
-    position: relative;
-  }
-  
-  .username {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .date {
-    font-size: 1rem;
-  }
-  
-  .profileImg {
-    border-radius: 50%;
-    box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
-    transition: box-shadow 0.4s ease, opacity 0.3s ease;
-    position: relative;
-    z-index: 100;
-  }
-  
-  .profileImg:hover {
-    box-shadow: 6.8px 13.6px 13.6px hsl(0deg 0% 0% / 0.29);
-    opacity: .5;
-    cursor: pointer;
-  }
-  
-  .gearIcon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 2rem;
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    cursor: pointer;
-  }
-  
-  .profileImg:hover + .gearIcon {
-    opacity: 1;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+  position: relative;
+}
+
+.username {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.date {
+  font-size: 1rem;
+}
+
+.profileImg {
+  border-radius: 50%;
+  box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
+  transition: box-shadow 0.4s ease, opacity 0.3s ease;
+  position: relative;
+  z-index: 100;
+}
+
+.profileImg:hover {
+  box-shadow: 6.8px 13.6px 13.6px hsl(0deg 0% 0% / 0.29);
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.gearIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  cursor: pointer;
+}
+
+.profileImg:hover + .gearIcon {
+  opacity: 1;
+}
+
+.loaderOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.8);
+  z-index: 100; 
+}
