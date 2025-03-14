@@ -3,7 +3,7 @@
 import React, { useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '@/context/AuthContext';
 import { auth } from '../../firebase';
 import { signOut } from 'firebase/auth';
 import styles from './Navbar.module.css';

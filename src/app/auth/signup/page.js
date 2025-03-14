@@ -3,7 +3,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Signup from '../../../components/signup/Signup';
-import { AuthContext } from '../../../context/AuthContext';
+import { AuthContext } from '@/context/AuthContext';
 import styles from './page.module.css'
 import Link from 'next/link';
 

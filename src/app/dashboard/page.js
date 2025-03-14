@@ -2,7 +2,7 @@
 
 import React, { useContext } from 'react';
 import withAuth from '../../hoc/withAuth';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '@/context/AuthContext';
 
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
