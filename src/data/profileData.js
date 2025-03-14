@@ -1,21 +1,21 @@
 const profileData = [
   {
-    id: 'legionsJoined',
+    id: 'numLegions',
     title: 'Legions Joined',
     iconUrl: '/img/quest.svg',
   },
   {
-    id: 'treasuresWon',
+    id: 'numVictories',
     title: 'Treasures Won',
     iconUrl: '/img/grail.svg',
   },
   {
-    id: 'songsShared',
+    id: 'numSongs',
     title: 'Songs Shared',
     iconUrl: '/img/music.svg',
   },
   {
-    id: 'votesCast',
+    id: 'numVotes',
     title: 'Votes Cast',
     iconUrl: '/img/vote.svg',
   },

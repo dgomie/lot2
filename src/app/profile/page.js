@@ -33,13 +33,6 @@ const Profile = () => {
     return <Loader />;
   }
 
-  const mockUserData = {
-    legionsJoined: 2,
-    treasuresWon: 1,
-    songsShared: 12,
-    votesCast: 24,
-  };
-
   return (
     <div className={styles.mainContainer}>
       {currentUser ? (
@@ -57,7 +50,7 @@ const Profile = () => {
               <ProfileCard
                 key={index}
                 title={item.title}
-                numValue={mockUserData[item.id]}
+                numValue={userProfile[item.id]}
                 iconUrl={item.iconUrl}
               />
             ))}

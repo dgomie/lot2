@@ -49,6 +49,10 @@ const signupUser = async (email, password, username) => {
     username: username,
     createdAt: new Date(),
     profileImg: null,
+    numVotes: 0,
+    numSongs: 0,
+    numLegions: 0,
+    numVictories: 0,
   });
   return user;
 };
