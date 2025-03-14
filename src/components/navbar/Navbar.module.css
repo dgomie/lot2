@@ -44,7 +44,7 @@
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
   justify-content: space-around;
   align-items: center; /* Add this line */
-  padding: 0.5rem 0;
+  padding: 0.5rem 0 2rem;
 }
 
 .bottomNav a, .bottomNav div {
