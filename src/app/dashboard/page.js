@@ -10,7 +10,7 @@ const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
 
   return (
-    <div>
+    <div className={styles.mainContainer}>
       <h1>Dashboard</h1>
       {currentUser && <p>Welcome, {currentUser.username}!</p>}
       <div className={styles.title}>Your Active Legions</div>
