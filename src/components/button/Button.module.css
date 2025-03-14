@@ -39,11 +39,11 @@
   opacity: 0.5;
 }
 
-.green {
+.blue {
   background-color: var(--lightblue100);
   color: white;
 }
 
-.green:hover {
+.blue:hover {
   opacity: 0.7;
 }

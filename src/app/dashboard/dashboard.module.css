@@ -1,0 +1,19 @@
+.buttonContainer {
+    display: flex;
+    gap: .5rem;
+    padding: 0.5rem;
+    height: 4.5rem;
+    max-width: 40%;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .buttonContainer {
+      max-width: 100%;
+    }
+  }
