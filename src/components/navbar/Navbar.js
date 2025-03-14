@@ -54,16 +54,6 @@ const Navbar = () => {
       </nav>
 
       <div className={styles.bottomNav}>
-        <Link href="/">
-          <Image
-            className={styles.bottomNavIcon}
-            src={'/img/home.svg'}
-            alt="Home Icon"
-            width={iconSize}
-            height={iconSize}
-          />
-          Home
-        </Link>
         {currentUser ? (
           <>
             <Link href="/dashboard">
@@ -99,6 +89,16 @@ const Navbar = () => {
           </>
         ) : (
           <>
+            <Link href="/">
+              <Image
+                className={styles.bottomNavIcon}
+                src={'/img/home.svg'}
+                alt="Home Icon"
+                width={iconSize}
+                height={iconSize}
+              />
+              Home
+            </Link>
             <Link href="/auth/login">
               <Image
                 className={styles.bottomNavIcon}
