@@ -3,7 +3,7 @@ import styles from './ProfileHeader.module.css';
 import Image from 'next/image';
 import { uploadProfileImage } from '@/firebase';
 import EditIcon from '../../../public/img/edit.svg';
-import Loader from '@/components/loader/Loader'; // Import the Loader component
+import Spinner from '../spinner/Spinner';
 
 const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
   const [imageUrl, setImageUrl] = useState(profileImg);
@@ -51,7 +51,7 @@ const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
       <div style={{ position: 'relative' }}>
         {loading && (
           <div className={styles.loaderOverlay}>
-            <Loader /> 
+            <Spinner />
           </div>
         )}
         <Image
