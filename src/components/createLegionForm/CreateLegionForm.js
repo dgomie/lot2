@@ -5,7 +5,7 @@ import NumberInput from '../numberInput/NumberInput';
 import { db } from '../../firebase';
 import Button from '../button/Button';
 
-const CreateLegionForm = () => {
+const CreateLegionForm = ({ currentUser }) => {
   const [formData, setFormData] = useState({
     legionName: '',
     legionDescription: '',
@@ -14,6 +14,7 @@ const CreateLegionForm = () => {
     voteTime: 0,
     submitTime: 0,
     players: [],
+    legionAdmin: '',
   });
 
   const [step, setStep] = useState(1);
