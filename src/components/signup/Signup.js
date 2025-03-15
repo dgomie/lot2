@@ -20,13 +20,18 @@ export default function Signup() {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: value.trim(),
     }));
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
     const { email, password, confirmPassword, username } = formData;
+
+    if (!email || !password || !confirmPassword || !username) {
+      setError('All fields are required');
+      return;
+    }
 
     if (password !== confirmPassword) {
       setError('Passwords do not match');
@@ -40,7 +45,6 @@ export default function Signup() {
       setError(error.message);
     }
   };
-
   const toggleShowPassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
