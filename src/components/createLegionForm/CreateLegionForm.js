@@ -3,7 +3,7 @@ import styles from './CreateLegionForm.module.css';
 import { useRouter } from 'next/navigation';
 import Input from '../input/Input';
 import NumberInput from '../numberInput/NumberInput';
-import { submitLegion } from '@/firebase';
+import { submitLegion, incrementUserLegions } from '@/firebase';
 import Button from '../button/Button';
 
 const CreateLegionForm = ({ currentUser }) => {
@@ -75,6 +75,7 @@ const CreateLegionForm = ({ currentUser }) => {
       };
       const result = await submitLegion(updatedFormData);
       if (result.success) {
+        await incrementUserLegions(currentUser.uid);
         const newLegionId = result.id;
         router.push(`/legions/${newLegionId}`);
       } else {

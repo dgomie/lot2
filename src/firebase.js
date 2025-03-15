@@ -12,6 +12,7 @@ import {
   getDoc,
   collection,
   addDoc,
+  increment,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -113,6 +114,19 @@ const submitLegion = async (formData) => {
   }
 };
 
+const incrementUserLegions = async (userId) => {
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    await updateDoc(userDocRef, {
+      numLegions: increment(1),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error incrementing numLegions: ', error);
+    return { success: false, error };
+  }
+};
+
 export {
   auth,
   db,
@@ -122,4 +136,5 @@ export {
   uploadProfileImage,
   getUserProfile,
   submitLegion,
+  incrementUserLegions,
 };
