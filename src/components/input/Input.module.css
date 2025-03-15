@@ -15,15 +15,15 @@
 .input {
   width: 100%;
   padding: 0.6rem;
-  border: none; /* Remove default border */
+  border: none; 
   border-radius: 20px;
   color: black;
   background-color: lightgray;
-  box-shadow: none; /* Remove default box shadow */
-  outline: none; /* Remove default outline */
-  -webkit-appearance: none; /* Remove default styling in WebKit browsers */
-  -moz-appearance: none; /* Remove default styling in Mozilla browsers */
-  appearance: none; /* Remove default styling in other browsers */
+  box-shadow: none;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none; 
+  appearance: none; 
 }
 
 .eyeIcon {
