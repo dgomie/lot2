@@ -40,7 +40,7 @@ const NumberInput = ({
           onChange={onChange}
           required={required}
           className={styles.input}
-          readOnly
+          
         />
         <Button
           onClick={handleIncrement}
