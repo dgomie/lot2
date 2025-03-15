@@ -10,6 +10,8 @@ import {
   setDoc,
   updateDoc,
   getDoc,
+  collection,
+  addDoc,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -101,6 +103,16 @@ const getUserProfile = async (userId) => {
   return userDoc.exists() ? userDoc.data() : null;
 };
 
+const submitLegion = async (formData) => {
+  try {
+    const docRef = await addDoc(collection(db, 'legions'), formData);
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error('Error creating legion: ', error);
+    return { success: false, error };
+  }
+};
+
 export {
   auth,
   db,
@@ -109,4 +121,5 @@ export {
   loginUser,
   uploadProfileImage,
   getUserProfile,
+  submitLegion,
 };

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styles from './CreateLegionForm.module.css';
+import { useRouter } from 'next/navigation';
 import Input from '../input/Input';
 import NumberInput from '../numberInput/NumberInput';
-import { db } from '../../firebase';
+import { submitLegion } from '@/firebase';
 import Button from '../button/Button';
 
 const CreateLegionForm = ({ currentUser }) => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     legionName: '',
     legionDescription: '',
@@ -66,12 +68,16 @@ const CreateLegionForm = ({ currentUser }) => {
 
   const handleSubmit = async () => {
     if (isStepValid) {
-      try {
-        console.log(formData);
-        await db.collection('legions').add(formData);
-        alert('Legion created successfully!');
-      } catch (error) {
-        console.error('Error creating legion: ', error);
+      const updatedFormData = {
+        ...formData,
+        legionAdmin: currentUser.uid,
+        players: [...formData.players, currentUser.uid],
+      };
+      const result = await submitLegion(updatedFormData);
+      if (result.success) {
+        const newLegionId = result.id;
+        router.push(`/legions/${newLegionId}`);
+      } else {
         alert('Error creating legion.');
       }
     } else {
