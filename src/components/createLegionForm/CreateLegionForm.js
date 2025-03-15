@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import styles from './CreateLegionForm.module.css';
 import Input from '../input/Input';
-import { db } from '../../firebase'; 
+import NumberInput from '../numberInput/NumberInput';
+import { db } from '../../firebase';
 import Button from '../button/Button';
 
 const CreateLegion = () => {
   const [formData, setFormData] = useState({
     legionName: '',
     legionDescription: '',
-    maxNumPlayers: null,
-    numRounds: null,
-    voteTime: null,
-    submitTime: null,
+    maxNumPlayers: 1,
+    numRounds: 1,
+    voteTime: 1,
+    submitTime: 1,
   });
 
   const [step, setStep] = useState(1);
@@ -20,7 +21,7 @@ const CreateLegion = () => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: name === 'legionName' || name === 'legionDescription' ? value : parseInt(value, 10) || 0,
     }));
   };
 
@@ -33,7 +34,14 @@ const CreateLegion = () => {
   };
 
   const handleSubmit = async () => {
-    if (formData.legionName && formData.legionDescription && formData.maxNumPlayers && formData.numRounds && formData.voteTime && formData.submitTime) {
+    if (
+      formData.legionName &&
+      formData.legionDescription &&
+      formData.maxNumPlayers &&
+      formData.numRounds &&
+      formData.voteTime &&
+      formData.submitTime
+    ) {
       try {
         await db.collection('legions').add(formData);
         alert('Legion created successfully!');
@@ -48,6 +56,7 @@ const CreateLegion = () => {
 
   return (
     <div className={styles.formContainer}>
+      <div className={styles.title}>Create a Legion</div>
       {step === 1 && (
         <div>
           <Input
@@ -74,49 +83,49 @@ const CreateLegion = () => {
       )}
       {step === 2 && (
         <div>
-          <Input
+          <NumberInput
             className={styles.inputField}
-            type="number"
             name="maxNumPlayers"
             value={formData.maxNumPlayers}
             onChange={handleChange}
-            placeholder="Max Number of Players"
             label="Max Number of Players"
             required
+            min={1}
+            max={100}
           />
         </div>
       )}
       {step === 3 && (
         <div>
-          <Input
+          <NumberInput
             className={styles.inputField}
-            type="number"
             name="numRounds"
             value={formData.numRounds}
             onChange={handleChange}
-            placeholder="Number of Rounds"
             label="Number of Rounds"
             required
+            min={1}
+            max={20}
           />
-          <Input
+          <NumberInput
             className={styles.inputField}
-            type="number"
             name="voteTime"
             value={formData.voteTime}
             onChange={handleChange}
-            placeholder="Vote Time (in minutes)"
-            label="Vote Time (in minutes)"
+            label="Vote Time (in days)"
             required
+            min={1}
+            max={60}
           />
-          <Input
+          <NumberInput
             className={styles.inputField}
-            type="number"
             name="submitTime"
             value={formData.submitTime}
             onChange={handleChange}
-            placeholder="Submit Time (in minutes)"
-            label="Submit Time (in minutes)"
+            label="Submit Time (in days)"
             required
+            min={1}
+            max={60}
           />
         </div>
       )}
