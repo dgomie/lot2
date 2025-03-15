@@ -120,10 +120,6 @@ const CreateLegionForm = ({ currentUser }) => {
             min={1}
             max={100}
           />
-        </div>
-      )}
-      {step === 3 && (
-        <div>
           <NumberInput
             className={styles.inputField}
             name="numRounds"
@@ -134,6 +130,10 @@ const CreateLegionForm = ({ currentUser }) => {
             min={1}
             max={20}
           />
+        </div>
+      )}
+      {step === 3 && (
+        <div>
           <NumberInput
             className={styles.inputField}
             name="voteTime"
