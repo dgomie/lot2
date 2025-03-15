@@ -5,14 +5,14 @@ import NumberInput from '../numberInput/NumberInput';
 import { db } from '../../firebase';
 import Button from '../button/Button';
 
-const CreateLegion = () => {
+const CreateLegionForm = () => {
   const [formData, setFormData] = useState({
     legionName: '',
     legionDescription: '',
-    maxNumPlayers: 1,
-    numRounds: 1,
-    voteTime: 1,
-    submitTime: 1,
+    maxNumPlayers: 0,
+    numRounds: 0,
+    voteTime: 0,
+    submitTime: 0,
     players: [],
   });
 
@@ -167,7 +167,11 @@ const CreateLegion = () => {
           </Button>
         )}
         {step === 3 && (
-          <Button onClick={handleSubmit} disabled={!isStepValid}>
+          <Button
+            onClick={handleSubmit}
+            disabled={!isStepValid}
+            variant={isStepValid ? 'blue' : 'disabled'}
+          >
             Start Legion
           </Button>
         )}
@@ -176,4 +180,4 @@ const CreateLegion = () => {
   );
 };
 
-export default CreateLegion;
+export default CreateLegionForm;
