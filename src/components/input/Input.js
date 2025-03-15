@@ -15,6 +15,7 @@ const Input = ({
   showToggle = false,
   toggleVisibility,
   isVisible,
+  maxLength,
 }) => {
   return (
     <div className={styles.inputGroup}>
@@ -30,6 +31,7 @@ const Input = ({
           onChange={onChange}
           required={required}
           className={styles.input}
+          maxLength={maxLength}
         />
         {showToggle && (
           <span className={styles.eyeIcon} onClick={toggleVisibility}>

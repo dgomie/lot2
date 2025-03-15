@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './CreateLegionForm.module.css';
 import Input from '../input/Input';
 import NumberInput from '../numberInput/NumberInput';
@@ -13,20 +13,50 @@ const CreateLegion = () => {
     numRounds: 1,
     voteTime: 1,
     submitTime: 1,
+    players: [],
   });
 
   const [step, setStep] = useState(1);
+  const [isStepValid, setIsStepValid] = useState(false);
+
+  useEffect(() => {
+    validateStep();
+  }, [formData, step]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === 'legionName' || name === 'legionDescription' ? value : parseInt(value, 10) || 0,
+      [name]:
+        name === 'legionName' || name === 'legionDescription'
+          ? value
+          : parseInt(value, 10) || 0,
     }));
   };
 
+  const validateStep = () => {
+    if (step === 1) {
+      setIsStepValid(
+        formData.legionName.length > 0 &&
+          formData.legionName.length < 25 &&
+          formData.legionDescription.length > 0 &&
+          formData.legionDescription.length < 150
+      );
+    } else if (step === 2) {
+      setIsStepValid(formData.maxNumPlayers > 0);
+    } else if (step === 3) {
+      setIsStepValid(
+        formData.numRounds > 0 &&
+          formData.voteTime > 0 &&
+          formData.submitTime > 0
+      );
+    }
+  };
+
   const handleNext = () => {
-    setStep((prevStep) => prevStep + 1);
+    if (isStepValid) {
+      setStep((prevStep) => prevStep + 1);
+    }
   };
 
   const handlePrevious = () => {
@@ -34,15 +64,9 @@ const CreateLegion = () => {
   };
 
   const handleSubmit = async () => {
-    if (
-      formData.legionName &&
-      formData.legionDescription &&
-      formData.maxNumPlayers &&
-      formData.numRounds &&
-      formData.voteTime &&
-      formData.submitTime
-    ) {
+    if (isStepValid) {
       try {
+        console.log(formData);
         await db.collection('legions').add(formData);
         alert('Legion created successfully!');
       } catch (error) {
@@ -68,6 +92,7 @@ const CreateLegion = () => {
             placeholder="Legion Title"
             label="Legion Title"
             required
+            maxLength={100}
           />
           <Input
             className={styles.inputField}
@@ -78,6 +103,7 @@ const CreateLegion = () => {
             placeholder="Legion Description"
             label="Legion Description"
             required
+            maxLength={100}
           />
         </div>
       )}
@@ -131,8 +157,20 @@ const CreateLegion = () => {
       )}
       <div className={styles.buttonContainer}>
         {step > 1 && <Button onClick={handlePrevious}>Previous</Button>}
-        {step < 3 && <Button onClick={handleNext}>Next</Button>}
-        {step === 3 && <Button onClick={handleSubmit}>Start Legion</Button>}
+        {step < 3 && (
+          <Button
+            onClick={handleNext}
+            disabled={!isStepValid}
+            variant={isStepValid ? 'blue' : 'disabled'}
+          >
+            Next
+          </Button>
+        )}
+        {step === 3 && (
+          <Button onClick={handleSubmit} disabled={!isStepValid}>
+            Start Legion
+          </Button>
+        )}
       </div>
     </div>
   );
