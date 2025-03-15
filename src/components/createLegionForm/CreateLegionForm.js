@@ -82,7 +82,7 @@ const CreateLegionForm = () => {
     <div className={styles.formContainer}>
       <div className={styles.title}>Create a Legion</div>
       {step === 1 && (
-        <div>
+        <div className={styles.inputField}>
           <Input
             className={styles.inputField}
             type="text"
