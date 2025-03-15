@@ -56,3 +56,7 @@
   color: white;
   opacity: .4;
 }
+
+.disabled:hover{
+  cursor: default;
+}
