@@ -1,0 +1,50 @@
+.mainContainer {
+  position: relative; 
+  display: grid;
+  border-radius: 15px;
+  padding: 1rem;
+  width: 100%;
+  box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
+  color: white;
+  overflow: hidden; 
+  cursor: pointer;
+}
+
+.mainContainer::before,
+.mainContainer::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+.mainContainer::before {
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.2);
+  top: -50px;
+  left: -50px;
+}
+
+.mainContainer::after {
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  bottom: -100px;
+  right: -100px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.description {
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.info {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
