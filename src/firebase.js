@@ -18,6 +18,7 @@ import {
   limit,
   startAfter,
   getDocs,
+  where,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -142,12 +143,18 @@ const fetchLegions = async (lastVisible) => {
   if (lastVisible) {
     q = query(
       legionsRef,
+      where('isActive', '==', true), 
       orderBy('createdAt'),
       startAfter(lastVisible),
       limit(10)
     );
   } else {
-    q = query(legionsRef, orderBy('createdAt'), limit(5));
+    q = query(
+      legionsRef,
+      where('isActive', '==', true),
+      orderBy('createdAt'),
+      limit(5)
+    );
   }
 
   const querySnapshot = await getDocs(q);

@@ -17,6 +17,7 @@ const CreateLegionForm = ({ currentUser }) => {
     submitTime: 0,
     players: [],
     legionAdmin: '',
+    isActive: true,
   });
 
   const [step, setStep] = useState(1);
