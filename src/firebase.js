@@ -13,6 +13,11 @@ import {
   collection,
   addDoc,
   increment,
+  query,
+  orderBy,
+  limit,
+  startAfter,
+  getDocs,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -106,7 +111,10 @@ const getUserProfile = async (userId) => {
 
 const submitLegion = async (formData) => {
   try {
-    const docRef = await addDoc(collection(db, 'legions'), formData);
+    const docRef = await addDoc(collection(db, 'legions'), {
+      ...formData,
+      createdAt: new Date(),
+    });
     return { success: true, id: docRef.id };
   } catch (error) {
     console.error('Error creating legion: ', error);
@@ -127,6 +135,33 @@ const incrementUserLegions = async (userId) => {
   }
 };
 
+const fetchLegions = async (lastVisible) => {
+  const legionsRef = collection(db, 'legions');
+  let q;
+
+  if (lastVisible) {
+    q = query(
+      legionsRef,
+      orderBy('createdAt'),
+      startAfter(lastVisible),
+      limit(10)
+    );
+  } else {
+    q = query(legionsRef, orderBy('createdAt'), limit(5));
+  }
+
+  const querySnapshot = await getDocs(q);
+  const legions = [];
+  querySnapshot.forEach((doc) => {
+    legions.push({ id: doc.id, ...doc.data() });
+  });
+
+  const lastVisibleDoc =
+    querySnapshot.docs[querySnapshot.docs.length - 1] || null;
+
+  return { legions, lastVisibleDoc };
+};
+
 export {
   auth,
   db,
@@ -137,4 +172,5 @@ export {
   getUserProfile,
   submitLegion,
   incrementUserLegions,
+  fetchLegions,
 };
