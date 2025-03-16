@@ -62,7 +62,7 @@ const Legions = () => {
           key={legion.id}
           legionName={legion.legionName}
           legionDescription={legion.legionDescription}
-          numPlayers={legion.numPlayers}
+          players={legion.players}
           maxNumPlayers={legion.maxNumPlayers}
           numRounds={legion.numRounds}
           onClick={() => {

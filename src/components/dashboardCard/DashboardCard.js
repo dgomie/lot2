@@ -4,13 +4,14 @@ import styles from './DashboardCard.module.css';
 const DashboardCard = ({
   legionName,
   legionDescription,
-  numPlayers,
+  players,
   maxNumPlayers,
   numRounds,
   onClick,
 }) => {
   const [background, setBackground] = useState('');
   const [shapeStyles, setShapeStyles] = useState({});
+  
 
   useEffect(() => {
     const predefinedColors = [
@@ -61,7 +62,7 @@ const DashboardCard = ({
       <div className={styles.title}>{legionName}</div>
       <div className={styles.description}>{legionDescription}</div>
       <div className={styles.info}>
-        {numPlayers} / {maxNumPlayers} Players
+        {players.length} / {maxNumPlayers} Players
       </div>
       <div className={styles.info}>{numRounds} Rounds</div>
     </div>
