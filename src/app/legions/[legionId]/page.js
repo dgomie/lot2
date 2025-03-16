@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { db } from '@/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import Loader from '@/components/loader/Loader';
+import withAuth from '@/hoc/withAuth';
 
 const LegionPage = () => {
   const params = useParams();
@@ -45,4 +46,4 @@ const LegionPage = () => {
   );
 };
 
-export default LegionPage;
+export default withAuth(LegionPage);
