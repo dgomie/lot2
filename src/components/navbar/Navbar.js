@@ -39,6 +39,7 @@ const Navbar = () => {
           {currentUser ? (
             <>
               <Link href="/dashboard">Dashboard</Link>
+              <Link href="/legions">Legions</Link>
               <Link href="/profile">Profile</Link>
               <button className={styles.logoutButton} onClick={handleLogout}>
                 Logout
@@ -59,12 +60,22 @@ const Navbar = () => {
             <Link href="/dashboard">
               <Image
                 className={styles.bottomNavIcon}
-                src={'/img/music-library.svg'}
+                src={'/img/home.svg'}
                 alt="Dashboard Icon"
                 width={iconSize}
                 height={iconSize}
               />
               Dashboard
+            </Link>
+            <Link href="/legions">
+              <Image
+                className={styles.bottomNavIcon}
+                src={'/img/legion.svg'}
+                alt="Legions Icon"
+                width={iconSize}
+                height={iconSize}
+              />
+              Legions
             </Link>
             <Link href="/profile">
               <Image
