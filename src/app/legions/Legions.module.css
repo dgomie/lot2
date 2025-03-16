@@ -5,3 +5,8 @@
   padding: 20px;
   margin: 0 0 5rem;
 }
+
+.noneLeft {
+    color: lightslategray;
+    font-style: italic;
+}

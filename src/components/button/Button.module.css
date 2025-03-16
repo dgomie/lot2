@@ -24,7 +24,7 @@
 
 .transparentWhite {
   background-color: transparent;
-  color: white;
+  color: var(--navyblue100);
   border: 1px solid white;
 }
 
