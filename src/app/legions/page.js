@@ -74,21 +74,18 @@ const Legions = () => {
       {legions.map((legion, index) => {
         if (legions.length === index + 1) {
           return (
-            <div
+            <DashboardCard
               ref={lastLegionElementRef}
               key={legion.id}
-            >
-              <DashboardCard
-                legionName={legion.legionName}
-                legionDescription={legion.legionDescription}
-                numPlayers={legion.numPlayers}
-                maxNumPlayers={legion.maxNumPlayers}
-                numRounds={legion.numRounds}
-                onClick={() => {
-                  handleCardClick(legion.id);
-                }}
-              />
-            </div>
+              legionName={legion.legionName}
+              legionDescription={legion.legionDescription}
+              numPlayers={legion.numPlayers}
+              maxNumPlayers={legion.maxNumPlayers}
+              numRounds={legion.numRounds}
+              onClick={() => {
+                handleCardClick(legion.id);
+              }}
+            />
           );
         } else {
           return (
