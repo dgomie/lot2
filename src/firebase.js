@@ -172,7 +172,6 @@ const fetchLegions = async (lastVisible) => {
 
 const resetPassword = async (email) => {
   await sendPasswordResetEmail(auth, email);
-  alert('Password reset email sent!');
 };
 
 export {
