@@ -171,29 +171,8 @@ const fetchLegions = async (lastVisible) => {
 };
 
 const resetPassword = async (email) => {
-  try {
-    await sendPasswordResetEmail(auth, email);
-    alert('Password reset email sent!');
-  } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.code) {
-        case 'auth/user-not-found':
-          alert(
-            'Email address not found. Please check your email and try again.'
-          );
-          break;
-        case 'auth/invalid-email':
-          alert('Invalid email address.');
-          break;
-        default:
-          console.error('Error sending password reset email:', error);
-          alert('An error occurred. Please try again later.');
-      }
-    } else {
-      console.error('An unexpected error occurred:', error);
-      alert('An unexpected error occurred. Please try again later.');
-    }
-  }
+  await sendPasswordResetEmail(auth, email);
+  alert('Password reset email sent!');
 };
 
 export {
@@ -207,5 +186,5 @@ export {
   submitLegion,
   incrementUserLegions,
   fetchLegions,
-  resetPassword
+  resetPassword,
 };
