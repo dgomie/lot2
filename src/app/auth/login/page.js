@@ -21,6 +21,7 @@ export default function LoginPage() {
     <>
       <Login />
       <div className={styles.text}>Don&apos;t have an account? <Link href='/auth/signup' className={styles.link}>Sign Up</Link></div>
+      <div className={styles.text}><Link href='/auth/forgot-password' className={styles.link}>Forgot Password?</Link></div>
     </>
   );
 }
