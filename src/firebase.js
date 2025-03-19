@@ -174,6 +174,24 @@ const resetPassword = async (email) => {
   await sendPasswordResetEmail(auth, email);
 };
 
+const fetchLegionsByPlayer = async (userId) => {
+  try {
+    const legionsRef = collection(db, 'legions');
+    const q = query(legionsRef, where('players', 'array-contains', userId));
+    const querySnapshot = await getDocs(q);
+
+    const legions = [];
+    querySnapshot.forEach((doc) => {
+      legions.push({ id: doc.id, ...doc.data() });
+    });
+
+    return { success: true, legions };
+  } catch (error) {
+    console.error('Error fetching legions by player:', error);
+    return { success: false, error };
+  }
+};
+
 export {
   auth,
   db,
@@ -185,5 +203,6 @@ export {
   submitLegion,
   incrementUserLegions,
   fetchLegions,
+  fetchLegionsByPlayer,
   resetPassword,
 };

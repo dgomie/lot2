@@ -6,6 +6,7 @@ import { AuthContext } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import Button from '@/components/button/Button';
 import styles from './dashboard.module.css';
+import DashboardFeed from '@/components/dashboardFeed/DashboardFeed';
 
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
@@ -18,6 +19,7 @@ const Dashboard = () => {
   return (
     <div className={styles.mainContainer}>
       <h1>Dashboard</h1>
+      <div>{currentUser.uid}</div>
       {currentUser && <p>Welcome, {currentUser.username}!</p>}
       <div className={styles.title}>Your Active Legions</div>
       <div className={styles.buttonContainer}>
@@ -36,6 +38,7 @@ const Dashboard = () => {
           Join a Legion
         </Button>
       </div>
+      <DashboardFeed currentUserId={currentUser.uid} />
     </div>
   );
 };
