@@ -6,7 +6,7 @@ const Welcome = () => {
   return (
     <div className={styles.mainContainer}>
     <Image
-      src="./img/logo.svg"
+      src="/img/logo.svg"
       alt="Legion of Tones Logo"
       width={400}
       height={400}
