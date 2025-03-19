@@ -3,6 +3,7 @@ import styles from './ForgotPassword.module.css';
 import { resetPassword } from '@/firebase';
 import Input from '../input/Input';
 import Button from '../button/Button';
+import Image from 'next/image';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ const ForgotPassword = () => {
     if (localPart.length > 1) {
       return `${localPart[0]}****@${domain}`;
     }
-    return email; 
+    return email;
   };
 
   const handleClick = () => {
@@ -42,28 +43,40 @@ const ForgotPassword = () => {
 
   return (
     <div className={styles.mainContainer}>
-      {!resetSent ? (
-        <form className={styles.form}>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            value={email}
-            onChange={handleChange}
-            label="Email:"
-            required
-          />
-          {error && <p className={styles.error}>{error}</p>}
-          <div className={styles.buttonContainer}>
-            <Button onClick={handleClick}>Reset Password</Button>
-          </div>
-        </form>
-      ) : (
-        <>
-          <div className={styles.text}>Reset password email sent to:</div>
-          <div className={styles.text}>{maskedEmail}</div>
-        </>
-      )}
+      <h1 className={styles.title}>Forgot your password?</h1>
+      <div className={styles.imageContainer}>
+        <Image
+          className={styles.image}
+          src={!resetSent ? ('/img/confused-wizard.png') : ('/img/success-wizard.png')}
+          alt="confused wizard"
+          height={200}
+          width={200}
+        />
+      </div>
+      <div className={styles.formContainer}>
+        {!resetSent ? (
+          <form className={styles.form}>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={email}
+              onChange={handleChange}
+              label="What's your email address?"
+              required
+            />
+            {error && <p className={styles.error}>{error}</p>}
+            <div className={styles.buttonContainer}>
+              <Button onClick={handleClick}>Send Reset Link</Button>
+            </div>
+          </form>
+        ) : (
+          <>
+            <div className={styles.text}>Reset password email sent to:</div>
+            <div className={styles.text}>{maskedEmail}</div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

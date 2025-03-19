@@ -5,7 +5,7 @@ import ForgotPassword from '@/components/forgotPassword/ForgotPassword';
 
 export default function ForgotPasswordPage() {
   return (
-    <div>
+    <div className={styles.pageContainer}>
       <ForgotPassword />
     </div>
   );
