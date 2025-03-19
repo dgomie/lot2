@@ -18,10 +18,7 @@ const Dashboard = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <h1>Dashboard</h1>
-      <div>{currentUser.uid}</div>
       {currentUser && <p>Welcome, {currentUser.username}!</p>}
-      <div className={styles.title}>Your Active Legions</div>
       <div className={styles.buttonContainer}>
         <Button
           onClick={() => {
@@ -38,6 +35,8 @@ const Dashboard = () => {
           Join a Legion
         </Button>
       </div>
+      <div className={styles.title}>Your Active Legions</div>
+
       <DashboardFeed currentUserId={currentUser.uid} />
     </div>
   );
