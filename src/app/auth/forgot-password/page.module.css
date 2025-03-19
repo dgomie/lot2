@@ -1,7 +1,13 @@
 .pageContainer {
+    padding: 1rem;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .pageContainer {
+      height: 100vh;
+    }
   }
