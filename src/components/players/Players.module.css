@@ -1,0 +1,34 @@
+.mainContainer {
+  box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
+  padding: 1rem;
+  border-radius: 15px;
+  margin: .5rem;
+}
+
+.playersList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.playerCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: .5rem;
+  width: 5.5rem;
+  text-align: center;
+}
+
+.profileImg {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+}
