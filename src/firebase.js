@@ -20,6 +20,7 @@ import {
   startAfter,
   getDocs,
   where,
+  arrayUnion,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -208,6 +209,21 @@ const fetchLegions = async (lastVisible) => {
   return { legions, lastVisibleDoc };
 };
 
+const joinLegion = async (legionId, userId) => {
+  try {
+    const legionDocRef = doc(db, 'legions', legionId);
+
+    await updateDoc(legionDocRef, {
+      players: arrayUnion(userId),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error adding user to legion:', error);
+    return { success: false, error };
+  }
+};
+
 const resetPassword = async (email) => {
   await sendPasswordResetEmail(auth, email);
 };
@@ -247,5 +263,6 @@ export {
   incrementUserLegions,
   fetchLegions,
   fetchLegionsByPlayer,
+  joinLegion,
   resetPassword,
 };

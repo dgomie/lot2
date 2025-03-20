@@ -15,23 +15,30 @@ const LegionPage = () => {
   const legionId = params.legionId;
   const [legionData, setLegionData] = useState(null);
 
+  const fetchLegionData = async () => {
+    try {
+      const docRef = doc(db, 'legions', legionId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        console.log('Document data:', docSnap.data());
+        setLegionData(docSnap.data());
+      } else {
+        console.log('No such document!');
+      }
+    } catch (error) {
+      console.error('Error fetching document:', error);
+    }
+  };
+
+  const handlePlayerAdded = (userId) => {
+    setLegionData((prevData) => ({
+      ...prevData,
+      players: [...prevData.players, userId], // Add the new player to the players array
+    }));
+  };
+
   useEffect(() => {
     if (legionId) {
-      const fetchLegionData = async () => {
-        try {
-          const docRef = doc(db, 'legions', legionId);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-            console.log('Document data:', docSnap.data());
-            setLegionData(docSnap.data());
-          } else {
-            console.log('No such document!');
-          }
-        } catch (error) {
-          console.error('Error fetching document:', error);
-        }
-      };
-
       fetchLegionData();
     }
   }, [legionId]);
@@ -42,7 +49,11 @@ const LegionPage = () => {
 
   return (
     <div>
-      <LegionHeader legionData={legionData} />
+      <LegionHeader
+        legionData={legionData}
+        legionId={legionId}
+        onPlayerAdded={handlePlayerAdded} // Pass the update function
+      />
       <Players legionPlayers={legionData.players} />
     </div>
   );
