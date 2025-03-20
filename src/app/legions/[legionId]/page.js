@@ -7,6 +7,8 @@ import { doc, getDoc } from 'firebase/firestore';
 import Loader from '@/components/loader/Loader';
 import withAuth from '@/hoc/withAuth';
 import Players from '@/components/players/Players';
+import styles from './LegionPage.module.css';
+import LegionHeader from '@/components/legionHeader/LegionHeader';
 
 const LegionPage = () => {
   const params = useParams();
@@ -40,10 +42,8 @@ const LegionPage = () => {
 
   return (
     <div>
-      <h1>{legionData.legionName}</h1>
-      <p>{legionData.legionDescription}</p>
-      <Players legionPlayers={legionData.players}/>
-      {/* Render other legion data as needed */}
+      <LegionHeader legionData={legionData} />
+      <Players legionPlayers={legionData.players} />
     </div>
   );
 };
