@@ -9,11 +9,12 @@ import ProfileCard from '@/components/profileCard/ProfileCard';
 import profileData from '@/data/profileData';
 import Loader from '@/components/loader/Loader';
 import { getUserProfileByUsername } from '@/firebase';
+import withAuth from '@/hoc/withAuth';
 
-const Profile = () => {
+const AnyUserProfile = () => {
   const { currentUser } = useContext(AuthContext);
   const params = useParams();
-  const username = params.username; // Extract username from URL params
+  const username = params.username;
   const [photoUrl, setPhotoUrl] = useState('/img/user.png');
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,7 @@ const Profile = () => {
     const fetchUserProfile = async () => {
       if (username) {
         try {
-          const profile = await getUserProfileByUsername(username); // Fetch user profile by username
+          const profile = await getUserProfileByUsername(username);
           setUserProfile(profile);
           if (profile && profile.profileImg) {
             setPhotoUrl(profile.profileImg);
@@ -71,4 +72,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default withAuth(AnyUserProfile);

@@ -46,10 +46,15 @@ const ProfileHeader = ({
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (date) => {
+    if (!date) return 'Unknown';
+
+    if (date.toDate) {
+      date = date.toDate();
+    }
+
     const options = { year: 'numeric', month: 'long' };
-    const date = new Date(dateString);
-    return date.toLocaleDateString(undefined, options);
+    return new Date(date).toLocaleDateString(undefined, options);
   };
 
   return (
