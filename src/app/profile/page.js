@@ -43,6 +43,7 @@ const Profile = () => {
               username={currentUser.username}
               createdAt={currentUser.metadata.creationTime}
               profileImg={photoUrl}
+              currentUserId={currentUser.uid}
             />
           </div>
           <div className={styles.categories}>

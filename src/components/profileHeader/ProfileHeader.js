@@ -5,9 +5,15 @@ import { uploadProfileImage } from '@/firebase';
 import EditIcon from '../../../public/img/edit.svg';
 import Spinner from '../spinner/Spinner';
 
-const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
+const ProfileHeader = ({
+  userId,
+  currentUserId,
+  username,
+  createdAt,
+  profileImg,
+}) => {
   const [imageUrl, setImageUrl] = useState(profileImg);
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
@@ -26,14 +32,14 @@ const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
         return;
       }
 
-      setLoading(true); // Set loading to true before starting the upload
+      setLoading(true);
       try {
         const url = await uploadProfileImage(file, userId);
         setImageUrl(url);
       } catch (error) {
         console.error('Error uploading profile image:', error);
       } finally {
-        setLoading(false); // Set loading to false after the upload is complete
+        setLoading(false);
       }
     } else {
       console.error('File or userId is missing');
@@ -60,21 +66,29 @@ const ProfileHeader = ({ userId, username, createdAt, profileImg }) => {
           alt="Profile Image"
           width={180}
           height={180}
-          onClick={() => document.getElementById('fileInput').click()}
+          onClick={() => {
+            if (currentUserId === userId) {
+              document.getElementById('fileInput').click();
+            }
+          }}
         />
-        <Image
-          src={EditIcon}
-          className={styles.gearIcon}
-          alt="Edit Icon"
-          width={70}
-        />
+        {currentUserId === userId && (
+          <Image
+            src={EditIcon}
+            className={styles.gearIcon}
+            alt="Edit Icon"
+            width={70}
+          />
+        )}
       </div>
-      <input
-        id="fileInput"
-        type="file"
-        onChange={handleImageUpload}
-        style={{ display: 'none' }}
-      />
+      {currentUserId === userId && (
+        <input
+          id="fileInput"
+          type="file"
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
+        />
+      )}
       <div className={styles.username}>{username}</div>
       <div className={styles.date}>Member Since {formatDate(createdAt)}</div>
     </div>

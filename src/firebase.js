@@ -131,6 +131,24 @@ const getUserProfile = async (userId) => {
   return userDoc.exists() ? userDoc.data() : null;
 };
 
+const getUserProfileByUsername = async (username) => {
+  try {
+    const usersRef = collection(db, 'users');
+    const q = query(usersRef, where('username', '==', username));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      // Return the first matching user profile
+      return querySnapshot.docs[0].data();
+    } else {
+      throw new Error('User not found');
+    }
+  } catch (error) {
+    console.error('Error fetching user profile by username:', error);
+    throw error;
+  }
+};
+
 const submitLegion = async (formData) => {
   try {
     const docRef = await addDoc(collection(db, 'legions'), {
@@ -224,6 +242,7 @@ export {
   loginUser,
   uploadProfileImage,
   getUserProfile,
+  getUserProfileByUsername,
   submitLegion,
   incrementUserLegions,
   fetchLegions,
