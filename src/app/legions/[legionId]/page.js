@@ -41,6 +41,7 @@ const LegionPage = () => {
     <div>
       <h1>{legionData.legionName}</h1>
       <p>{legionData.legionDescription}</p>
+      
       {/* Render other legion data as needed */}
     </div>
   );
