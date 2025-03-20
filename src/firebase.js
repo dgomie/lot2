@@ -47,24 +47,44 @@ const storage = getStorage(app);
 
 // Authentication functions
 const signupUser = async (email, password, username) => {
-  const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-  const user = userCredential.user;
-  await setDoc(doc(db, 'users', user.uid), {
-    email: user.email,
-    uid: user.uid,
-    username: username,
-    createdAt: new Date(),
-    profileImg: null,
-    numVotes: 0,
-    numSongs: 0,
-    numLegions: 0,
-    numVictories: 0,
-  });
-  return user;
+  try {
+    // Check if the username already exists
+    const usernameDocRef = doc(db, 'usernames', username);
+    const usernameDoc = await getDoc(usernameDocRef);
+
+    if (usernameDoc.exists()) {
+      throw new Error('Username is already taken. Please choose another one.');
+    }
+
+    // Create the user
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+
+    // Add the username to the usernames collection
+    await setDoc(usernameDocRef, { uid: user.uid });
+
+    // Add the user to the users collection
+    await setDoc(doc(db, 'users', user.uid), {
+      email: user.email,
+      uid: user.uid,
+      username: username,
+      createdAt: new Date(),
+      profileImg: null,
+      numVotes: 0,
+      numSongs: 0,
+      numLegions: 0,
+      numVictories: 0,
+    });
+
+    return user;
+  } catch (error) {
+    console.error('Error signing up user:', error);
+    throw error;
+  }
 };
 
 const loginUser = async (email, password) => {
