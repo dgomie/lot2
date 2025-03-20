@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './LegionHeader.module.css';
 import Button from '../button/Button';
-import { joinLegion } from '@/firebase';
+import { joinLegion, incrementUserLegions } from '@/firebase';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation'; // Import useRouter
@@ -20,8 +20,8 @@ const LegionHeader = ({ legionData, legionId, onPlayerAdded }) => {
     try {
       const result = await joinLegion(legionId, currentUser.uid);
       if (result.success) {
-        console.log('Successfully joined the legion!');
-        onPlayerAdded(currentUser.uid); // Add the current user to the players array
+        incrementUserLegions(currentUser.uid)
+        onPlayerAdded(currentUser.uid); 
       } else {
         alert('Failed to join the legion. Please try again.');
       }
