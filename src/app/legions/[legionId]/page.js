@@ -63,7 +63,11 @@ const LegionPage = () => {
         onPlayerRemoved={handlePlayerRemoved}
       />
       <Players legionPlayers={legionData.players} legionAdmin={legionData.legionAdmin}/>
-      <RoundCard />
+      <div>
+      {legionData.rounds.map((round) => (
+        <RoundCard key={round.roundNumber} round={round} />
+      ))}
+    </div>
     </div>
   );
 };

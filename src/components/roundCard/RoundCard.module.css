@@ -1,0 +1,25 @@
+.roundCard {
+  box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
+  border-radius: 15px;
+  padding: 1rem;
+  margin: 1rem;
+  background-color: #f9f9f9;
+}
+
+.roundNumber {
+  font-size: .7rem;
+  font-style: italic;
+  color: lightgray;
+  margin-bottom: 8px;
+}
+
+.deadlines {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.status {
+  font-size: 14px;
+  font-weight: bold;
+  color: #0070f3;
+}
