@@ -8,6 +8,7 @@ import Loader from '@/components/loader/Loader';
 import withAuth from '@/hoc/withAuth';
 import Players from '@/components/players/Players';
 import LegionHeader from '@/components/legionHeader/LegionHeader';
+import RoundCard from '@/components/roundCard/RoundCard';
 
 const LegionPage = () => {
   const params = useParams();
@@ -62,6 +63,7 @@ const LegionPage = () => {
         onPlayerRemoved={handlePlayerRemoved}
       />
       <Players legionPlayers={legionData.players} legionAdmin={legionData.legionAdmin}/>
+      <RoundCard />
     </div>
   );
 };
