@@ -7,7 +7,6 @@ import { doc, getDoc } from 'firebase/firestore';
 import Loader from '@/components/loader/Loader';
 import withAuth from '@/hoc/withAuth';
 import Players from '@/components/players/Players';
-import styles from './LegionPage.module.css';
 import LegionHeader from '@/components/legionHeader/LegionHeader';
 
 const LegionPage = () => {
