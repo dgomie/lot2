@@ -69,18 +69,51 @@ const CreateLegionForm = ({ currentUser }) => {
 
   const handleSubmit = async () => {
     if (isStepValid) {
-      const updatedFormData = {
-        ...formData,
-        legionAdmin: currentUser.uid,
-        players: [...formData.players, currentUser.uid],
-      };
-      const result = await submitLegion(updatedFormData);
-      if (result.success) {
-        await incrementUserLegions(currentUser.uid);
-        const newLegionId = result.id;
-        router.push(`/legions/${newLegionId}`);
-      } else {
-        alert('Error creating legion.');
+      try {
+        // Generate rounds based on the selected number of rounds
+        const rounds = Array.from(
+          { length: formData.numRounds },
+          (_, index) => {
+            const roundNumber = index + 1;
+            const submissionDeadline = new Date();
+            submissionDeadline.setDate(
+              submissionDeadline.getDate() + formData.submitTime * roundNumber
+            );
+
+            const voteDeadline = new Date(submissionDeadline);
+            voteDeadline.setDate(voteDeadline.getDate() + formData.voteTime);
+
+            return {
+              roundNumber,
+              submissionDeadline: submissionDeadline.toISOString(),
+              voteDeadline: voteDeadline.toISOString(),
+              submissions: [],
+              prompt: '',
+              isRoundComplete: false,
+            };
+          }
+        );
+
+        // Add the rounds to the legion document
+        const updatedFormData = {
+          ...formData,
+          legionAdmin: currentUser.uid,
+          players: [...formData.players, currentUser.uid],
+          rounds,
+        };
+
+        // Submit the legion document
+        const result = await submitLegion(updatedFormData);
+        if (result.success) {
+          await incrementUserLegions(currentUser.uid);
+          const newLegionId = result.id;
+          router.push(`/legions/${newLegionId}`);
+        } else {
+          alert('Error creating legion.');
+        }
+      } catch (error) {
+        console.error('Error creating legion:', error);
+        alert('An error occurred while creating the legion.');
       }
     } else {
       alert('Please fill in all fields.');
@@ -144,20 +177,20 @@ const CreateLegionForm = ({ currentUser }) => {
         <div>
           <NumberInput
             className={styles.inputField}
-            name="voteTime"
-            value={formData.voteTime}
+            name="submitTime"
+            value={formData.submitTime}
             onChange={handleChange}
-            label="Vote Time (in days)"
+            label="Song Submission Time (in days)"
             required
             min={1}
             max={60}
           />
           <NumberInput
             className={styles.inputField}
-            name="submitTime"
-            value={formData.submitTime}
+            name="voteTime"
+            value={formData.voteTime}
             onChange={handleChange}
-            label="Submit Time (in days)"
+            label="Vote Time (in days)"
             required
             min={1}
             max={60}
