@@ -21,6 +21,7 @@ import {
   getDocs,
   where,
   arrayUnion,
+  arrayRemove,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -176,6 +177,19 @@ const incrementUserLegions = async (userId) => {
   }
 };
 
+const decrementUserLegions = async (userId) => {
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    await updateDoc(userDocRef, {
+      numLegions: increment(-1),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error decrementing numLegions: ', error);
+    return { success: false, error };
+  }
+};
+
 const fetchLegions = async (lastVisible) => {
   const legionsRef = collection(db, 'legions');
   let q;
@@ -224,6 +238,21 @@ const joinLegion = async (legionId, userId) => {
   }
 };
 
+const leaveLegion = async (legionId, userId) => {
+  try {
+    const legionDocRef = doc(db, 'legions', legionId);
+
+    await updateDoc(legionDocRef, {
+      players: arrayRemove(userId),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error removing user from legion:', error);
+    return { success: false, error };
+  }
+};
+
 const resetPassword = async (email) => {
   await sendPasswordResetEmail(auth, email);
 };
@@ -261,8 +290,10 @@ export {
   getUserProfileByUsername,
   submitLegion,
   incrementUserLegions,
+  decrementUserLegions,
   fetchLegions,
   fetchLegionsByPlayer,
   joinLegion,
+  leaveLegion,
   resetPassword,
 };

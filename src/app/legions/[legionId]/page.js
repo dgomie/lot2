@@ -33,7 +33,14 @@ const LegionPage = () => {
   const handlePlayerAdded = (userId) => {
     setLegionData((prevData) => ({
       ...prevData,
-      players: [...prevData.players, userId], // Add the new player to the players array
+      players: [...prevData.players, userId],
+    }));
+  };
+
+  const handlePlayerRemoved = (userId) => {
+    setLegionData((prevData) => ({
+      ...prevData,
+      players: prevData.players.filter((player) => player !== userId),
     }));
   };
 
@@ -52,7 +59,8 @@ const LegionPage = () => {
       <LegionHeader
         legionData={legionData}
         legionId={legionId}
-        onPlayerAdded={handlePlayerAdded} // Pass the update function
+        onPlayerAdded={handlePlayerAdded}
+        onPlayerRemoved={handlePlayerRemoved}
       />
       <Players legionPlayers={legionData.players} />
     </div>
