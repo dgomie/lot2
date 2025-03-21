@@ -4,7 +4,7 @@ import { getUserProfile } from '@/firebase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-const Players = ({ legionPlayers }) => {
+const Players = ({ legionPlayers, legionAdmin }) => {
   const [playersData, setPlayersData] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -49,13 +49,18 @@ const Players = ({ legionPlayers }) => {
             className={styles.playerCard}
             onClick={() => handleProfileClick(player.username)}
           >
-            <Image
-              src={player.profileImg || '/img/user.png'}
-              alt={`${player.username}'s profile`}
-              className={styles.profileImg}
-              width={25}
-              height={25}
-            />
+            <div className={styles.imageContainer}>
+              <Image
+                src={player.profileImg || '/img/user.png'}
+                alt={`${player.username}'s profile`}
+                className={styles.profileImg}
+                width={25}
+                height={25}
+              />
+              {player.uid === legionAdmin && (
+                <div className={styles.adminBadge}>★</div>
+              )}
+            </div>
             <div className={styles.username}>
               {player.username || 'Unknown'}
             </div>

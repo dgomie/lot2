@@ -61,7 +61,7 @@ const LegionPage = () => {
         onPlayerAdded={handlePlayerAdded}
         onPlayerRemoved={handlePlayerRemoved}
       />
-      <Players legionPlayers={legionData.players} />
+      <Players legionPlayers={legionData.players} legionAdmin={legionData.legionAdmin}/>
     </div>
   );
 };
