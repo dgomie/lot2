@@ -40,9 +40,9 @@
 
 .adminBadge {
   position: absolute;
-  bottom: -5px;
-  right: -5px;
-  background-color: gold;
+  bottom: -1px;
+  right: 0px;
+  background-color: var(--lightgreen100);
   color: white;
   border-radius: 50%;
   width: 15px;
