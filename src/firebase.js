@@ -279,6 +279,50 @@ const fetchLegionsByPlayer = async (userId) => {
   }
 };
 
+const saveRoundData = async (legionId, roundId, updatedRoundData) => {
+  try {
+    const docRef = doc(db, 'legions', legionId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const legionData = docSnap.data();
+      const updatedRounds = legionData.rounds.map((r) =>
+        r.roundNumber === parseInt(roundId, 10) ? updatedRoundData : r
+      );
+
+      await updateDoc(docRef, { rounds: updatedRounds });
+      return { success: true };
+    } else {
+      console.error('No such document!');
+      return { success: false, error: 'No such document!' };
+    }
+  } catch (error) {
+    console.error('Error saving round data:', error);
+    return { success: false, error };
+  }
+};
+
+const fetchRoundData = async (legionId, roundId) => {
+  try {
+    const docRef = doc(db, 'legions', legionId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const legionData = docSnap.data();
+      const round = legionData.rounds.find(
+        (r) => r.roundNumber === parseInt(roundId, 10)
+      );
+      return { success: true, round };
+    } else {
+      console.error('No such document!');
+      return { success: false, error: 'No such document!' };
+    }
+  } catch (error) {
+    console.error('Error fetching round data:', error);
+    return { success: false, error };
+  }
+};
+
 export {
   auth,
   db,
@@ -293,7 +337,9 @@ export {
   decrementUserLegions,
   fetchLegions,
   fetchLegionsByPlayer,
+  fetchRoundData,
   joinLegion,
   leaveLegion,
   resetPassword,
+  saveRoundData,
 };
