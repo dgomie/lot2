@@ -5,6 +5,7 @@ import Input from '../input/Input';
 import NumberInput from '../numberInput/NumberInput';
 import { submitLegion, incrementUserLegions } from '@/firebase';
 import Button from '../button/Button';
+import { musicLeaguePrompts } from '@/data/defaultPrompts';
 
 const CreateLegionForm = ({ currentUser }) => {
   const router = useRouter();
@@ -83,12 +84,18 @@ const CreateLegionForm = ({ currentUser }) => {
             const voteDeadline = new Date(submissionDeadline);
             voteDeadline.setDate(voteDeadline.getDate() + formData.voteTime);
 
+            // Pick a random prompt
+            const randomPrompt =
+              musicLeaguePrompts[
+                Math.floor(Math.random() * musicLeaguePrompts.length)
+              ];
+
             return {
               roundNumber,
               submissionDeadline: submissionDeadline.toISOString(),
               voteDeadline: voteDeadline.toISOString(),
               submissions: [],
-              prompt: '',
+              prompt: randomPrompt, // Add the random prompt here
               isRoundComplete: false,
             };
           }
