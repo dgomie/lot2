@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { fetchRoundData, saveRoundData } from '@/firebase';
 import styles from './RoundPage.module.css';
 import Image from 'next/image';
@@ -9,6 +9,7 @@ import RoundSettingsModal from '@/components/roundSettingsModal/RoundSettingsMod
 import withAuth from '@/hoc/withAuth';
 
 const RoundPage = ({ currentUser }) => {
+  const router = useRouter();
   const params = useParams();
   const { legionId, roundId } = params;
 
@@ -54,11 +55,29 @@ const RoundPage = ({ currentUser }) => {
 
   return (
     <div className={styles.roundPage}>
-      {currentUser?.uid === roundData.legionAdmin && (
-        <div className={styles.gearIcon} onClick={() => setIsModalOpen(true)}>
-          <Image src={'/img/gear.svg'} width={25} height={25} alt="settings" />
+      <div className={styles.header}>
+        <div
+          className={styles.backArrow}
+          onClick={() => router.push(`/legions/${legionId}`)}
+        >
+          <Image
+            src={'/img/arrow-back.svg'}
+            width={25}
+            height={25}
+            alt="Back"
+          />
         </div>
-      )}
+        {currentUser?.uid === roundData.legionAdmin && (
+          <div className={styles.gearIcon} onClick={() => setIsModalOpen(true)}>
+            <Image
+              src={'/img/gear.svg'}
+              width={25}
+              height={25}
+              alt="settings"
+            />
+          </div>
+        )}
+      </div>
 
       <h1>Round {roundData.roundNumber}</h1>
       <p>Prompt: {roundData.prompt}</p>
