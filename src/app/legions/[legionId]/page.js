@@ -69,7 +69,11 @@ const LegionPage = () => {
       />
       <div className={`${styles.container} scroll-1`}>
         {legionData.rounds.map((round) => (
-          <RoundCard key={round.roundNumber} round={round} />
+          <RoundCard
+            key={round.roundNumber}
+            round={round}
+            legionId={legionId}
+          />
         ))}
       </div>
     </div>

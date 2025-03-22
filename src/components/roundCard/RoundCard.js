@@ -1,9 +1,16 @@
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './RoundCard.module.css';
 
-const RoundCard = ({ round }) => {
+const RoundCard = ({ round, legionId }) => {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/legions/${legionId}/${round.roundNumber}`);
+  };
+
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={handleCardClick}>
       <div className={styles.card__image}></div>
       <div className={styles.card__content}>
         <span className={styles.card__title}>Round {round.roundNumber}</span>
