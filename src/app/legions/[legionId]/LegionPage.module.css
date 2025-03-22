@@ -1,0 +1,10 @@
+.container {
+    display: flex; /* Align items horizontally */
+    flex-wrap: nowrap; /* Prevent wrapping to a new line */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: 24px;
+    width: 100%; /* Ensure the container spans the full width */
+    scroll-snap-type: x mandatory; /* Enable snapping */
+    scroll-padding: 24px;
+    gap: 20px; /* Space between cards */
+  }

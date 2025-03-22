@@ -9,6 +9,7 @@ import withAuth from '@/hoc/withAuth';
 import Players from '@/components/players/Players';
 import LegionHeader from '@/components/legionHeader/LegionHeader';
 import RoundCard from '@/components/roundCard/RoundCard';
+import styles from './LegionPage.module.css';
 
 const LegionPage = () => {
   const params = useParams();
@@ -62,12 +63,15 @@ const LegionPage = () => {
         onPlayerAdded={handlePlayerAdded}
         onPlayerRemoved={handlePlayerRemoved}
       />
-      <Players legionPlayers={legionData.players} legionAdmin={legionData.legionAdmin}/>
-      <div>
-      {legionData.rounds.map((round) => (
-        <RoundCard key={round.roundNumber} round={round} />
-      ))}
-    </div>
+      <Players
+        legionPlayers={legionData.players}
+        legionAdmin={legionData.legionAdmin}
+      />
+      <div className={`${styles.container} scroll-1`}>
+        {legionData.rounds.map((round) => (
+          <RoundCard key={round.roundNumber} round={round} />
+        ))}
+      </div>
     </div>
   );
 };

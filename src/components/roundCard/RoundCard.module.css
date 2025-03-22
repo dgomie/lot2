@@ -7,7 +7,7 @@
 }
 
 .roundNumber {
-  font-size: .7rem;
+  font-size: 0.7rem;
   font-style: italic;
   color: lightgray;
   margin-bottom: 8px;
@@ -22,4 +22,92 @@
   font-size: 14px;
   font-weight: bold;
   color: #0070f3;
+}
+
+/* Scrollbar styles */
+.scroll-1::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scroll-1::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #888;
+}
+
+/* Container styles */
+.container {
+  display: flex;
+  overflow-x: auto; /* Enable horizontal scrolling */
+  padding: 24px;
+  width: 100%;
+  scroll-snap-type: x mandatory; /* Enable snapping */
+  scroll-padding: 24px;
+  gap: 20px; /* Space between cards */
+}
+
+/* Card styles */
+.card {
+  flex: 0 0 300px; /* Fixed width for each card */
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #141414;
+  scroll-snap-align: start; /* Snap to start of the card */
+}
+
+.card__image {
+  flex: 1;
+  height: 70px;
+}
+
+.card:nth-child(1) .card__image {
+  background-image: linear-gradient(
+    to right top,
+    #051937,
+    #004d7a,
+    #008793,
+    #00bf72,
+    #a8eb12
+  );
+}
+
+.card:nth-child(2) .card__image {
+  background-image: linear-gradient(
+    to right top,
+    #dc09a5,
+    #ce00b4,
+    #ba00c5,
+    #9c00d8,
+    #6f12eb
+  );
+}
+
+.card:nth-child(3) .card__image {
+  background-image: linear-gradient(
+    to right top,
+    #dc1009,
+    #e55f00,
+    #e49200,
+    #dac000,
+    #c7eb12
+  );
+}
+
+.card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+}
+
+.card__title {
+  font-size: .7rem;
+  color: #fff;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.card__describe {
+  color: #fff;
+  font-size: 14px;
 }
