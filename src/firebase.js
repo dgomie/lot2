@@ -323,6 +323,23 @@ const fetchRoundData = async (legionId, roundId) => {
   }
 };
 
+const fetchLegionData = async (legionId) => {
+  try {
+    const docRef = doc(db, 'legions', legionId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { success: true, data: docSnap.data() };
+    } else {
+      console.error('No such document!');
+      return { success: false, error: 'No such document!' };
+    }
+  } catch (error) {
+    console.error('Error fetching legion data:', error);
+    return { success: false, error };
+  }
+};
+
 export {
   auth,
   db,
@@ -337,6 +354,7 @@ export {
   decrementUserLegions,
   fetchLegions,
   fetchLegionsByPlayer,
+  fetchLegionData,
   fetchRoundData,
   joinLegion,
   leaveLegion,

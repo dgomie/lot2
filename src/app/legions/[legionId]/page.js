@@ -2,8 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { db } from '@/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { fetchLegionData } from '@/firebase';
 import Loader from '@/components/loader/Loader';
 import withAuth from '@/hoc/withAuth';
 import Players from '@/components/players/Players';
@@ -16,18 +15,12 @@ const LegionPage = () => {
   const legionId = params.legionId;
   const [legionData, setLegionData] = useState(null);
 
-  const fetchLegionData = async () => {
-    try {
-      const docRef = doc(db, 'legions', legionId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        console.log('Document data:', docSnap.data());
-        setLegionData(docSnap.data());
-      } else {
-        console.log('No such document!');
-      }
-    } catch (error) {
-      console.error('Error fetching document:', error);
+  const fetchData = async () => {
+    const result = await fetchLegionData(legionId);
+    if (result.success) {
+      setLegionData(result.data);
+    } else {
+      console.error(result.error);
     }
   };
 
@@ -47,7 +40,7 @@ const LegionPage = () => {
 
   useEffect(() => {
     if (legionId) {
-      fetchLegionData();
+      fetchData();
     }
   }, [legionId]);
 
