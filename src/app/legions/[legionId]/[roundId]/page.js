@@ -6,6 +6,7 @@ import { fetchRoundData, saveRoundData } from '@/firebase';
 import styles from './RoundPage.module.css';
 import Image from 'next/image';
 import RoundSettingsModal from '@/components/roundSettingsModal/RoundSettingsModal';
+import withAuth from '@/hoc/withAuth';
 
 const RoundPage = ({ currentUser }) => {
   const params = useParams();
@@ -71,6 +72,7 @@ const RoundPage = ({ currentUser }) => {
       {isModalOpen && (
         <RoundSettingsModal
           editableRoundData={editableRoundData}
+          originalRoundData={roundData}
           setEditableRoundData={setEditableRoundData}
           onSave={handleSaveChanges}
           onCancel={() => setIsModalOpen(false)}
@@ -80,4 +82,4 @@ const RoundPage = ({ currentUser }) => {
   );
 };
 
-export default RoundPage;
+export default withAuth(RoundPage);
