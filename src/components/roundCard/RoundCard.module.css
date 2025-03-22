@@ -60,7 +60,7 @@
   height: 70px;
 }
 
-.card:nth-child(1) .card__image {
+.card:nth-child(3n + 1) .card__image {
   background-image: linear-gradient(
     to right top,
     #051937,
@@ -71,7 +71,7 @@
   );
 }
 
-.card:nth-child(2) .card__image {
+.card:nth-child(3n + 2) .card__image {
   background-image: linear-gradient(
     to right top,
     #dc09a5,
@@ -82,7 +82,7 @@
   );
 }
 
-.card:nth-child(3) .card__image {
+.card:nth-child(3n + 3) .card__image {
   background-image: linear-gradient(
     to right top,
     #dc1009,
@@ -101,7 +101,7 @@
 }
 
 .card__title {
-  font-size: .7rem;
+  font-size: 0.7rem;
   color: #fff;
   font-style: italic;
   font-weight: bold;
