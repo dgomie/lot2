@@ -20,6 +20,13 @@
     text-align: center;
 }
 
+.BubbleMenu {
+  position: fixed;
+  bottom: 7rem; /* Adjust the distance from the bottom */
+  right: 1rem; /* Adjust the distance from the right */
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+
 @media (max-width: 768px) {
     .buttonContainer {
       max-width: 100%;

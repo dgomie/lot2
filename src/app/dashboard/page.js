@@ -20,7 +20,7 @@ const Dashboard = () => {
   return (
     <div className={styles.mainContainer}>
       {currentUser && <p>Welcome, {currentUser.username}!</p>}
-      <div className={styles.buttonContainer}>
+      {/* <div className={styles.buttonContainer}>
         <Button
           onClick={() => {
             handleButtonClick('./create-legion');
@@ -35,11 +35,13 @@ const Dashboard = () => {
         >
           Join a Legion
         </Button>
-      </div>
+      </div> */}
       <div className={styles.title}>Your Active Legions</div>
 
       <DashboardFeed currentUserId={currentUser.uid} />
-      <BubbleMenu />
+      <div className={styles.BubbleMenu}>
+        <BubbleMenu />
+      </div>
     </div>
   );
 };

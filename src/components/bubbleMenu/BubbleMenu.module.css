@@ -53,6 +53,7 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
+  font-weight: bold;
   transform: translate(0, 0) scale(0);
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
