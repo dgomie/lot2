@@ -79,14 +79,18 @@ const RoundPage = ({ currentUser }) => {
         )}
       </div>
 
-      <h1>Round {roundData.roundNumber}</h1>
-      <p>Prompt: {roundData.prompt}</p>
-      <p>
-        Submission Deadline:{' '}
-        {new Date(roundData.submissionDeadline).toLocaleString()}
-      </p>
-      <p>Vote Deadline: {new Date(roundData.voteDeadline).toLocaleString()}</p>
-      <p>Status: {roundData.isRoundComplete ? 'Complete' : 'In Progress'}</p>
+      <div className={styles.roundInfo}>
+        <div className={styles.title}>Round {roundData.roundNumber}</div>
+        <div className={styles.prompt}>{roundData.prompt}</div>
+        <p>
+          Submission Deadline:{' '}
+          {new Date(roundData.submissionDeadline).toLocaleString()}
+        </p>
+        <p>
+          Vote Deadline: {new Date(roundData.voteDeadline).toLocaleString()}
+        </p>
+        <p>Status: {roundData.isRoundComplete ? 'Complete' : 'In Progress'}</p>
+      </div>
 
       {isModalOpen && (
         <RoundSettingsModal
