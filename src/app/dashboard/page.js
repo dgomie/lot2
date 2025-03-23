@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Button from '@/components/button/Button';
 import styles from './dashboard.module.css';
 import DashboardFeed from '@/components/dashboardFeed/DashboardFeed';
+import BubbleMenu from '@/components/bubbleMenu/BubbleMenu';
 
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
@@ -38,6 +39,7 @@ const Dashboard = () => {
       <div className={styles.title}>Your Active Legions</div>
 
       <DashboardFeed currentUserId={currentUser.uid} />
+      <BubbleMenu />
     </div>
   );
 };
