@@ -53,6 +53,9 @@ const RoundPage = ({ currentUser }) => {
     return <div className={styles.roundPage}>Round not found.</div>;
   }
 
+  console.log('Current User ID:', currentUser?.uid);
+  console.log('Legion Admin ID:', roundData?.legionAdmin);
+
   return (
     <div className={styles.roundPage}>
       <div className={styles.header}>
@@ -67,16 +70,21 @@ const RoundPage = ({ currentUser }) => {
             alt="Back"
           />
         </div>
-        {currentUser?.uid === roundData.legionAdmin && (
-          <div className={styles.gearIcon} onClick={() => setIsModalOpen(true)}>
-            <Image
-              src={'/img/gear.svg'}
-              width={25}
-              height={25}
-              alt="settings"
-            />
-          </div>
-        )}
+        {currentUser &&
+          roundData &&
+          currentUser.uid === roundData.legionAdmin && (
+            <div
+              className={styles.gearIcon}
+              onClick={() => setIsModalOpen(true)}
+            >
+              <Image
+                src={'/img/gear.svg'}
+                width={25}
+                height={25}
+                alt="settings"
+              />
+            </div>
+          )}
       </div>
 
       <div className={styles.roundInfo}>

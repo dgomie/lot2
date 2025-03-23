@@ -304,15 +304,39 @@ const saveRoundData = async (legionId, roundId, updatedRoundData) => {
 
 const fetchRoundData = async (legionId, roundId) => {
   try {
+    // Validate input parameters
+    if (!legionId || !roundId) {
+      console.error('Invalid legionId or roundId');
+      return { success: false, error: 'Invalid legionId or roundId' };
+    }
+
     const docRef = doc(db, 'legions', legionId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       const legionData = docSnap.data();
+
+      // Ensure rounds data exists and is valid
+      if (!legionData.rounds || !Array.isArray(legionData.rounds)) {
+        console.error('Rounds data is missing or invalid');
+        return { success: false, error: 'Rounds data is missing or invalid' };
+      }
+
+      // Find the specific round
       const round = legionData.rounds.find(
         (r) => r.roundNumber === parseInt(roundId, 10)
       );
-      return { success: true, round };
+
+      if (!round) {
+        console.error('Round not found');
+        return { success: false, error: 'Round not found' };
+      }
+
+      // Include legionAdmin in the response
+      return {
+        success: true,
+        round: { ...round, legionAdmin: legionData.legionAdmin },
+      };
     } else {
       console.error('No such document!');
       return { success: false, error: 'No such document!' };

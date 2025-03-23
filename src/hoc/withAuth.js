@@ -17,10 +17,11 @@ const withAuth = (WrappedComponent) => {
     }, [loading, currentUser, router]);
 
     if (loading || !currentUser) {
-      return <Loader />
+      return <Loader />;
     }
 
-    return <WrappedComponent {...props} />;
+    // Pass currentUser to the WrappedComponent
+    return <WrappedComponent {...props} currentUser={currentUser} />;
   };
 
   WithAuth.displayName = `WithAuth(${getDisplayName(WrappedComponent)})`;
