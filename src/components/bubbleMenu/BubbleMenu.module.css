@@ -32,13 +32,13 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  pointer-events: none; 
+  pointer-events: none;
   transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 1;
 }
 
 .options.show {
-  pointer-events: auto; 
+  pointer-events: auto;
 }
 
 .option {
@@ -53,24 +53,24 @@
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transform: translate(0, 0) scale(0); 
+  transform: translate(0, 0) scale(0);
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .options.show .option:nth-child(1) {
-  transform: translateY(60px) translateX(-60px) scale(1); 
-  opacity: 1;
-  transition-delay: 0.1s;
+  transform: translateY(60px) translateX(-60px); /* Removed scale(1) */
+  opacity: 1; /* Keep opacity at 1 for visibility */
+  transition: transform 0.3s ease, opacity 0.1s ease; /* Adjusted timing */
 }
 
 .options.show .option:nth-child(2) {
-  transform: translateY(-60px) translateX(-60px) scale(1);
-  opacity: 1;
-  transition-delay: 0.2s; 
+  transform: translateY(-60px) translateX(-60px); /* Removed scale(1) */
+  opacity: 1; /* Keep opacity at 1 for visibility */
+  transition: transform 0.3s ease, opacity 0.1s ease; /* Adjusted timing */
 }
 
 .options:not(.show) .option {
-  transform: translate(0, 0) scale(0);
-  opacity: 0;
-  transition-delay: 0s;
+  transform: translate(0, 0); /* Removed scale(0) */
+  opacity: 0; /* Keep opacity for hiding */
+  transition: transform 0.3s ease, opacity 0.1s ease; /* Adjusted timing */
 }
