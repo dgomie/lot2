@@ -106,6 +106,10 @@ const RoundPage = ({ currentUser }) => {
           onCancel={() => setIsModalOpen(false)}
         />
       )}
+
+      <div className={styles.submit}>
+        <Image />
+      </div>
     </div>
   );
 };

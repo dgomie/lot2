@@ -53,6 +53,7 @@
   border-radius: 8px;
   background-color: #141414;
   scroll-snap-align: start; /* Snap to start of the card */
+  cursor: pointer;
 }
 
 .card__image {
