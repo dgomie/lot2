@@ -53,9 +53,6 @@ const RoundPage = ({ currentUser }) => {
     return <div className={styles.roundPage}>Round not found.</div>;
   }
 
-  console.log('Current User ID:', currentUser?.uid);
-  console.log('Legion Admin ID:', roundData?.legionAdmin);
-
   return (
     <div className={styles.roundPage}>
       <div className={styles.header}>
