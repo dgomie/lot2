@@ -74,10 +74,10 @@ const RoundSettingsModal = ({
           required
         />
         <div className={styles.modalActions}>
-          <Button onClick={onSave} variant={!hasChanges ? 'disable' : 'blue'} disabled={!hasChanges}>
+          <Button onClick={onSave} variant={!hasChanges ? 'disabled' : 'blue'} disabled={!hasChanges}>
             Save
           </Button>
-          <Button onClick={onCancel} variant="gray">
+          <Button onClick={onCancel} variant="red">
             Cancel
           </Button>
         </div>
