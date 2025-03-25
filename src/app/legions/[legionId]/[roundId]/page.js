@@ -108,7 +108,7 @@ const RoundPage = ({ currentUser }) => {
       )}
 
       <div className={styles.submit}>
-        <Image />
+        <Image src='/img/share.svg' alt="submit" width={50} height={50}/>
       </div>
     </div>
   );
