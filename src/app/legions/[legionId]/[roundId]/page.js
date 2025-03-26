@@ -121,7 +121,6 @@ const RoundPage = ({ currentUser }) => {
             </div>
           )}
       </div>
-
       <div className={styles.roundInfo}>
         <div className={styles.title}>Round {roundData.roundNumber}</div>
         <div className={styles.prompt}>{roundData.prompt}</div>

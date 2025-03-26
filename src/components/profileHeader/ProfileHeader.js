@@ -69,8 +69,8 @@ const ProfileHeader = ({
           className={styles.profileImg}
           src={imageUrl}
           alt="Profile Image"
-          width={180}
-          height={180}
+          width={160}
+          height={160}
           onClick={() => {
             if (currentUserId === userId) {
               document.getElementById('fileInput').click();

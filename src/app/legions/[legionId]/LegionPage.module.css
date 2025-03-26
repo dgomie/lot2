@@ -1,10 +1,25 @@
 .container {
-    display: flex; /* Align items horizontally */
-    flex-wrap: nowrap; /* Prevent wrapping to a new line */
-    overflow-x: auto; /* Enable horizontal scrolling */
+    display: flex; 
+    flex-wrap: nowrap; 
+    overflow-x: auto; 
     padding: 24px;
-    width: 100%; /* Ensure the container spans the full width */
-    scroll-snap-type: x mandatory; /* Enable snapping */
+    width: 100%; 
+    scroll-snap-type: x mandatory; 
     scroll-padding: 24px;
-    gap: 20px; /* Space between cards */
+    gap: 20px; 
+  }
+
+  .title {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 0 .5rem
+  }
+
+  .currentRound {
+    margin: 1rem;
+  }
+
+  .mainContainer {
+    margin-bottom: 6rem;
   }

@@ -49,7 +49,7 @@ const LegionPage = () => {
   }
 
   return (
-    <div>
+    <div className={styles.mainContainer}>
       <LegionHeader
         legionData={legionData}
         legionId={legionId}
@@ -60,6 +60,13 @@ const LegionPage = () => {
         legionPlayers={legionData.players}
         legionAdmin={legionData.legionAdmin}
       />
+      <div className={styles.currentRound}>
+        <div className={styles.title}>Current Round</div>
+        <RoundCard
+          round={legionData.rounds[legionData.currentRound - 1]}
+          legionId={legionId}
+        />
+      </div>
       <div className={`${styles.container} scroll-1`}>
         {legionData.rounds.map((round) => (
           <RoundCard

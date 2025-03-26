@@ -18,6 +18,7 @@ const CreateLegionForm = ({ currentUser }) => {
     submitTime: 0,
     players: [],
     legionAdmin: '',
+    currentRound: 1,
     isActive: true,
   });
 
@@ -71,7 +72,6 @@ const CreateLegionForm = ({ currentUser }) => {
   const handleSubmit = async () => {
     if (isStepValid) {
       try {
-        // Generate rounds based on the selected number of rounds
         const rounds = Array.from(
           { length: formData.numRounds },
           (_, index) => {
@@ -95,13 +95,12 @@ const CreateLegionForm = ({ currentUser }) => {
               submissionDeadline: submissionDeadline.toISOString(),
               voteDeadline: voteDeadline.toISOString(),
               submissions: [],
-              prompt: randomPrompt, // Add the random prompt here
+              prompt: randomPrompt,
               isRoundComplete: false,
             };
           }
         );
 
-        // Add the rounds to the legion document
         const updatedFormData = {
           ...formData,
           legionAdmin: currentUser.uid,
@@ -109,7 +108,6 @@ const CreateLegionForm = ({ currentUser }) => {
           rounds,
         };
 
-        // Submit the legion document
         const result = await submitLegion(updatedFormData);
         if (result.success) {
           await incrementUserLegions(currentUser.uid);
