@@ -45,3 +45,21 @@
   box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
   padding: 1rem;
 }
+
+.submit {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 3rem 0 2rem;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.submit:hover {
+  opacity: .7;
+}

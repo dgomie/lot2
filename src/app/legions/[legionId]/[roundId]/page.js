@@ -133,6 +133,14 @@ const RoundPage = ({ currentUser }) => {
           Vote Deadline: {new Date(roundData.voteDeadline).toLocaleString()}
         </p>
         <p>Status: {roundData.isRoundComplete ? 'Complete' : 'In Progress'}</p>
+
+        <div
+          className={styles.submit}
+          onClick={() => setIsSubmitModalOpen(true)}
+        >
+          <Image src="/img/share.svg" alt="submit" width={50} height={50} />
+          <div className={styles.label}>Submit Song</div>
+        </div>
       </div>
 
       {isModalOpen && (
@@ -144,10 +152,6 @@ const RoundPage = ({ currentUser }) => {
           onCancel={() => setIsModalOpen(false)}
         />
       )}
-
-      <div className={styles.submit} onClick={() => setIsSubmitModalOpen(true)}>
-        <Image src="/img/share.svg" alt="submit" width={50} height={50} />
-      </div>
 
       {isSubmitModalOpen && (
         <SubmitModal
