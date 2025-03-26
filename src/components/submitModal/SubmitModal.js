@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import styles from './SubmitModal.module.css';
+import Input from '../input/Input';
+import Button from '../button/Button';
 
 const SubmitModal = ({ onClose, onSubmit }) => {
   const [youtubeUrl, setYoutubeUrl] = useState('');
+  const [isDirty, setIsDirty] = useState(false);
+
+  const isValidYoutubeUrl = (url) => {
+    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/;
+    return youtubeRegex.test(url);
+  };
+
+  const handleInputChange = (e) => {
+    setYoutubeUrl(e.target.value);
+    setIsDirty(true);
+  };
 
   const handleSubmit = () => {
-    if (youtubeUrl.trim()) {
+    if (youtubeUrl.trim() && isValidYoutubeUrl(youtubeUrl)) {
       onSubmit(youtubeUrl);
       onClose();
     } else {
@@ -17,20 +30,24 @@ const SubmitModal = ({ onClose, onSubmit }) => {
     <div className={styles.modalOverlay}>
       <div className={styles.modalContent}>
         <h2>Submit YouTube URL</h2>
-        <input
-          type="text"
-          placeholder="Enter YouTube URL"
-          value={youtubeUrl}
-          onChange={(e) => setYoutubeUrl(e.target.value)}
-          className={styles.input}
-        />
+        <Input type="text" value={youtubeUrl} onChange={handleInputChange} />
         <div className={styles.actions}>
-          <button onClick={handleSubmit} className={styles.submitButton}>
+          <Button
+            onClick={handleSubmit}
+            variant={
+              youtubeUrl.trim() && isDirty && isValidYoutubeUrl(youtubeUrl)
+                ? 'blue'
+                : 'disabled'
+            }
+            disabled={
+              !youtubeUrl.trim() || !isDirty || !isValidYoutubeUrl(youtubeUrl)
+            }
+          >
             Submit
-          </button>
-          <button onClick={onClose} className={styles.cancelButton}>
+          </Button>
+          <Button onClick={onClose} variant="red">
             Cancel
-          </button>
+          </Button>
         </div>
       </div>
     </div>
