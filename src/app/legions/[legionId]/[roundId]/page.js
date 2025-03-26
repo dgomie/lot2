@@ -7,6 +7,7 @@ import styles from './RoundPage.module.css';
 import Image from 'next/image';
 import RoundSettingsModal from '@/components/roundSettingsModal/RoundSettingsModal';
 import withAuth from '@/hoc/withAuth';
+import SubmitModal from '@/components/submitModal/SubmitModal';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const RoundPage = ({ currentUser }) => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editableRoundData, setEditableRoundData] = useState(null);
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
 
   const fetchRound = async () => {
     const result = await fetchRoundData(legionId, roundId);
@@ -52,6 +54,34 @@ const RoundPage = ({ currentUser }) => {
   if (!roundData) {
     return <div className={styles.roundPage}>Round not found.</div>;
   }
+
+  const handleSubmitUrl = async (youtubeUrl) => {
+    if (!currentUser) return;
+
+    const newSubmission = {
+      uid: currentUser.uid,
+      youtubeUrl,
+      voteCount: 0,
+    };
+
+    const updatedSubmissions = [
+      ...(roundData.submissions || []),
+      newSubmission,
+    ];
+    const result = await saveRoundData(legionId, roundId, {
+      ...roundData,
+      submissions: updatedSubmissions,
+    });
+
+    if (result.success) {
+      setRoundData((prev) => ({
+        ...prev,
+        submissions: updatedSubmissions,
+      }));
+    } else {
+      console.error(result.error);
+    }
+  };
 
   return (
     <div className={styles.roundPage}>
@@ -107,9 +137,16 @@ const RoundPage = ({ currentUser }) => {
         />
       )}
 
-      <div className={styles.submit}>
-        <Image src='/img/share.svg' alt="submit" width={50} height={50}/>
+      <div className={styles.submit} onClick={() => setIsSubmitModalOpen(true)}>
+        <Image src="/img/share.svg" alt="submit" width={50} height={50} />
       </div>
+
+      {isSubmitModalOpen && (
+        <SubmitModal
+          onClose={() => setIsSubmitModalOpen(false)}
+          onSubmit={handleSubmitUrl}
+        />
+      )}
     </div>
   );
 };
