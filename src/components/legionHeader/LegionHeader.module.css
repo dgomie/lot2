@@ -1,10 +1,37 @@
 .title {
-    text-align: center;
-    font-weight: bold;
-    font-size: 2rem;
-    padding: 1rem;
+  text-align: center;
+  color: black;
+  font-weight: bold;
+  font-size: 2rem;
+  padding: 1rem 0 0;
 }
 
 .subtitle {
-    padding: 1rem;
+  padding: 0.5rem 0 1rem;
+  text-align: center;
+  color: black;
+  margin: 0.5rem;
+  border-radius: 15px;
 }
+
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-width: 50rem;
+}
+
+/* .container {
+    border-radius: 0 0 20px 20px;
+  background-color: #e5e5f7;
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  background-image: repeating-radial-gradient(
+      circle at 0 0,
+      transparent 0,
+      var(--lightgreen100) 30px
+    ),
+    repeating-linear-gradient(var(--pastelgreen100), var(--lightgreen100));
+} */

@@ -50,16 +50,20 @@ const LegionPage = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <LegionHeader
-        legionData={legionData}
-        legionId={legionId}
-        onPlayerAdded={handlePlayerAdded}
-        onPlayerRemoved={handlePlayerRemoved}
-      />
+      <div className={styles.headerContainer}>
+        <LegionHeader
+          legionData={legionData}
+          legionId={legionId}
+          onPlayerAdded={handlePlayerAdded}
+          onPlayerRemoved={handlePlayerRemoved}
+        />
+      </div>
+    <div className={styles.playersContainer}>
       <Players
         legionPlayers={legionData.players}
         legionAdmin={legionData.legionAdmin}
       />
+      </div>
       <div className={styles.currentRound}>
         <div className={styles.title}>Current Round</div>
         <RoundCard
@@ -67,7 +71,7 @@ const LegionPage = () => {
           legionId={legionId}
         />
       </div>
-      <div>
+      <div className={styles.allRoundsContainer}>
         <div className={styles.allRoundsTitle}>All Rounds</div>
         <div className={`${styles.container} scroll-1`}>
           {legionData.rounds.map((round) => (

@@ -67,32 +67,34 @@ const LegionHeader = ({
 
   const isMember = legionData.players.includes(currentUser?.uid);
   const isAdmin = legionData.legionAdmin === currentUser?.uid;
-  const isFull = legionData.players.length >= legionData.maxNumPlayers; 
+  const isFull = legionData.players.length >= legionData.maxNumPlayers;
 
   return (
-    <div>
-      <div className={styles.title}>{legionData.legionName}</div>
-      <div className={styles.subtitle}>{legionData.legionDescription}</div>
-      {!isAdmin &&
-        (isMember ? (
-          <Button
-            variant="transparentBlack"
-            onClick={handleLeaveLegion}
-            disabled={isDisabled}
-          >
-            Leave Legion
-          </Button>
-        ) : (
-          !isFull && ( 
+    <div className={styles.mainContainer}>
+      <div className={styles.container}>
+        <div className={styles.title}>{legionData.legionName}</div>
+        <div className={styles.subtitle}>{legionData.legionDescription}</div>
+        {!isAdmin &&
+          (isMember ? (
             <Button
               variant="transparentBlack"
-              onClick={handleJoinLegion}
+              onClick={handleLeaveLegion}
               disabled={isDisabled}
             >
-              Join Legion
+              Leave Legion
             </Button>
-          )
-        ))}
+          ) : (
+            !isFull && (
+              <Button
+                variant="transparentBlack"
+                onClick={handleJoinLegion}
+                disabled={isDisabled}
+              >
+                Join Legion
+              </Button>
+            )
+          ))}
+      </div>
     </div>
   );
 };
