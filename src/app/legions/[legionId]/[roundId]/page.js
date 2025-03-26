@@ -64,10 +64,18 @@ const RoundPage = ({ currentUser }) => {
       voteCount: 0,
     };
 
-    const updatedSubmissions = [
-      ...(roundData.submissions || []),
-      newSubmission,
-    ];
+    const existingSubmissions = roundData.submissions || [];
+    const updatedSubmissions = existingSubmissions.map((submission) =>
+      submission.uid === currentUser.uid ? newSubmission : submission
+    );
+
+    const isNewSubmission = !existingSubmissions.some(
+      (submission) => submission.uid === currentUser.uid
+    );
+    if (isNewSubmission) {
+      updatedSubmissions.push(newSubmission);
+    }
+
     const result = await saveRoundData(legionId, roundId, {
       ...roundData,
       submissions: updatedSubmissions,
