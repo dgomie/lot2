@@ -67,14 +67,17 @@ const LegionPage = () => {
           legionId={legionId}
         />
       </div>
-      <div className={`${styles.container} scroll-1`}>
-        {legionData.rounds.map((round) => (
-          <RoundCard
-            key={round.roundNumber}
-            round={round}
-            legionId={legionId}
-          />
-        ))}
+      <div>
+        <div className={styles.allRoundsTitle}>All Rounds</div>
+        <div className={`${styles.container} scroll-1`}>
+          {legionData.rounds.map((round) => (
+            <RoundCard
+              key={round.roundNumber}
+              round={round}
+              legionId={legionId}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
