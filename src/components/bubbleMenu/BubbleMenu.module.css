@@ -60,13 +60,13 @@
 }
 
 .options.show .option:nth-child(1) {
-  transform: translateY(80px) translateX(-60px); /* Removed scale(1) */
+  transform: translateY(40px) translateX(-70px); /* Removed scale(1) */
   opacity: 1; /* Keep opacity at 1 for visibility */
   transition: transform 0.3s ease, opacity 0.1s ease; /* Adjusted timing */
 }
 
 .options.show .option:nth-child(2) {
-  transform: translateY(-80px) translateX(-60px); /* Removed scale(1) */
+  transform: translateY(-110px) translateX(-20px); /* Removed scale(1) */
   opacity: 1; /* Keep opacity at 1 for visibility */
   transition: transform 0.3s ease, opacity 0.1s ease; /* Adjusted timing */
 }
