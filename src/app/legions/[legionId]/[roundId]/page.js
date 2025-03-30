@@ -32,26 +32,37 @@ const RoundPage = ({ currentUser }) => {
   };
 
   const generatePlaylist = () => {
-    if (!roundData || !roundData.submissions || roundData.submissions.length === 0) {
+    if (
+      !roundData ||
+      !roundData.submissions ||
+      roundData.submissions.length === 0
+    ) {
       alert('No submissions available to generate a playlist.');
       return;
     }
-  
+
     const videoIds = roundData.submissions
       .map((submission) => {
         const url = submission.youtubeUrl;
-        const match = url.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/); 
+        const match = url.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/);
         return match ? match[1] : null;
       })
       .filter((id) => id !== null); 
-  
+
     if (videoIds.length === 0) {
       alert('No valid YouTube video IDs found.');
       return;
     }
-  
-    const playlistUrl = `http://www.youtube.com/watch_videos?video_ids=${videoIds.join(',')}`;
-  
+
+    for (let i = videoIds.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [videoIds[i], videoIds[j]] = [videoIds[j], videoIds[i]]; 
+    }
+
+    const playlistUrl = `http://www.youtube.com/watch_videos?video_ids=${videoIds.join(
+      ','
+    )}`;
+
     window.location.href = playlistUrl;
   };
 
@@ -165,10 +176,7 @@ const RoundPage = ({ currentUser }) => {
           <div className={styles.label}>Submit Song</div>
         </div>
 
-        <div
-          className={styles.submit}
-          onClick={generatePlaylist}
-        >
+        <div className={styles.submit} onClick={generatePlaylist}>
           <Image src="/img/playlist.svg" alt="submit" width={50} height={50} />
           <div className={styles.label}>Listen to Playlist</div>
         </div>
