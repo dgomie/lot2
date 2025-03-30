@@ -168,8 +168,7 @@ const RoundPage = ({ currentUser }) => {
         </p>
         <p>Status: {roundData.isRoundComplete ? 'Complete' : 'In Progress'}</p>
 
-        {new Date() > new Date(roundData.submissionDeadline) ||
-        roundData.submissions.length === roundData.players.length ? (
+        {new Date() > new Date(roundData.submissionDeadline) ? (
           // Show "Listen to Playlist" button if the current date is past the submission deadline
           // OR if the number of submissions equals the number of players
           <div className={styles.submit} onClick={generatePlaylist}>
