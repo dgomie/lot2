@@ -47,7 +47,7 @@ const RoundPage = ({ currentUser }) => {
         const match = url.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/);
         return match ? match[1] : null;
       })
-      .filter((id) => id !== null); 
+      .filter((id) => id !== null);
 
     if (videoIds.length === 0) {
       alert('No valid YouTube video IDs found.');
@@ -56,7 +56,7 @@ const RoundPage = ({ currentUser }) => {
 
     for (let i = videoIds.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [videoIds[i], videoIds[j]] = [videoIds[j], videoIds[i]]; 
+      [videoIds[i], videoIds[j]] = [videoIds[j], videoIds[i]];
     }
 
     const playlistUrl = `http://www.youtube.com/watch_videos?video_ids=${videoIds.join(
@@ -168,18 +168,29 @@ const RoundPage = ({ currentUser }) => {
         </p>
         <p>Status: {roundData.isRoundComplete ? 'Complete' : 'In Progress'}</p>
 
-        <div
-          className={styles.submit}
-          onClick={() => setIsSubmitModalOpen(true)}
-        >
-          <Image src="/img/share.svg" alt="submit" width={50} height={50} />
-          <div className={styles.label}>Submit Song</div>
-        </div>
-
-        <div className={styles.submit} onClick={generatePlaylist}>
-          <Image src="/img/playlist.svg" alt="submit" width={50} height={50} />
-          <div className={styles.label}>Listen to Playlist</div>
-        </div>
+        {new Date() > new Date(roundData.submissionDeadline) ||
+        roundData.submissions.length === roundData.players.length ? (
+          // Show "Listen to Playlist" button if the current date is past the submission deadline
+          // OR if the number of submissions equals the number of players
+          <div className={styles.submit} onClick={generatePlaylist}>
+            <Image
+              src="/img/playlist.svg"
+              alt="playlist"
+              width={50}
+              height={50}
+            />
+            <div className={styles.label}>Listen to Playlist</div>
+          </div>
+        ) : (
+          // Show "Submit Song" button if the conditions above are not met
+          <div
+            className={styles.submit}
+            onClick={() => setIsSubmitModalOpen(true)}
+          >
+            <Image src="/img/share.svg" alt="submit" width={50} height={50} />
+            <div className={styles.label}>Submit Song</div>
+          </div>
+        )}
       </div>
 
       {isModalOpen && (
