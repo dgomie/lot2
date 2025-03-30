@@ -168,10 +168,7 @@ const RoundPage = ({ currentUser }) => {
         </p>
         <p>Status: {roundData.isRoundComplete ? 'Complete' : 'In Progress'}</p>
 
-        {new Date() > new Date(roundData.submissionDeadline) ||
-        roundData.submissions.length === roundData.players.length ? (
-          // Show "Listen to Playlist" button if the current date is past the submission deadline
-          // OR if the number of submissions equals the number of players
+        {new Date() > new Date(roundData.submissionDeadline) ? (
           <div className={styles.submit} onClick={generatePlaylist}>
             <Image
               src="/img/playlist.svg"
@@ -182,7 +179,7 @@ const RoundPage = ({ currentUser }) => {
             <div className={styles.label}>Listen to Playlist</div>
           </div>
         ) : (
-          // Show "Submit Song" button if the conditions above are not met
+         
           <div
             className={styles.submit}
             onClick={() => setIsSubmitModalOpen(true)}
