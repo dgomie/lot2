@@ -19,6 +19,7 @@ const CreateLegionForm = ({ currentUser }) => {
     players: [],
     legionAdmin: '',
     currentRound: 1,
+    standings: [],
     isActive: true,
   });
 
