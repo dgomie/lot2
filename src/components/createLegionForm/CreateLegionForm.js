@@ -97,7 +97,7 @@ const CreateLegionForm = ({ currentUser }) => {
               voteDeadline: voteDeadline.toISOString(),
               submissions: [],
               prompt: randomPrompt,
-              isRoundComplete: false,
+              roundStatus: "incomplete",
             };
           }
         );

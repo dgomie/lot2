@@ -166,7 +166,7 @@ const RoundPage = ({ currentUser }) => {
         <p>
           Vote Deadline: {new Date(roundData.voteDeadline).toLocaleString()}
         </p>
-        <p>Status: {roundData.isRoundComplete ? 'Complete' : 'In Progress'}</p>
+        <p>Status: {roundData.roundStatus }</p>
 
         {new Date() > new Date(roundData.submissionDeadline) ? (
           // Show "Listen to Playlist" button if the current date is past the submission deadline

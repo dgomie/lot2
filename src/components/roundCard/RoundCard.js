@@ -25,7 +25,7 @@ const RoundCard = ({ round, legionId }) => {
           Vote Deadline: {new Date(round.voteDeadline).toLocaleString()}
         </p>
         <p className={styles.card__describe}>
-          Status: {round.isRoundComplete ? 'Complete' : 'In Progress'}
+          Status: {round.roundStatus}
         </p>
       </div>
     </div>
