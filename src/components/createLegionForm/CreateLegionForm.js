@@ -6,6 +6,7 @@ import NumberInput from '../numberInput/NumberInput';
 import { submitLegion, incrementUserLegions } from '@/firebase';
 import Button from '../button/Button';
 import { musicLeaguePrompts } from '@/data/defaultPrompts';
+import { status } from '@/utils/status';
 
 const CreateLegionForm = ({ currentUser }) => {
   const router = useRouter();
@@ -97,7 +98,8 @@ const CreateLegionForm = ({ currentUser }) => {
               voteDeadline: voteDeadline.toISOString(),
               submissions: [],
               prompt: randomPrompt,
-              roundStatus: "incomplete",
+              roundStatus:
+                roundNumber === 1 ? status.IN_PROGRESS : status.INCOMPLETE, // Set first round to IN_PROGRESS
             };
           }
         );
