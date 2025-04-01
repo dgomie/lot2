@@ -58,18 +58,22 @@ const LegionPage = () => {
           onPlayerRemoved={handlePlayerRemoved}
         />
       </div>
-    <div className={styles.playersContainer}>
-      <Players
-        legionPlayers={legionData.players}
-        legionAdmin={legionData.legionAdmin}
-      />
+      <div className={styles.playersContainer}>
+        <Players
+          legionPlayers={legionData.players}
+          legionAdmin={legionData.legionAdmin}
+        />
       </div>
       <div className={styles.currentRound}>
         <div className={styles.title}>Current Round</div>
-        <RoundCard
-          round={legionData.rounds[legionData.currentRound - 1]}
-          legionId={legionId}
-        />
+        {legionData.currentRound > legionData.rounds.length ? (
+          <div className={styles.completedMessage}>Legion Completed</div>
+        ) : (
+          <RoundCard
+            round={legionData.rounds[legionData.currentRound - 1]}
+            legionId={legionId}
+          />
+        )}
       </div>
       <div className={styles.allRoundsContainer}>
         <div className={styles.allRoundsTitle}>All Rounds</div>
