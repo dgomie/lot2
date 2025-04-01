@@ -4,15 +4,17 @@ import 'dotenv/config';
 
 if (!getApps().length) {
   try {
+    // Decode the Base64 string and parse the JSON
     const serviceAccount = JSON.parse(
-        process.env.FIREBASE_SERVICE_ACCOUNT_KEY || {}
-      );
+      Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_KEY_BASE64, 'base64').toString('utf8')
+    );
+
     initializeApp({
       credential: cert(serviceAccount),
     });
   } catch (error) {
-    console.error('Error parsing FIREBASE_SERVICE_ACCOUNT_KEY:', error);
-    throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT_KEY environment variable');
+    console.error('Error parsing FIREBASE_SERVICE_ACCOUNT_KEY_BASE64:', error);
+    throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT_KEY_BASE64 environment variable');
   }
 }
 
