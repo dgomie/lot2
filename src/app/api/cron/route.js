@@ -36,7 +36,7 @@ export async function GET(req, res) {
             (round) => round.roundNumber === legionData.currentRound + 1
           );
           if (nextRound) {
-            nextRound.status = roundStatus.ACTIVE;
+            nextRound.roundStatus = status.ACTIVE;
           }
 
           // Update the Firestore document

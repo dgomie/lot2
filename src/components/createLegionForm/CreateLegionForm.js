@@ -99,7 +99,7 @@ const CreateLegionForm = ({ currentUser }) => {
               submissions: [],
               prompt: randomPrompt,
               roundStatus:
-                roundNumber === 1 ? status.IN_PROGRESS : status.INCOMPLETE, // Set first round to IN_PROGRESS
+                roundNumber === 1 ? status.ACTIVE : status.INCOMPLETE,
             };
           }
         );
