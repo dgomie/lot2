@@ -2,8 +2,6 @@ import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import 'dotenv/config';
 
-console.log("Service Account:", process.env.FIREBASE_SERVICE_ACCOUNT_KEY.replace(/\\n/g, '\n'))
-console.log('test')
 if (!getApps().length) {
   try {
     const serviceAccount = JSON.parse(
