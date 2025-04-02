@@ -3,6 +3,7 @@ import {
   loginUser,
   getFcmToken,
   requestNotificationPermission,
+  onMessageListener,
 } from '../../firebase';
 import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore functions
 import { db } from '../../firebase'; // Import the Firestore instance
@@ -17,6 +18,21 @@ const Login = () => {
   });
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onMessageListener()
+      .then((payload) => {
+        console.log('Foreground notification received:', payload);
+        alert(
+          `Notification: ${payload.notification.title} - ${payload.notification.body}`
+        );
+      })
+      .catch((err) =>
+        console.error('Error receiving foreground notification:', err)
+      );
+
+    return () => unsubscribe;
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
