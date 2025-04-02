@@ -287,12 +287,13 @@ const fetchLegions = async (lastVisible) => {
   return { legions, lastVisibleDoc };
 };
 
-const joinLegion = async (legionId, userId) => {
+const joinLegion = async (legionId, userId, fcmToken) => {
   try {
     const legionDocRef = doc(db, 'legions', legionId);
 
     await updateDoc(legionDocRef, {
       players: arrayUnion(userId),
+      playerTokens: arrayUnion(fcmToken), 
     });
 
     return { success: true };
@@ -302,12 +303,13 @@ const joinLegion = async (legionId, userId) => {
   }
 };
 
-const leaveLegion = async (legionId, userId) => {
+const leaveLegion = async (legionId, userId, fcmToken) => {
   try {
     const legionDocRef = doc(db, 'legions', legionId);
 
     await updateDoc(legionDocRef, {
       players: arrayRemove(userId),
+      playerTokens: arrayRemove(fcmToken), 
     });
 
     return { success: true };

@@ -18,6 +18,7 @@ const CreateLegionForm = ({ currentUser }) => {
     voteTime: 0,
     submitTime: 0,
     players: [],
+    playerTokens: [],
     legionAdmin: '',
     currentRound: 1,
     standings: [],
@@ -108,6 +109,7 @@ const CreateLegionForm = ({ currentUser }) => {
           ...formData,
           legionAdmin: currentUser.uid,
           players: [...formData.players, currentUser.uid],
+          playerTokens: [...formData.playerTokens, currentUser.fcmToken],
           rounds,
         };
 

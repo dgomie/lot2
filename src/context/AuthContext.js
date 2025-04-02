@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }) => {
             ...user,
             username: userDoc.data().username,
             profileImg: userDoc.data().profileImg,
+            fcmToken: userDoc.data().fcmToken
           });
         } else {
           setCurrentUser(user);
