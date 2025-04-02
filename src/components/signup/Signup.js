@@ -1,6 +1,12 @@
 'use client';
 import { useState } from 'react';
-import { signupUser } from '../../firebase';
+import {
+  signupUser,
+  getFcmToken,
+  requestNotificationPermission,
+} from '../../firebase';
+import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore functions
+import { db } from '../../firebase'; // Import Firestore instance
 import styles from './Signup.module.css';
 import Input from '../input/Input';
 import Button from '../button/Button';
@@ -40,11 +46,30 @@ export default function Signup() {
 
     try {
       const user = await signupUser(email, password, username);
+      console.log('Signed up user:', user);
+
+      // Request notification permission and get FCM token
+      const permissionGranted = await requestNotificationPermission();
+      if (permissionGranted) {
+        const fcmToken = await getFcmToken();
+        if (fcmToken) {
+          console.log('Saving FCM token for user:', user.uid);
+          const userDocRef = doc(db, 'users', user.uid); // Reference Firestore document
+          await updateDoc(userDocRef, { fcmToken }); // Save FCM token
+          console.log('FCM token saved to Firestore:', fcmToken);
+        } else {
+          console.warn('Failed to retrieve FCM token.');
+        }
+      }
+
+      // Redirect after completing all tasks
       window.location.href = '/dashboard';
     } catch (error) {
+      console.error('Error during signup:', error);
       setError(error.message);
     }
   };
+
   const toggleShowPassword = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };

@@ -30,6 +30,7 @@ import {
   getDownloadURL,
   deleteObject,
 } from 'firebase/storage';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -46,6 +47,69 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+// Initialize Firebase Messaging (only in the browser)
+let messaging;
+if (typeof window !== 'undefined') {
+  messaging = getMessaging(app);
+}
+
+// Function to get FCM token
+export const getFcmToken = async () => {
+  if (!messaging) {
+    console.warn('Firebase Messaging is not initialized (server-side).');
+    return null;
+  }
+
+  try {
+    console.log('VAPID KEY:', process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY);
+    const currentToken = await getToken(messaging, {
+      vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+    });
+
+    if (currentToken) {
+      console.log('FCM Token retrieved:', currentToken);
+      return currentToken;
+    } else {
+      console.warn('No registration token available. Request permission to generate one.');
+      return null;
+    }
+  } catch (error) {
+    console.error('Error retrieving FCM token:', error);
+    return null;
+  }
+};
+
+export const requestNotificationPermission = async () => {
+  try {
+    const permission = await Notification.requestPermission();
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+      return true;
+    } else {
+      console.warn('Notification permission denied.');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error requesting notification permission:', error);
+    return false;
+  }
+};
+
+// Listen for incoming messages
+export const onMessageListener = () =>
+  new Promise((resolve) => {
+    if (!messaging) {
+      console.warn('Firebase Messaging is not initialized (server-side).');
+      resolve(null);
+      return;
+    }
+
+    onMessage(messaging, (payload) => {
+      console.log('Message received: ', payload);
+      resolve(payload);
+    });
+  });
 
 // Authentication functions
 const signupUser = async (email, password, username) => {

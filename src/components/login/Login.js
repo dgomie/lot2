@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { loginUser } from '../../firebase';
+import {
+  loginUser,
+  getFcmToken,
+  requestNotificationPermission,
+} from '../../firebase';
+import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore functions
+import { db } from '../../firebase'; // Import the Firestore instance
 import styles from './Login.module.css';
 import Input from '../input/Input';
 import Button from '../button/Button';
@@ -23,12 +29,29 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
+
     try {
       const user = await loginUser(email, password);
-      const idToken = await user.getIdToken();
-      localStorage.setItem('token', idToken);
+      console.log('Logged in user:', user);
+
+      // Request notification permission and get FCM token
+      const permissionGranted = await requestNotificationPermission();
+      if (permissionGranted) {
+        const fcmToken = await getFcmToken();
+        if (fcmToken) {
+          console.log('Saving FCM token for user:', user.uid);
+          const userDocRef = doc(db, 'users', user.uid); // Create a reference to the user's Firestore document
+          await updateDoc(userDocRef, { fcmToken }); // Update the document with the FCM token
+          console.log('FCM token saved to Firestore:', fcmToken);
+        } else {
+          console.warn('Failed to retrieve FCM token.');
+        }
+      }
+
+      // Redirect after completing all tasks
       window.location.href = '/dashboard';
     } catch (error) {
+      console.error('Error during login:', error);
       setError(error.message);
     }
   };

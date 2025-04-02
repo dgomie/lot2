@@ -1,6 +1,7 @@
 import { adminDb } from '../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { status } from '../../../utils/status';
+import admin from 'firebase-admin'; // Ensure Firebase Admin SDK is initialized
 
 export async function GET(req, res) {
   try {
@@ -13,6 +14,7 @@ export async function GET(req, res) {
     const querySnapshot = await legionsRef.where('isActive', '==', true).get();
 
     const updates = [];
+    const notifications = [];
 
     querySnapshot.forEach((legionDoc) => {
       const legionData = legionDoc.data();
@@ -46,12 +48,25 @@ export async function GET(req, res) {
               currentRound: FieldValue.increment(1), // Increment the currentRound
             })
           );
+
+          // Prepare notifications for players
+          if (legionData.playerTokens && legionData.playerTokens.length > 0) {
+            notifications.push(
+              admin.messaging().sendMulticast({
+                tokens: legionData.playerTokens, // Array of player device tokens
+                notification: {
+                  title: 'Round Completed!',
+                  body: `The round ${currentRound.roundNumber} has been completed. Check the app for updates.`,
+                },
+              })
+            );
+          }
         }
       }
     });
 
-    // Wait for all updates to complete
-    await Promise.all(updates);
+    // Wait for all updates and notifications to complete
+    await Promise.all([...updates, ...notifications]);
 
     return new Response(
       JSON.stringify({ success: true, message: 'Cron job executed successfully' }),
