@@ -1,13 +1,14 @@
-.mainContainer {
+  .mainContainer {
     box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
     border-radius: 15px;
     padding: 1rem;
-    width: 300px; /* Set a fixed width for uniform size */
-    height: 400px; /* Set a fixed height for uniform size */
+    width: 300px;
+    height: 400px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.3s ease; /* Smooth background transition */
   }
   
   .videoTitle {

@@ -1,4 +1,4 @@
-.mainContainer {
+.carousel {
     display: flex;
     min-width: 100%;
     overflow-x: auto; 
@@ -8,8 +8,12 @@
     padding: .5rem
 }
 
-.mainContainer > * {
+.carousel > * {
     flex: 0 0 auto; 
     scroll-snap-align: start; 
     margin-right: 10px;
+}
+
+.buttonContainer {
+    margin: 1rem;
 }

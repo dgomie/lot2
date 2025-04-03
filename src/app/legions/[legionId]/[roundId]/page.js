@@ -221,7 +221,7 @@ const RoundPage = ({ currentUser }) => {
 
       {new Date() > new Date(roundData.submissionDeadline) &&
         new Date() < new Date(roundData.voteDeadline) && (
-          <VoteCard submissions={randomizedSubmissions} />
+          <VoteCard submissions={randomizedSubmissions} legionId={legionId} roundId={roundId}/>
         )}
 
       {isModalOpen && (

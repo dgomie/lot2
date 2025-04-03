@@ -71,7 +71,9 @@ export const getFcmToken = async () => {
       console.log('FCM Token retrieved:', currentToken);
       return currentToken;
     } else {
-      console.warn('No registration token available. Request permission to generate one.');
+      console.warn(
+        'No registration token available. Request permission to generate one.'
+      );
       return null;
     }
   } catch (error) {
@@ -293,7 +295,7 @@ const joinLegion = async (legionId, userId, fcmToken) => {
 
     await updateDoc(legionDocRef, {
       players: arrayUnion(userId),
-      playerTokens: arrayUnion(fcmToken), 
+      playerTokens: arrayUnion(fcmToken),
     });
 
     return { success: true };
@@ -309,7 +311,7 @@ const leaveLegion = async (legionId, userId, fcmToken) => {
 
     await updateDoc(legionDocRef, {
       players: arrayRemove(userId),
-      playerTokens: arrayRemove(fcmToken), 
+      playerTokens: arrayRemove(fcmToken),
     });
 
     return { success: true };
@@ -426,6 +428,44 @@ const fetchLegionData = async (legionId) => {
     }
   } catch (error) {
     console.error('Error fetching legion data:', error);
+    return { success: false, error };
+  }
+};
+
+export const updateRoundSubmissions = async (
+  legionId,
+  roundId,
+  updatedSubmissions
+) => {
+  try {
+    const roundDocRef = doc(db, 'legions', legionId); // Reference to the legion document
+    const roundDoc = await getDoc(roundDocRef);
+
+    if (!roundDoc.exists()) {
+      throw new Error('Legion not found');
+    }
+
+    const legionData = roundDoc.data();
+
+    // Ensure the `rounds` array exists
+    if (!legionData.rounds || !Array.isArray(legionData.rounds)) {
+      throw new Error('Rounds data is missing or invalid');
+    }
+
+    // Find the specific round by its roundNumber
+    const updatedRounds = legionData.rounds.map((round) =>
+      round.roundNumber === parseInt(roundId, 10)
+        ? { ...round, submissions: updatedSubmissions } // Update the submissions for the matching round
+        : round
+    );
+
+    // Update the Firestore document with the modified rounds array
+    await updateDoc(roundDocRef, { rounds: updatedRounds });
+
+    console.log('Submissions updated successfully');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating submissions:', error);
     return { success: false, error };
   }
 };
