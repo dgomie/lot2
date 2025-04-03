@@ -5,16 +5,18 @@ import Button from '@/components/button/Button';
 import { updateRoundSubmissions } from '@/firebase';
 
 const VoteCard = ({ submissions, legionId, roundId }) => {
-  const [votes, setVotes] = useState(submissions.map(() => 0));
+  const [votes, setVotes] = useState(submissions.map(() => 0)); // Initialize all votes to 0
 
   const handleVote = (index, type) => {
     setVotes((prevVotes) => {
       const updatedVotes = [...prevVotes];
 
       if (type === 'positive') {
-        updatedVotes[index] = updatedVotes[index] === 1 ? 0 : 1; // Toggle between 1 and 0
+   
+        updatedVotes[index] = updatedVotes[index] === 1 ? 0 : 1;
       } else if (type === 'negative') {
-        updatedVotes[index] = updatedVotes[index] === -1 ? 0 : -1; // Toggle between -1 and 0
+        // Cycle between 0 -> -1 -> 0
+        updatedVotes[index] = updatedVotes[index] === -1 ? 0 : -1;
       }
 
       return updatedVotes;
