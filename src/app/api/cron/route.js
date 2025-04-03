@@ -53,7 +53,6 @@ export async function GET(req, res) {
           // Prepare notifications for players
           if (legionData.players && legionData.players.length > 0) {
             const playerUids = legionData.players; // Array of UIDs
-            console.log('Player UIDs:', playerUids);
 
             // Fetch fcmTokens for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
@@ -66,7 +65,6 @@ export async function GET(req, res) {
               Boolean
             );
             const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
-            console.log('Unique player tokens:', uniqueTokens);
 
             if (uniqueTokens.length === 0) {
               console.warn(
@@ -86,13 +84,13 @@ export async function GET(req, res) {
                     })
                     .then((response) => {
                       console.log(
-                        `Notification sent to token ${token}:`,
+                        `Notification sent`,
                         response
                       );
                     })
                     .catch((error) => {
                       console.error(
-                        `Error sending notification to token ${token}:`,
+                        `Error sending notification`,
                         error
                       );
                       // Optionally, handle invalid tokens here
