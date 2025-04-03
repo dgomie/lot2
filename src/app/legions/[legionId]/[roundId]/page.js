@@ -196,8 +196,25 @@ const RoundPage = ({ currentUser }) => {
             className={styles.submit}
             onClick={() => setIsSubmitModalOpen(true)}
           >
-            <Image src="/img/share.svg" alt="submit" width={50} height={50} />
-            <div className={styles.label}>Submit Song</div>
+            <Image
+              src={
+                roundData.submissions?.some(
+                  (submission) => submission.uid === currentUser.uid
+                )
+                  ? '/img/resubmit.svg'
+                  : '/img/share.svg'
+              }
+              alt="submit"
+              width={50}
+              height={50}
+            />
+            <div className={styles.label}>
+              {roundData.submissions?.some(
+                (submission) => submission.uid === currentUser.uid
+              )
+                ? 'Change Submission'
+                : 'Submit Song'}
+            </div>
           </div>
         )}
       </div>
