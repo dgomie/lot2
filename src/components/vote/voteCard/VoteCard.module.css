@@ -1,0 +1,14 @@
+.mainContainer {
+    display: flex;
+    min-width: 100%;
+    border: 1px solid black;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent items from wrapping to the next line */
+    scroll-snap-type: x mandatory; /* Enable snapping for a carousel effect */
+}
+
+.mainContainer > * {
+    flex: 0 0 auto; /* Ensure child elements don't shrink or grow */
+    scroll-snap-align: start; /* Snap each child to the start of the container */
+    margin-right: 10px; /* Add spacing between items */
+}
