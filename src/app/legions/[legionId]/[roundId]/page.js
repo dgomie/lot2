@@ -8,6 +8,7 @@ import Image from 'next/image';
 import RoundSettingsModal from '@/components/roundSettingsModal/RoundSettingsModal';
 import withAuth from '@/hoc/withAuth';
 import SubmitModal from '@/components/submitModal/SubmitModal';
+import VoteCard from '@/components/vote/voteCard/VoteCard';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -166,7 +167,7 @@ const RoundPage = ({ currentUser }) => {
         <p>
           Vote Deadline: {new Date(roundData.voteDeadline).toLocaleString()}
         </p>
-        <p>Status: {roundData.roundStatus }</p>
+        <p>Status: {roundData.roundStatus}</p>
 
         {new Date() > new Date(roundData.submissionDeadline) ? (
           // Show "Listen to Playlist" button if the current date is past the submission deadline
@@ -191,6 +192,9 @@ const RoundPage = ({ currentUser }) => {
           </div>
         )}
       </div>
+
+      {new Date() > new Date(roundData.submissionDeadline) &&
+        new Date() < new Date(roundData.voteDeadline) && <VoteCard />}
 
       {isModalOpen && (
         <RoundSettingsModal
