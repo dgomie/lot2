@@ -98,6 +98,7 @@ const CreateLegionForm = ({ currentUser }) => {
               submissionDeadline: submissionDeadline.toISOString(),
               voteDeadline: voteDeadline.toISOString(),
               submissions: [],
+              playersVoted: [],
               prompt: randomPrompt,
               roundStatus:
                 roundNumber === 1 ? status.ACTIVE : status.INCOMPLETE,
