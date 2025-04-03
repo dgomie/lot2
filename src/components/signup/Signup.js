@@ -23,20 +23,7 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onMessageListener()
-      .then((payload) => {
-        console.log('Foreground notification received:', payload);
-        alert(
-          `Notification: ${payload.notification.title} - ${payload.notification.body}`
-        );
-      })
-      .catch((err) =>
-        console.error('Error receiving foreground notification:', err)
-      );
-
-    return () => unsubscribe;
-  }, []);
+ 
 
   const handleChange = (e) => {
     const { name, value } = e.target;

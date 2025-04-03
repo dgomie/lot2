@@ -1,9 +1,10 @@
-'use client'
+'use client';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
 import Navbar from '../components/navbar/Navbar';
 import { useEffect } from 'react';
+import { onMessageListener} from '../firebase'; // Import your Firebase messaging instance
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -15,23 +16,22 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 });
 
-// export const metadata = {
-//   title: 'Legion of Tones',
-//   description: 'Music for the Masses',
-// };
-
 export default function RootLayout({ children }) {
   useEffect(() => {
+    // Register the service worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.getRegistrations().then((registrations) => {
-        const isAlreadyRegistered = registrations.some(
-          (registration) => registration.active?.scriptURL.includes('firebase-messaging-sw.js')
+        const isAlreadyRegistered = registrations.some((registration) =>
+          registration.active?.scriptURL.includes('firebase-messaging-sw.js')
         );
         if (!isAlreadyRegistered) {
           navigator.serviceWorker
             .register('/firebase-messaging-sw.js')
             .then((registration) => {
-              console.log('Service Worker registered with scope:', registration.scope);
+              console.log(
+                'Service Worker registered with scope:',
+                registration.scope
+              );
             })
             .catch((error) => {
               console.error('Service Worker registration failed:', error);
@@ -41,6 +41,20 @@ export default function RootLayout({ children }) {
         }
       });
     }
+
+    // Set up the foreground notification listener
+    const unsubscribe = onMessageListener()
+      .then((payload) => {
+        console.log('Foreground notification received:', payload);
+        alert(
+          `Notification: ${payload.notification.title} - ${payload.notification.body}`
+        );
+      })
+      .catch((err) =>
+        console.error('Error receiving foreground notification:', err)
+      );
+
+    return () => unsubscribe;
   }, []);
 
   return (
