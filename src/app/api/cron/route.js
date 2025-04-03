@@ -51,15 +51,18 @@ export async function GET(req, res) {
 
           // Prepare notifications for players
           if (legionData.playerTokens && legionData.playerTokens.length > 0) {
-            notifications.push(
-              admin.messaging().sendMulticast({
-                tokens: legionData.playerTokens, // Array of player device tokens
-                notification: {
-                  title: 'Round Completed!',
-                  body: `The round ${currentRound.roundNumber} has been completed. Check the app for updates.`,
-                },
-              })
-            );
+            legionData.playerTokens.forEach((token) => {
+              console.log('messaging token:', token)
+              notifications.push(
+                admin.messaging().send({
+                  token,
+                  notification: {
+                    title: 'Round Completed!',
+                    body: `The round ${currentRound.roundNumber} has been completed. Check the app for updates.`,
+                  },
+                })
+              );
+            });
           }
         }
       }
