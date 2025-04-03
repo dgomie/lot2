@@ -127,6 +127,15 @@ const RoundPage = ({ currentUser }) => {
     }
   };
 
+  const randomizedSubmissions = [...(roundData.submissions || [])];
+  for (let i = randomizedSubmissions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [randomizedSubmissions[i], randomizedSubmissions[j]] = [
+      randomizedSubmissions[j],
+      randomizedSubmissions[i],
+    ];
+  }
+
   return (
     <div className={styles.roundPage}>
       <div className={styles.header}>
@@ -194,7 +203,9 @@ const RoundPage = ({ currentUser }) => {
       </div>
 
       {new Date() > new Date(roundData.submissionDeadline) &&
-        new Date() < new Date(roundData.voteDeadline) && <VoteCard />}
+        new Date() < new Date(roundData.voteDeadline) && (
+          <VoteCard submissions={randomizedSubmissions} />
+        )}
 
       {isModalOpen && (
         <RoundSettingsModal
