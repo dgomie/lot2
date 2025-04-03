@@ -5,6 +5,7 @@
     overflow-x: auto; /* Enable horizontal scrolling */
     white-space: nowrap; /* Prevent items from wrapping to the next line */
     scroll-snap-type: x mandatory; /* Enable snapping for a carousel effect */
+    margin: 1rem 0 0 0;
 }
 
 .mainContainer > * {
