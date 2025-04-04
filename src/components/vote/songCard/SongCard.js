@@ -10,18 +10,12 @@ const extractYouTubeVideoId = (url) => {
   return match ? match[1] : null;
 };
 
-const SongCard = ({
-  youtubeUrl,
-  videoTitle,
-  positiveVotes,
-  negativeVotes,
-  onVote,
-}) => {
+const SongCard = ({ youtubeUrl, videoTitle, vote, onVote }) => {
   const videoId = extractYouTubeVideoId(youtubeUrl);
 
   const getBackgroundColor = () => {
-    if (positiveVotes > 0) return '#25A18E'; // Green for positive vote
-    if (negativeVotes > 0) return '#a12538'; // Red for negative vote
+    if (vote === 1) return '#25A18E'; // Green for positive vote
+    if (vote === -1) return '#a12538'; // Red for negative vote
     return 'transparent'; // Default background
   };
 

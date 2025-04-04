@@ -13,7 +13,6 @@ const VoteCard = ({
   onVotesSubmitted,
 }) => {
   const [votes, setVotes] = useState(submissions.map(() => 0)); // Initialize all votes to 0
-
   const handleVote = (index, type) => {
     setVotes((prevVotes) => {
       const updatedVotes = [...prevVotes];
@@ -33,7 +32,7 @@ const VoteCard = ({
   const handleSubmitVotes = async () => {
     const updatedSubmissions = submissions.map((submission, index) => ({
       ...submission,
-      voteCount: submission.voteCount + votes[index], // Add the vote to the submission's voteCount
+      voteCount: (submission.voteCount || 0) + votes[index], // Add the vote to the submission's voteCount
     }));
 
     try {
@@ -64,10 +63,9 @@ const VoteCard = ({
           <SongCard
             key={submission.uid}
             youtubeUrl={submission.youtubeUrl}
-            videoTitle={submission.videoTitle} 
-            positiveVotes={submission.positiveVotes || 0}
-            negativeVotes={submission.negativeVotes || 0}
-            onVote={(voteType) => handleVote(submission.uid, voteType)}
+            videoTitle={submission.videoTitle}
+            vote={votes[index]} // Pass the vote for this submission
+            onVote={(voteType) => handleVote(index, voteType)} // Use the index to update the vote
           />
         ))}
       </div>

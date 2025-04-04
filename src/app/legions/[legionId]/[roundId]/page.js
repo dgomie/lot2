@@ -269,7 +269,7 @@ const RoundPage = ({ currentUser }) => {
                 legionId={legionId}
                 roundId={roundId}
                 currentUser={currentUser}
-                onVotesSubmitted={refreshRoundData}
+                onVotesSubmitted={refreshRoundData} // Refresh the round data after votes are submitted
               />
             )}
           </>
