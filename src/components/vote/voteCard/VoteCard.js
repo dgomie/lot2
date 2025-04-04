@@ -5,7 +5,13 @@ import SongCard from '../songCard/SongCard';
 import Button from '@/components/button/Button';
 import { updateRoundSubmissions } from '@/firebase';
 
-const VoteCard = ({ submissions, legionId, roundId, currentUser, onVotesSubmitted }) => {
+const VoteCard = ({
+  submissions,
+  legionId,
+  roundId,
+  currentUser,
+  onVotesSubmitted,
+}) => {
   const [votes, setVotes] = useState(submissions.map(() => 0)); // Initialize all votes to 0
 
   const handleVote = (index, type) => {
@@ -56,11 +62,12 @@ const VoteCard = ({ submissions, legionId, roundId, currentUser, onVotesSubmitte
       <div className={styles.carousel}>
         {submissions.map((submission, index) => (
           <SongCard
-            key={index}
+            key={submission.uid}
             youtubeUrl={submission.youtubeUrl}
-            positiveVotes={votes[index] === 1 ? 1 : 0}
-            negativeVotes={votes[index] === -1 ? 1 : 0}
-            onVote={(type) => handleVote(index, type)}
+            videoTitle={submission.videoTitle} 
+            positiveVotes={submission.positiveVotes || 0}
+            negativeVotes={submission.negativeVotes || 0}
+            onVote={(voteType) => handleVote(submission.uid, voteType)}
           />
         ))}
       </div>

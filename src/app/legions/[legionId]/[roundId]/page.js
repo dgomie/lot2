@@ -78,8 +78,8 @@ const RoundPage = ({ currentUser }) => {
   };
 
   const refreshRoundData = async () => {
-    setLoading(true); // Show loading state while refreshing
-    await fetchRound(); // Fetch the latest round data
+    setLoading(true);
+    await fetchRound();
   };
 
   useEffect(() => {
@@ -99,9 +99,29 @@ const RoundPage = ({ currentUser }) => {
   const handleSubmitUrl = async (youtubeUrl) => {
     if (!currentUser) return;
 
+    const videoId = youtubeUrl.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/)?.[1];
+    if (!videoId) {
+      alert('Invalid YouTube URL');
+      return;
+    }
+
+    let videoTitle = 'Unknown Video';
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+      );
+      const data = await response.json();
+      if (data.items && data.items.length > 0) {
+        videoTitle = data.items[0].snippet.title;
+      }
+    } catch (error) {
+      console.error('Error fetching video title:', error);
+    }
+
     const newSubmission = {
       uid: currentUser.uid,
       youtubeUrl,
+      videoTitle, // Save the fetched title
       voteCount: 0,
     };
 
@@ -242,7 +262,10 @@ const RoundPage = ({ currentUser }) => {
               </div>
             ) : (
               <VoteCard
-                submissions={randomizedSubmissions}
+                submissions={randomizedSubmissions.map((submission) => ({
+                  ...submission,
+                  videoTitle: submission.videoTitle, // Pass the saved title
+                }))}
                 legionId={legionId}
                 roundId={roundId}
                 currentUser={currentUser}
