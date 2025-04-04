@@ -435,7 +435,8 @@ const fetchLegionData = async (legionId) => {
 export const updateRoundSubmissions = async (
   legionId,
   roundId,
-  updatedSubmissions
+  updatedSubmissions,
+  userUid
 ) => {
   try {
     const roundDocRef = doc(db, 'legions', legionId); // Reference to the legion document
@@ -453,16 +454,23 @@ export const updateRoundSubmissions = async (
     }
 
     // Find the specific round by its roundNumber
-    const updatedRounds = legionData.rounds.map((round) =>
-      round.roundNumber === parseInt(roundId, 10)
-        ? { ...round, submissions: updatedSubmissions } // Update the submissions for the matching round
-        : round
-    );
+    const updatedRounds = legionData.rounds.map((round) => {
+      if (round.roundNumber === parseInt(roundId, 10)) {
+        return {
+          ...round,
+          submissions: updatedSubmissions, // Update the submissions
+          playersVoted: Array.isArray(round.playersVoted)
+            ? [...new Set([...round.playersVoted, userUid])] // Add the user UID if not already present
+            : [userUid], // Initialize the array if it doesn't exist
+        };
+      }
+      return round;
+    });
 
     // Update the Firestore document with the modified rounds array
     await updateDoc(roundDocRef, { rounds: updatedRounds });
 
-    console.log('Submissions updated successfully');
+    console.log('Submissions and playersVoted updated successfully');
     return { success: true };
   } catch (error) {
     console.error('Error updating submissions:', error);

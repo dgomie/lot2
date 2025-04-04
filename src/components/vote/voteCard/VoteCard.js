@@ -4,7 +4,7 @@ import SongCard from '../songCard/SongCard';
 import Button from '@/components/button/Button';
 import { updateRoundSubmissions } from '@/firebase';
 
-const VoteCard = ({ submissions, legionId, roundId }) => {
+const VoteCard = ({ submissions, legionId, roundId, currentUser }) => {
   const [votes, setVotes] = useState(submissions.map(() => 0)); // Initialize all votes to 0
 
   const handleVote = (index, type) => {
@@ -12,10 +12,8 @@ const VoteCard = ({ submissions, legionId, roundId }) => {
       const updatedVotes = [...prevVotes];
 
       if (type === 'positive') {
-   
         updatedVotes[index] = updatedVotes[index] === 1 ? 0 : 1;
       } else if (type === 'negative') {
-        // Cycle between 0 -> -1 -> 0
         updatedVotes[index] = updatedVotes[index] === -1 ? 0 : -1;
       }
 
@@ -35,7 +33,8 @@ const VoteCard = ({ submissions, legionId, roundId }) => {
       const result = await updateRoundSubmissions(
         legionId,
         roundId,
-        updatedSubmissions
+        updatedSubmissions,
+        currentUser.uid // Pass the current user's UID
       );
 
       if (result.success) {

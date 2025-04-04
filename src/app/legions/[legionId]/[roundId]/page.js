@@ -221,7 +221,28 @@ const RoundPage = ({ currentUser }) => {
 
       {new Date() > new Date(roundData.submissionDeadline) &&
         new Date() < new Date(roundData.voteDeadline) && (
-          <VoteCard submissions={randomizedSubmissions} legionId={legionId} roundId={roundId}/>
+          <>
+            {roundData.playersVoted?.includes(currentUser.uid) ? (
+              // Show "Votes Submitted" message if the user has already voted
+              <div className={styles.votesSubmitted}>
+                <Image
+                  src="/img/check.svg"
+                  alt="Votes Submitted"
+                  width={50}
+                  height={50}
+                />
+                <div className={styles.label}>Votes Submitted</div>
+              </div>
+            ) : (
+              // Show the VoteCard if the user has not yet voted
+              <VoteCard
+                submissions={randomizedSubmissions}
+                legionId={legionId}
+                roundId={roundId}
+                currentUser={currentUser}
+              />
+            )}
+          </>
         )}
 
       {isModalOpen && (
