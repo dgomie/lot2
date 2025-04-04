@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import styles from './VoteCard.module.css';
 import SongCard from '../songCard/SongCard';
 import Button from '@/components/button/Button';
 import { updateRoundSubmissions } from '@/firebase';
 
-const VoteCard = ({ submissions, legionId, roundId, currentUser }) => {
+const VoteCard = ({ submissions, legionId, roundId, currentUser, onVotesSubmitted }) => {
   const [votes, setVotes] = useState(submissions.map(() => 0)); // Initialize all votes to 0
 
   const handleVote = (index, type) => {
@@ -39,6 +40,9 @@ const VoteCard = ({ submissions, legionId, roundId, currentUser }) => {
 
       if (result.success) {
         console.log('Votes successfully submitted');
+        if (onVotesSubmitted) {
+          onVotesSubmitted(); // Call the callback function to refresh the round data
+        }
       } else {
         console.error('Failed to submit votes:', result.error);
       }

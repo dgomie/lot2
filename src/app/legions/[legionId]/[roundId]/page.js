@@ -77,6 +77,11 @@ const RoundPage = ({ currentUser }) => {
     }
   };
 
+  const refreshRoundData = async () => {
+    setLoading(true); // Show loading state while refreshing
+    await fetchRound(); // Fetch the latest round data
+  };
+
   useEffect(() => {
     if (legionId && roundId) {
       fetchRound();
@@ -122,6 +127,8 @@ const RoundPage = ({ currentUser }) => {
         ...prev,
         submissions: updatedSubmissions,
       }));
+      setLoading(true);
+      await fetchRound();
     } else {
       console.error(result.error);
     }
@@ -234,12 +241,12 @@ const RoundPage = ({ currentUser }) => {
                 <div className={styles.label}>Votes Submitted</div>
               </div>
             ) : (
-              // Show the VoteCard if the user has not yet voted
               <VoteCard
                 submissions={randomizedSubmissions}
                 legionId={legionId}
                 roundId={roundId}
                 currentUser={currentUser}
+                onVotesSubmitted={refreshRoundData}
               />
             )}
           </>
