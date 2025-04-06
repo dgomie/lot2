@@ -29,8 +29,8 @@ export const UserImageContainer = ({ users, title }) => {
             <Image
               src={user.profileImage || '/img/user.png'}
               alt={user.username || 'User'}
-              width={30}
-              height={30}
+              width={40}
+              height={40}
               className={styles.image}
             />
           </div>
