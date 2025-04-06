@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { uploadProfileImage } from '@/firebase';
 import EditIcon from '../../../public/img/edit.svg';
 import Spinner from '../spinner/Spinner';
+import imageCompression from 'browser-image-compression';
 
 const ProfileHeader = ({
   userId,
@@ -25,16 +26,25 @@ const ProfileHeader = ({
         return;
       }
 
-      // Validate file size (500 KB or less)
-      const maxSize = 500 * 1024; // 500 KB in bytes
-      if (file.size > maxSize) {
-        alert('Image size must be 500 KB or less.');
-        return;
-      }
-
       setLoading(true);
       try {
-        const url = await uploadProfileImage(file, userId);
+        // Compress the image
+        const options = {
+          maxSizeMB: 0.5, // Maximum size in MB (500 KB)
+          maxWidthOrHeight: 1920, // Optional: Resize the image if needed
+          useWebWorker: true,
+        };
+        const compressedFile = await imageCompression(file, options);
+
+        // Validate compressed file size
+        if (compressedFile.size > 500 * 1024) {
+          alert('Compressed image size exceeds 500 KB.');
+          setLoading(false);
+          return;
+        }
+
+        // Upload the compressed image
+        const url = await uploadProfileImage(compressedFile, userId);
         setImageUrl(url);
       } catch (error) {
         console.error('Error uploading profile image:', error);
