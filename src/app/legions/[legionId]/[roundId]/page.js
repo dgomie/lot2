@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchRoundData, saveRoundData } from '@/firebase';
+import { fetchRoundData, saveRoundData, getUserProfile } from '@/firebase';
 import styles from './RoundPage.module.css';
 import Image from 'next/image';
 import RoundSettingsModal from '@/components/roundSettingsModal/RoundSettingsModal';
 import withAuth from '@/hoc/withAuth';
 import SubmitModal from '@/components/submitModal/SubmitModal';
 import VoteCard from '@/components/vote/voteCard/VoteCard';
+import { UserImageContainer } from '@/components/userImageContainer/UserImageContainer';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -20,6 +21,9 @@ const RoundPage = ({ currentUser }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editableRoundData, setEditableRoundData] = useState(null);
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [usersWithSubmissions, setUsersWithSubmissions] = useState([]);
+  const [usersWhoVoted, setUsersWhoVoted] = useState([]);
+  const [stillPonderingUsers, setStillPonderingUsers] = useState([]);
 
   const fetchRound = async () => {
     const result = await fetchRoundData(legionId, roundId);
@@ -31,6 +35,70 @@ const RoundPage = ({ currentUser }) => {
     }
     setLoading(false);
   };
+
+  const fetchUsersByUids = async (uids) => {
+    const users = await Promise.all(
+      uids.map(async (uid) => {
+        const user = await getUserProfile(uid);
+        return {
+          uid,
+          profileImage: user?.profileImg || '/img/user.png',
+          username: user?.username,
+        };
+      })
+    );
+    return users;
+  };
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      if (roundData) {
+        // Fetch users with submissions
+        const submissionUids =
+          roundData.submissions?.map((submission) => submission.uid) || [];
+        const fetchedUsersWithSubmissions = await fetchUsersByUids(
+          submissionUids
+        );
+        setUsersWithSubmissions(fetchedUsersWithSubmissions);
+
+        // Fetch users who voted
+        const fetchedUsersWhoVoted = await fetchUsersByUids(
+          roundData.playersVoted || []
+        );
+        setUsersWhoVoted(fetchedUsersWhoVoted);
+
+        // Determine the current phase
+        const now = new Date();
+        const isSubmissionPhase = now <= new Date(roundData.submissionDeadline);
+        const isVotingPhase =
+          now > new Date(roundData.submissionDeadline) &&
+          now <= new Date(roundData.voteDeadline);
+
+        // Determine users who haven't submitted or voted
+        const allPlayerUids = roundData.players || []; // Ensure players array exists
+        let stillPonderingUids = [];
+
+        if (isSubmissionPhase) {
+          // Users who haven't submitted
+          stillPonderingUids = allPlayerUids.filter(
+            (uid) => !submissionUids.includes(uid)
+          );
+        } else if (isVotingPhase) {
+          // Users who haven't voted
+          stillPonderingUids = allPlayerUids.filter(
+            (uid) => !(roundData.playersVoted || []).includes(uid)
+          );
+        }
+
+        const fetchedStillPonderingUsers = await fetchUsersByUids(
+          stillPonderingUids
+        );
+        setStillPonderingUsers(fetchedStillPonderingUsers);
+      }
+    };
+
+    fetchUsers();
+  }, [roundData]);
 
   const generatePlaylist = () => {
     if (
@@ -204,6 +272,24 @@ const RoundPage = ({ currentUser }) => {
           Vote Deadline: {new Date(roundData.voteDeadline).toLocaleString()}
         </p>
         <p>Status: {roundData.roundStatus}</p>
+
+        <UserImageContainer
+          title={
+            new Date() > new Date(roundData.submissionDeadline)
+              ? 'Players Voted'
+              : 'Players Submitted'
+          }
+          users={
+            new Date() > new Date(roundData.submissionDeadline)
+              ? usersWhoVoted
+              : usersWithSubmissions
+          }
+        />
+
+        <UserImageContainer
+          title="Still Pondering"
+          users={stillPonderingUsers}
+        />
 
         {new Date() > new Date(roundData.submissionDeadline) ? (
           // Show "Listen to Playlist" button if the current date is past the submission deadline

@@ -403,7 +403,7 @@ const fetchRoundData = async (legionId, roundId) => {
       // Include legionAdmin in the response
       return {
         success: true,
-        round: { ...round, legionAdmin: legionData.legionAdmin },
+        round: { ...round, legionAdmin: legionData.legionAdmin, players: legionData.players },
       };
     } else {
       console.error('No such document!');
