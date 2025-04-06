@@ -273,8 +273,8 @@ const RoundPage = ({ currentUser }) => {
         <UserImageContainer
           title={
             new Date() > new Date(roundData.submissionDeadline)
-              ? 'Players Voted'
-              : 'Players Submitted'
+              ? 'Voted'
+              : 'Submitted'
           }
           users={
             new Date() > new Date(roundData.submissionDeadline)
