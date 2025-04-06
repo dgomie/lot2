@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { fetchRoundData, saveRoundData, getUserProfile } from '@/firebase';
 import styles from './RoundPage.module.css';
@@ -52,53 +52,50 @@ const RoundPage = ({ currentUser }) => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      if (roundData) {
-        // Fetch users with submissions
-        const submissionUids =
-          roundData.submissions?.map((submission) => submission.uid) || [];
-        const fetchedUsersWithSubmissions = await fetchUsersByUids(
-          submissionUids
-        );
-        setUsersWithSubmissions(fetchedUsersWithSubmissions);
-
-        // Fetch users who voted
-        const fetchedUsersWhoVoted = await fetchUsersByUids(
-          roundData.playersVoted || []
-        );
-        setUsersWhoVoted(fetchedUsersWhoVoted);
-
-        // Determine the current phase
-        const now = new Date();
-        const isSubmissionPhase = now <= new Date(roundData.submissionDeadline);
-        const isVotingPhase =
-          now > new Date(roundData.submissionDeadline) &&
-          now <= new Date(roundData.voteDeadline);
-
-        // Determine users who haven't submitted or voted
-        const allPlayerUids = roundData.players || []; // Ensure players array exists
-        let stillPonderingUids = [];
-
-        if (isSubmissionPhase) {
-          // Users who haven't submitted
-          stillPonderingUids = allPlayerUids.filter(
-            (uid) => !submissionUids.includes(uid)
-          );
-        } else if (isVotingPhase) {
-          // Users who haven't voted
-          stillPonderingUids = allPlayerUids.filter(
-            (uid) => !(roundData.playersVoted || []).includes(uid)
-          );
-        }
-
-        const fetchedStillPonderingUsers = await fetchUsersByUids(
-          stillPonderingUids
-        );
-        setStillPonderingUsers(fetchedStillPonderingUsers);
-      }
+      if (!roundData) return;
+  
+      const submissionUids = roundData.submissions?.map((s) => s.uid) || [];
+      const playersVoted = roundData.playersVoted || [];
+      const allPlayerUids = roundData.players || [];
+  
+      const now = new Date();
+      const isSubmissionPhase = now <= new Date(roundData.submissionDeadline);
+      const isVotingPhase =
+        now > new Date(roundData.submissionDeadline) &&
+        now <= new Date(roundData.voteDeadline);
+  
+      const stillPonderingUids = allPlayerUids.filter((uid) =>
+        isSubmissionPhase
+          ? !submissionUids.includes(uid)
+          : !playersVoted.includes(uid)
+      );
+  
+      const [fetchedUsersWithSubmissions, fetchedUsersWhoVoted, fetchedStillPonderingUsers] =
+        await Promise.all([
+          fetchUsersByUids(submissionUids),
+          fetchUsersByUids(playersVoted),
+          fetchUsersByUids(stillPonderingUids),
+        ]);
+  
+      setUsersWithSubmissions(fetchedUsersWithSubmissions);
+      setUsersWhoVoted(fetchedUsersWhoVoted);
+      setStillPonderingUsers(fetchedStillPonderingUsers);
     };
-
+  
     fetchUsers();
   }, [roundData]);
+  
+  const isSubmissionPhase = useMemo(
+    () => new Date() <= new Date(roundData?.submissionDeadline),
+    [roundData]
+  );
+
+  const isVotingPhase = useMemo(
+    () =>
+      new Date() > new Date(roundData?.submissionDeadline) &&
+      new Date() <= new Date(roundData?.voteDeadline),
+    [roundData]
+  );
 
   const generatePlaylist = () => {
     if (
