@@ -2,7 +2,7 @@
   text-align: center;
   color: black;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
   padding: 1rem 0 0;
 }
 
@@ -19,19 +19,30 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    max-width: 50rem;
+    width: 100vw;
+    box-shadow: 1.8px 3.7px 3.7px hsla(244, 82%, 22%, 0.44);
 }
 
 /* .container {
-    border-radius: 0 0 20px 20px;
-  background-color: #e5e5f7;
-  opacity: 1;
-  width: 100%;
-  height: 100%;
-  background-image: repeating-radial-gradient(
-      circle at 0 0,
-      transparent 0,
-      var(--lightgreen100) 30px
-    ),
-    repeating-linear-gradient(var(--pastelgreen100), var(--lightgreen100));
-} */
+    background-image: linear-gradient(
+      to right top,
+      #051937,
+      #004d7a,
+      #008793,
+      #00bf72,
+      #a8eb12
+    );
+    width: 100%;
+  } */
+
+  .container {
+    /* background-image: linear-gradient(
+      to right bottom,
+      #b185db,
+      #7251b5,
+      #9163cb,
+      #b185db,
+      #7251b5
+    );
+    width: 100%; */
+  }
