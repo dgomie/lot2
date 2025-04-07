@@ -10,6 +10,7 @@ import withAuth from '@/hoc/withAuth';
 import SubmitModal from '@/components/submitModal/SubmitModal';
 import VoteCard from '@/components/vote/voteCard/VoteCard';
 import { UserImageContainer } from '@/components/userImageContainer/UserImageContainer';
+import { RoundResults } from '@/components/results/RoundResults';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -358,6 +359,8 @@ const RoundPage = ({ currentUser }) => {
             )}
           </>
         )}
+
+        <RoundResults />
 
       {isModalOpen && (
         <RoundSettingsModal
