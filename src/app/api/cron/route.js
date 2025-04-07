@@ -2,6 +2,7 @@ import { adminDb } from '../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { status } from '../../../utils/status';
 import admin from 'firebase-admin'; // Ensure Firebase Admin SDK is initialized
+import { updateLegionStandings } from '../../../firebase'; // Import the function
 
 export async function GET(req, res) {
   try {
@@ -49,6 +50,9 @@ export async function GET(req, res) {
               currentRound: FieldValue.increment(1), // Increment the currentRound
             })
           );
+
+          // Update the standings for the legion
+          updates.push(updateLegionStandings(legionDoc.id)); // Call the function here
 
           // Prepare notifications for players
           if (legionData.players && legionData.players.length > 0) {
@@ -121,39 +125,3 @@ export async function GET(req, res) {
     );
   }
 }
-
-// export async function GET(req, res) {
-//   try {
-//     // Replace this with a valid FCM token for testing
-//     const testToken =
-//       'fYGHV2NbVUeRIuwA6PjPsY:APA91bEila8yefmZyMDJv_uTw_Xwn03XD6fAAVmlODq_lwGIlRqf9vpOksWH6_wNZSan1pxFqtAEIDsF9hl_Bn0tm0mc1sSbQziFmAlHddNpwGrrjBUGLfY';
-
-//     // Prepare the test notification payload
-//     const message = {
-//       token: testToken,
-//       notification: {
-//         title: 'Test Notification',
-//         body: 'This is a test notification from the cron job.',
-//       },
-//     };
-
-//     // Send the notification
-//     const response = await admin.messaging().send(message);
-//     console.log('Test notification sent successfully:', response);
-
-//     return new Response(
-//       JSON.stringify({
-//         success: true,
-//         message: 'Test notification sent successfully',
-//         response,
-//       }),
-//       { status: 200 }
-//     );
-//   } catch (error) {
-//     console.error('Error sending test notification:', error);
-//     return new Response(
-//       JSON.stringify({ success: false, error: error.message }),
-//       { status: 500 }
-//     );
-//   }
-// }

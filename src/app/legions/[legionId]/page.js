@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { fetchLegionData } from '@/firebase';
+import { fetchLegionData, updateLegionStandings } from '@/firebase'; // Import the function
 import Loader from '@/components/loader/Loader';
 import withAuth from '@/hoc/withAuth';
 import Players from '@/components/players/Players';
@@ -39,6 +39,21 @@ const LegionPage = () => {
     }));
   };
 
+  // const handleTestStandingsUpdate = async () => {
+  //   try {
+  //     const result = await updateLegionStandings(legionId);
+  //     if (result.success) {
+  //       console.log('Standings updated successfully:', result.standings);
+  //     } else {
+  //       console.error('Error updating standings:', result.error);
+        
+  //     }
+  //   } catch (error) {
+  //     console.error('Unexpected error:', error);
+     
+  //   }
+  // };
+
   useEffect(() => {
     if (legionId) {
       fetchData();
@@ -66,7 +81,7 @@ const LegionPage = () => {
         />
       </div>
 
-      <StandingsCard standings={legionData.standings}/>
+      <StandingsCard standings={legionData.standings} />
 
       <div className={styles.currentRound}>
         <div className={styles.title}>Current Round</div>
@@ -91,6 +106,14 @@ const LegionPage = () => {
           ))}
         </div>
       </div>
+
+     
+      {/* <button
+        className={styles.testButton}
+        onClick={handleTestStandingsUpdate}
+      >
+        Test Update Standings
+      </button> */}
     </div>
   );
 };
