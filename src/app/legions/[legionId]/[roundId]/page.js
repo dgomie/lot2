@@ -106,8 +106,6 @@ const RoundPage = ({ currentUser }) => {
     [roundData]
   );
 
-  console.log(roundData);
-
   const generatePlaylist = () => {
     if (
       !roundData ||
