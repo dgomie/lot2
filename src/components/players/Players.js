@@ -8,7 +8,7 @@ import Button from '../button/Button';
 const Players = ({ legionPlayers, legionAdmin }) => {
   const [playersData, setPlayersData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [visibleCount, setVisibleCount] = useState(6); 
+  const [visibleCount, setVisibleCount] = useState(6);
   const router = useRouter();
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const Players = ({ legionPlayers, legionAdmin }) => {
   };
 
   const handleShowMore = () => {
-    setVisibleCount((prevCount) => prevCount + 5); 
+    setVisibleCount((prevCount) => prevCount + 5);
   };
 
   return (
@@ -73,9 +73,11 @@ const Players = ({ legionPlayers, legionAdmin }) => {
         ))}
       </div>
       {visibleCount < playersData.length && (
-        <Button className={styles.showMoreButton} onClick={handleShowMore} variant='transparentBlack'>
-          See More
-        </Button>
+        <div className={styles.showMoreButton}>
+          <Button onClick={handleShowMore} variant="transparentGray">
+            See More
+          </Button>
+        </div>
       )}
     </div>
   );

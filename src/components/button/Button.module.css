@@ -35,10 +35,18 @@
 .transparentBlack {
   background-color: transparent;
   color: black;
-  border: 1px solid black;
 }
 
 .transparentBlack:hover {
+  opacity: 0.5;
+}
+
+.transparentGray {
+  background-color: transparent;
+  color: gray;
+}
+
+.transparentGray:hover {
   opacity: 0.5;
 }
 
