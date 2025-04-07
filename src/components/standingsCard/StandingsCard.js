@@ -1,42 +1,73 @@
 import React, { useEffect, useState } from 'react';
 import styles from './StandingsCard.module.css';
 import { getUserProfile } from '@/firebase';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export const StandingsCard = ({ standings }) => {
-  const [usernames, setUsernames] = useState({});
+  const [userProfiles, setUserProfiles] = useState({});
 
   useEffect(() => {
-    const fetchUsernames = async () => {
-      const usernameMap = {};
+    const fetchUserProfiles = async () => {
+      const profileMap = {};
       for (const item of standings) {
         if (item.uid) {
           try {
             const userProfile = await getUserProfile(item.uid);
-            usernameMap[item.uid] = userProfile?.username || 'Unknown User';
+            profileMap[item.uid] = {
+              username: userProfile?.username || 'Unknown User',
+              profileImg: userProfile?.profileImg || '/img/user.png',
+            };
           } catch (error) {
-            console.error(`Error fetching username for UID ${item.uid}:`, error);
-            usernameMap[item.uid] = 'Unknown User';
+            console.error(`Error fetching profile for UID ${item.uid}:`, error);
+            profileMap[item.uid] = {
+              username: 'Unknown User',
+              profileImage: '/default-profile.png',
+            };
           }
         }
       }
-      setUsernames(usernameMap);
+      setUserProfiles(profileMap);
     };
 
-    fetchUsernames();
+    fetchUserProfiles();
   }, [standings]);
 
   const sortedStandings = standings.sort((a, b) => b.votes - a.votes);
 
+  const router = useRouter();
+
+  const handleImageClick = (username) => {
+    if (username) {
+      router.push(`/profile/${username}`);
+    }
+  };
+
   return (
     <div className={styles.mainContainer}>
-        <div className={styles.title}>Standings</div>
+      <div className={styles.title}>Standings</div>
       {sortedStandings.map((item, index) => (
         <div key={item.uid || index} className={styles.standingItem}>
           <div className={styles.rank}>#{index + 1}</div>
-          <div className={styles.name}>
-            {usernames[item.uid] || 'Loading...'}
+          <div
+            className={styles.userInfo}
+            onClick={() => handleImageClick(userProfiles[item.uid]?.username)}
+          >
+            <Image
+              src={userProfiles[item.uid]?.profileImg || '/img/user.png'}
+              alt={`${
+                userProfiles[item.uid]?.username || 'Unknown User'
+              }'s profile`}
+              width={40}
+              height={40}
+              className={styles.profileImage}
+            />
+
+            <div className={styles.name}>
+              {userProfiles[item.uid]?.username || 'Loading...'}
+            </div>
           </div>
-          <div className={styles.votes}>{item.votes} votes</div>
+          <div className={styles.votes}>{item.votes}pts</div>
         </div>
       ))}
     </div>

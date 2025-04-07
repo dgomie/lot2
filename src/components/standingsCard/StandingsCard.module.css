@@ -10,6 +10,7 @@
     align-items: center;
     justify-content: space-around;
     font-weight: bold;
+    margin: 1rem;
   }
 
   .title {
@@ -17,4 +18,15 @@
     font-weight: bold;
     text-align: center;
     margin: .5rem 0 .5rem 0;
+  }
+
+  .profileImage {
+    border-radius: 50%;
+  }
+
+  .userInfo {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: .5rem;
   }
