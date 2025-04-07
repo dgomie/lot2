@@ -54,3 +54,19 @@
   font-weight: bold;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
+
+.showMoreButton {
+  margin: 1rem auto;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.showMoreButton:hover {
+  background-color: #0056b3;
+}

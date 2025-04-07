@@ -3,10 +3,12 @@ import styles from './Players.module.css';
 import { getUserProfile } from '@/firebase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Button from '../button/Button';
 
 const Players = ({ legionPlayers, legionAdmin }) => {
   const [playersData, setPlayersData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(6); 
   const router = useRouter();
 
   useEffect(() => {
@@ -39,11 +41,14 @@ const Players = ({ legionPlayers, legionAdmin }) => {
     router.push(`/profile/${username}`);
   };
 
+  const handleShowMore = () => {
+    setVisibleCount((prevCount) => prevCount + 5); 
+  };
+
   return (
     <div className={styles.mainContainer}>
-      <h2>Players</h2>
       <div className={styles.playersList}>
-        {playersData.map((player) => (
+        {playersData.slice(0, visibleCount).map((player) => (
           <div
             key={player.uid}
             className={styles.playerCard}
@@ -67,6 +72,11 @@ const Players = ({ legionPlayers, legionAdmin }) => {
           </div>
         ))}
       </div>
+      {visibleCount < playersData.length && (
+        <Button className={styles.showMoreButton} onClick={handleShowMore} variant='transparentBlack'>
+          See More
+        </Button>
+      )}
     </div>
   );
 };
