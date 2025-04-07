@@ -8,4 +8,29 @@
 .title {
     font-weight: bold;
     text-align: center;
+    margin: 0 0 .5rem 0;
 }
+
+.videoTitle {
+    font-weight: bold;
+    width: 40%;
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+}
+
+.resultRow {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 .5rem 0;
+}
+
+.username {
+    font-weight: normal;
+    color: #000;
+  }
+  
+  .currentUser {
+    font-weight: bold;
+    color: var(--aquamarine100); 
+  }

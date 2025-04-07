@@ -2,7 +2,12 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchRoundData, saveRoundData, getUserProfile, incrementUserSongs } from '@/firebase';
+import {
+  fetchRoundData,
+  saveRoundData,
+  getUserProfile,
+  incrementUserSongs,
+} from '@/firebase';
 import styles from './RoundPage.module.css';
 import Image from 'next/image';
 import RoundSettingsModal from '@/components/roundSettingsModal/RoundSettingsModal';
@@ -54,38 +59,41 @@ const RoundPage = ({ currentUser }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       if (!roundData) return;
-  
+
       const submissionUids = roundData.submissions?.map((s) => s.uid) || [];
       const playersVoted = roundData.playersVoted || [];
       const allPlayerUids = roundData.players || [];
-  
+
       const now = new Date();
       const isSubmissionPhase = now <= new Date(roundData.submissionDeadline);
       const isVotingPhase =
         now > new Date(roundData.submissionDeadline) &&
         now <= new Date(roundData.voteDeadline);
-  
+
       const stillPonderingUids = allPlayerUids.filter((uid) =>
         isSubmissionPhase
           ? !submissionUids.includes(uid)
           : !playersVoted.includes(uid)
       );
-  
-      const [fetchedUsersWithSubmissions, fetchedUsersWhoVoted, fetchedStillPonderingUsers] =
-        await Promise.all([
-          fetchUsersByUids(submissionUids),
-          fetchUsersByUids(playersVoted),
-          fetchUsersByUids(stillPonderingUids),
-        ]);
-  
+
+      const [
+        fetchedUsersWithSubmissions,
+        fetchedUsersWhoVoted,
+        fetchedStillPonderingUsers,
+      ] = await Promise.all([
+        fetchUsersByUids(submissionUids),
+        fetchUsersByUids(playersVoted),
+        fetchUsersByUids(stillPonderingUids),
+      ]);
+
       setUsersWithSubmissions(fetchedUsersWithSubmissions);
       setUsersWhoVoted(fetchedUsersWhoVoted);
       setStillPonderingUsers(fetchedStillPonderingUsers);
     };
-  
+
     fetchUsers();
   }, [roundData]);
-  
+
   const isSubmissionPhase = useMemo(
     () => new Date() <= new Date(roundData?.submissionDeadline),
     [roundData]
@@ -97,6 +105,8 @@ const RoundPage = ({ currentUser }) => {
       new Date() <= new Date(roundData?.voteDeadline),
     [roundData]
   );
+
+  console.log(roundData);
 
   const generatePlaylist = () => {
     if (
@@ -201,7 +211,7 @@ const RoundPage = ({ currentUser }) => {
     );
     if (isNewSubmission) {
       updatedSubmissions.push(newSubmission);
-      await incrementUserSongs(currentUser.uid)
+      await incrementUserSongs(currentUser.uid);
     }
 
     const result = await saveRoundData(legionId, roundId, {
@@ -332,7 +342,8 @@ const RoundPage = ({ currentUser }) => {
       </div>
 
       {new Date() > new Date(roundData.submissionDeadline) &&
-        new Date() < new Date(roundData.voteDeadline) && (
+        new Date() <= new Date(roundData.voteDeadline) &&
+        roundData.roundStatus !== 'completed' && (
           <>
             {roundData.playersVoted?.includes(currentUser.uid) ? (
               // Show "Votes Submitted" message if the user has already voted
@@ -349,18 +360,24 @@ const RoundPage = ({ currentUser }) => {
               <VoteCard
                 submissions={randomizedSubmissions.map((submission) => ({
                   ...submission,
-                  videoTitle: submission.videoTitle, // Pass the saved title
+                  videoTitle: submission.videoTitle,
                 }))}
                 legionId={legionId}
                 roundId={roundId}
                 currentUser={currentUser}
-                onVotesSubmitted={refreshRoundData} // Refresh the round data after votes are submitted
+                onVotesSubmitted={refreshRoundData}
               />
             )}
           </>
         )}
 
-        <RoundResults />
+      {roundData.roundStatus === 'completed' && (
+        <RoundResults
+          currentUser={currentUser}
+          roundData={roundData}
+          userProfiles={usersWithSubmissions}
+        />
+      )}
 
       {isModalOpen && (
         <RoundSettingsModal

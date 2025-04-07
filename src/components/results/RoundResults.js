@@ -1,15 +1,35 @@
 import React from 'react';
 import styles from './RoundResults.module.css';
 
-export const RoundResults = (currentUser, roundData) => {
-  return (
-    <div className={styles.mainContainer}>
-      <div className={styles.title}>Round Results</div>
-      <div className={styles.roundInfoContainer}>
-        <div>Song</div>
-        <div>user</div>
-        <div>vote count</div>
+export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
+    
+    const sortedSubmissions = [...(roundData.submissions || [])].sort(
+      (a, b) => b.voteCount - a.voteCount
+    );
+  
+    const userStyle = (submissionUid) => {
+      return currentUser.uid === submissionUid ? styles.currentUser : '';
+    };
+  
+    return (
+      <div className={styles.mainContainer}>
+        <div className={styles.title}>Round Results</div>
+  
+        {sortedSubmissions.map((submission) => {
+          const username =
+            userProfiles.find((user) => user.uid === submission.uid)?.username ||
+            'Unknown User';
+  
+          return (
+            <div key={submission.uid} className={styles.resultRow}>
+              <div className={styles.videoTitle}>{submission.videoTitle}</div>
+              <div className={`${styles.username} ${userStyle(submission.uid)}`}>
+                {username}
+              </div>
+              <div>{submission.voteCount}pts</div>
+            </div>
+          );
+        })}
       </div>
-    </div>
-  );
-};
+    );
+  };
