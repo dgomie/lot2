@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { fetchRoundData, saveRoundData, getUserProfile } from '@/firebase';
+import { fetchRoundData, saveRoundData, getUserProfile, incrementUserSongs } from '@/firebase';
 import styles from './RoundPage.module.css';
 import Image from 'next/image';
 import RoundSettingsModal from '@/components/roundSettingsModal/RoundSettingsModal';
@@ -186,7 +186,7 @@ const RoundPage = ({ currentUser }) => {
     const newSubmission = {
       uid: currentUser.uid,
       youtubeUrl,
-      videoTitle, // Save the fetched title
+      videoTitle,
       voteCount: 0,
     };
 
@@ -200,6 +200,7 @@ const RoundPage = ({ currentUser }) => {
     );
     if (isNewSubmission) {
       updatedSubmissions.push(newSubmission);
+      await incrementUserSongs(currentUser.uid)
     }
 
     const result = await saveRoundData(legionId, roundId, {

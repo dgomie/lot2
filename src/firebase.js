@@ -243,6 +243,45 @@ const incrementUserLegions = async (userId) => {
   }
 };
 
+export const incrementUserVotes = async (userId) => {
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    await updateDoc(userDocRef, {
+      numVotes: increment(1),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error incrementing numVotes: ', error);
+    return { success: false, error };
+  }
+};
+
+export const incrementUserSongs = async (userId) => {
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    await updateDoc(userDocRef, {
+      numSongs: increment(1),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error incrementing numSongs: ', error);
+    return { success: false, error };
+  }
+};
+
+export const incrementUserVictoriess = async (userId) => {
+  try {
+    const userDocRef = doc(db, 'users', userId);
+    await updateDoc(userDocRef, {
+      numVictories: increment(1),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error incrementing victories: ', error);
+    return { success: false, error };
+  }
+};
+
 const decrementUserLegions = async (userId) => {
   try {
     const userDocRef = doc(db, 'users', userId);

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter
 import styles from './VoteCard.module.css';
 import SongCard from '../songCard/SongCard';
 import Button from '@/components/button/Button';
-import { updateRoundSubmissions } from '@/firebase';
+import { updateRoundSubmissions, incrementUserVotes } from '@/firebase';
 
 const VoteCard = ({
   submissions,
@@ -32,7 +31,7 @@ const VoteCard = ({
   const handleSubmitVotes = async () => {
     const updatedSubmissions = submissions.map((submission, index) => ({
       ...submission,
-      voteCount: (submission.voteCount || 0) + votes[index], // Add the vote to the submission's voteCount
+      voteCount: (submission.voteCount || 0) + votes[index], 
     }));
 
     try {
@@ -45,6 +44,7 @@ const VoteCard = ({
 
       if (result.success) {
         console.log('Votes successfully submitted');
+        await incrementUserVotes(currentUser.uid)
         if (onVotesSubmitted) {
           onVotesSubmitted(); // Call the callback function to refresh the round data
         }
