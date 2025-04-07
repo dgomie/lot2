@@ -8,21 +8,21 @@
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.3s ease; /* Smooth background transition */
+    transition: background-color 0.3s ease; 
   }
   
   .videoTitle {
     font-size: 1rem;
     font-weight: bold;
     text-align: center;
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden; /* Hide overflowing text */
-    text-overflow: ellipsis; /* Add ellipsis for long titles */
-    width: 100%; /* Ensure the title spans the full width */
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    width: 100%; 
   }
   
   .videoContainer {
-    flex-grow: 1; /* Allow the video container to take up available space */
+    flex-grow: 1; 
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,4 +32,10 @@
   .buttonContainer {
     display: flex;
     gap: 0.5rem;
+  }
+
+  .userSubmissionMessage {
+    font-weight: bold;
+    font-style: italic;
+    color: gray;
   }

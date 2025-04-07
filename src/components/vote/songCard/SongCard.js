@@ -20,9 +20,9 @@ const SongCard = ({
   const videoId = extractYouTubeVideoId(youtubeUrl);
 
   const getBackgroundColor = () => {
-    if (vote === 1) return '#25A18E'; // Green for positive vote
-    if (vote === -1) return '#a12538'; // Red for negative vote
-    return 'transparent'; // Default background
+    if (vote === 1) return '#25A18E'; 
+    if (vote === -1) return '#a12538'; 
+    return 'transparent';
   };
 
   if (!videoId) {
