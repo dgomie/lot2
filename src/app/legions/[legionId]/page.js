@@ -9,6 +9,7 @@ import Players from '@/components/players/Players';
 import LegionHeader from '@/components/legionHeader/LegionHeader';
 import RoundCard from '@/components/roundCard/RoundCard';
 import styles from './LegionPage.module.css';
+import { StandingsCard } from '@/components/standingsCard/StandingsCard';
 
 const LegionPage = () => {
   const params = useParams();
@@ -64,6 +65,9 @@ const LegionPage = () => {
           legionAdmin={legionData.legionAdmin}
         />
       </div>
+
+      <StandingsCard standings={legionData.standings}/>
+
       <div className={styles.currentRound}>
         <div className={styles.title}>Current Round</div>
         {legionData.currentRound > legionData.rounds.length ? (

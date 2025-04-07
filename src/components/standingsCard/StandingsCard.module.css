@@ -1,0 +1,20 @@
+.mainContainer {
+    box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
+    padding: 1rem;
+    border-radius: 15px;
+    margin: .5rem;
+  }
+
+  .standingItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-weight: bold;
+  }
+
+  .title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin: .5rem 0 .5rem 0;
+  }
