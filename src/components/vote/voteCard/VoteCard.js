@@ -26,7 +26,7 @@ const VoteCard = ({
     });
   };
 
-  const canSubmitVotes = votes.some((vote) => vote !== 0); // Allow submission if any vote is non-zero
+  const canSubmitVotes = votes.some((vote) => vote !== 0); 
 
   const handleSubmitVotes = async () => {
     const updatedSubmissions = submissions.map((submission, index) => ({
@@ -39,14 +39,14 @@ const VoteCard = ({
         legionId,
         roundId,
         updatedSubmissions,
-        currentUser.uid // Pass the current user's UID
+        currentUser.uid 
       );
 
       if (result.success) {
         console.log('Votes successfully submitted');
         await incrementUserVotes(currentUser.uid)
         if (onVotesSubmitted) {
-          onVotesSubmitted(); // Call the callback function to refresh the round data
+          onVotesSubmitted(); 
         }
       } else {
         console.error('Failed to submit votes:', result.error);
@@ -59,13 +59,14 @@ const VoteCard = ({
   return (
     <div className={styles.mainContainer}>
       <div className={styles.carousel}>
-        {submissions.map((submission, index) => (
+      {submissions.map((submission, index) => (
           <SongCard
             key={submission.uid}
             youtubeUrl={submission.youtubeUrl}
             videoTitle={submission.videoTitle}
-            vote={votes[index]} // Pass the vote for this submission
-            onVote={(voteType) => handleVote(index, voteType)} // Use the index to update the vote
+            vote={votes[index]} 
+            onVote={(voteType) => handleVote(index, voteType)} 
+            isUserSubmission={submission.uid === currentUser.uid}
           />
         ))}
       </div>

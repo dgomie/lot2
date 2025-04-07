@@ -10,7 +10,13 @@ const extractYouTubeVideoId = (url) => {
   return match ? match[1] : null;
 };
 
-const SongCard = ({ youtubeUrl, videoTitle, vote, onVote }) => {
+const SongCard = ({
+  youtubeUrl,
+  videoTitle,
+  vote,
+  onVote,
+  isUserSubmission,
+}) => {
   const videoId = extractYouTubeVideoId(youtubeUrl);
 
   const getBackgroundColor = () => {
@@ -40,14 +46,18 @@ const SongCard = ({ youtubeUrl, videoTitle, vote, onVote }) => {
           allowFullScreen
         ></iframe>
       </div>
-      <div className={styles.buttonContainer}>
-        <Button onClick={() => onVote('negative')}>
-          <Image src="/img/minus.svg" alt="Downvote" width={25} height={25} />
-        </Button>
-        <Button onClick={() => onVote('positive')}>
-          <Image src="/img/plus.svg" alt="Upvote" width={25} height={25} />
-        </Button>
-      </div>
+      {isUserSubmission ? (
+        <div className={styles.userSubmissionMessage}>Your Submission</div>
+      ) : (
+        <div className={styles.buttonContainer}>
+          <Button onClick={() => onVote('negative')}>
+            <Image src="/img/minus.svg" alt="Downvote" width={25} height={25} />
+          </Button>
+          <Button onClick={() => onVote('positive')}>
+            <Image src="/img/plus.svg" alt="Upvote" width={25} height={25} />
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
