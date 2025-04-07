@@ -13,16 +13,21 @@
 
 .videoTitle {
     font-weight: bold;
-    width: 40%;
+    width: 85%;
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
+    margin: 0 0 .5rem 0;
 }
 
 .resultRow {
     display: flex;
     justify-content: space-between;
-    margin: 0 0 .5rem 0;
+    margin: 0 0 1rem 0;
+}
+
+.resultInfo {
+    margin: 0 0 1rem 0;
 }
 
 .username {
@@ -33,4 +38,8 @@
   .currentUser {
     font-weight: bold;
     color: var(--aquamarine100); 
+  }
+
+  .votes {
+    font-weight: bold;
   }
