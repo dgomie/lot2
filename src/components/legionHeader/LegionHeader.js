@@ -30,6 +30,7 @@ const LegionHeader = ({
       const result = await joinLegion({
         legionId: legionId,
         userId: currentUser.uid,
+        username: currentUser.username,
         fcmToken: currentUser.fcmToken,
         profileImg: currentUser.profileImg,
       });

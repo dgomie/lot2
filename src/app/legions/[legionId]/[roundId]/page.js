@@ -254,7 +254,7 @@ const RoundPage = ({ currentUser }) => {
         </div>
         {currentUser &&
           roundData &&
-          currentUser.uid === roundData.legionAdmin && (
+          currentUser.uid === roundData.legionAdmin.userId && (
             <div
               className={styles.gearIcon}
               onClick={() => setIsModalOpen(true)}
