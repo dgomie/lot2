@@ -44,13 +44,11 @@ const VoteCard = ({
       );
 
       if (result.success) {
-        console.log('Votes successfully submitted');
         await incrementUserVotes(currentUser.uid);
 
         // Check if the current user is the last in stillPonderingUsers
         if (stillPonderingUsers.length === 1 && stillPonderingUsers[0].uid === currentUser.uid) {
           const today = new Date().toISOString(); 
-          console.log("today (ISO format):", today);
           await updateVoteDeadline(legionId, roundId, today);
         
           // Trigger the cron job
