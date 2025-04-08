@@ -56,7 +56,7 @@ export async function GET(req, res) {
 
           // Prepare notifications for players
           if (legionData.players && legionData.players.length > 0) {
-            const playerUids = legionData.players; // Array of UIDs
+            const playerUids = legionData.players.map((player) => player.userId).filter(Boolean);
 
             // Fetch fcmTokens for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
@@ -83,7 +83,7 @@ export async function GET(req, res) {
                       token,
                       notification: {
                         title: 'The Votes are In!',
-                        body: `Round ${currentRound.roundNumber} in ${legionData.legionName} is complete. Check out how you did!`,
+                        body: `Round ${currentRound.roundNumber} in ${legionData.legionName} is complete. Check the app to see how you did!`,
                       },
                     })
                     .then((response) => {
