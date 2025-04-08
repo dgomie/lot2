@@ -26,10 +26,13 @@ const LegionPage = () => {
     }
   };
 
-  const handlePlayerAdded = ({userId, username, profileImg}) => {
+  const handlePlayerAdded = ({ userId, username, profileImg }) => {
     setLegionData((prevData) => ({
       ...prevData,
-      players: [...prevData.players, {userId: userId, username:username, profileImg: profileImg}],
+      players: [
+        ...prevData.players,
+        { userId: userId, username: username, profileImg: profileImg },
+      ],
     }));
   };
 
@@ -40,7 +43,6 @@ const LegionPage = () => {
     }));
   };
 
-
   // const handleTestStandingsUpdate = async () => {
   //   try {
   //     const result = await updateLegionStandings(legionId);
@@ -48,11 +50,11 @@ const LegionPage = () => {
   //       console.log('Standings updated successfully:', result.standings);
   //     } else {
   //       console.error('Error updating standings:', result.error);
-        
+
   //     }
   //   } catch (error) {
   //     console.error('Unexpected error:', error);
-     
+
   //   }
   // };
 
@@ -76,8 +78,8 @@ const LegionPage = () => {
           onPlayerRemoved={handlePlayerRemoved}
         />
       </div>
-
-         <div className={styles.tabContainer}>
+      <div className={styles.tabCentering}>
+      <div className={styles.tabContainer} data-active-tab={activeTab}>
         <button
           className={`${styles.tabButton1} ${
             activeTab === 'players' ? styles.activeTab : ''
@@ -95,6 +97,7 @@ const LegionPage = () => {
           Standings
         </button>
       </div>
+      </div>
 
       <div className={styles.tabContent}>
         {activeTab === 'players' && (
@@ -106,7 +109,10 @@ const LegionPage = () => {
           </div>
         )}
         {activeTab === 'standings' && (
-          <StandingsCard standings={legionData.standings} legionPlayers={legionData.players} />
+          <StandingsCard
+            standings={legionData.standings}
+            legionPlayers={legionData.players}
+          />
         )}
       </div>
 
@@ -134,7 +140,6 @@ const LegionPage = () => {
         </div>
       </div>
 
-     
       {/* <button
         className={styles.testButton}
         onClick={handleTestStandingsUpdate}
