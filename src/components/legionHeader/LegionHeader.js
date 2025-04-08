@@ -19,6 +19,7 @@ const LegionHeader = ({
   const { currentUser } = useContext(AuthContext);
   const [isDisabled, setIsDisabled] = useState(false);
 
+  console.log('current user', currentUser)
   const handleJoinLegion = async () => {
     setIsDisabled(true);
     if (!currentUser) {
@@ -36,7 +37,7 @@ const LegionHeader = ({
       });
       if (result.success) {
         incrementUserLegions(currentUser.uid);
-        onPlayerAdded(currentUser.uid);
+        onPlayerAdded({userId: currentUser.uid, username:currentUser.username, profileImg:currentUser.profileImg});
       } else {
         alert('Failed to join the legion. Please try again.');
       }
@@ -75,8 +76,8 @@ const LegionHeader = ({
     }
   };
 
-  const isMember = legionData.players.includes(currentUser?.uid);
-  const isAdmin = legionData.legionAdmin === currentUser?.uid;
+  const isMember = legionData.players.some(player => player.userId === currentUser?.uid);
+  const isAdmin = legionData.legionAdmin.userId === currentUser?.uid;
   const isFull = legionData.players.length >= legionData.maxNumPlayers;
 
   return (

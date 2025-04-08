@@ -26,36 +26,35 @@ const LegionPage = () => {
     }
   };
 
-  const handlePlayerAdded = (userId) => {
+  const handlePlayerAdded = ({userId, username, profileImg}) => {
     setLegionData((prevData) => ({
       ...prevData,
-      players: [...prevData.players, userId],
+      players: [...prevData.players, {userId: userId, username:username, profileImg: profileImg}],
     }));
   };
 
   const handlePlayerRemoved = (userId) => {
     setLegionData((prevData) => ({
       ...prevData,
-      players: prevData.players.filter((player) => player !== userId),
+      players: prevData.players.filter((player) => player.userId !== userId),
     }));
   };
 
-  console.log(legionData)
 
-  const handleTestStandingsUpdate = async () => {
-    try {
-      const result = await updateLegionStandings(legionId);
-      if (result.success) {
-        console.log('Standings updated successfully:', result.standings);
-      } else {
-        console.error('Error updating standings:', result.error);
+  // const handleTestStandingsUpdate = async () => {
+  //   try {
+  //     const result = await updateLegionStandings(legionId);
+  //     if (result.success) {
+  //       console.log('Standings updated successfully:', result.standings);
+  //     } else {
+  //       console.error('Error updating standings:', result.error);
         
-      }
-    } catch (error) {
-      console.error('Unexpected error:', error);
+  //     }
+  //   } catch (error) {
+  //     console.error('Unexpected error:', error);
      
-    }
-  };
+  //   }
+  // };
 
   useEffect(() => {
     if (legionId) {
@@ -78,7 +77,6 @@ const LegionPage = () => {
         />
       </div>
 
-         {/* Tab Navigation */}
          <div className={styles.tabContainer}>
         <button
           className={`${styles.tabButton1} ${
@@ -98,7 +96,6 @@ const LegionPage = () => {
         </button>
       </div>
 
-      {/* Tab Content */}
       <div className={styles.tabContent}>
         {activeTab === 'players' && (
           <div className={styles.playersContainer}>
@@ -147,12 +144,12 @@ const LegionPage = () => {
       </div>
 
      
-      <button
+      {/* <button
         className={styles.testButton}
         onClick={handleTestStandingsUpdate}
       >
         Test Update Standings
-      </button>
+      </button> */}
     </div>
   );
 };
