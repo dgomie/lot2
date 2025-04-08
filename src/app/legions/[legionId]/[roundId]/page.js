@@ -345,7 +345,6 @@ const RoundPage = ({ currentUser }) => {
         ) && (
           <>
             {roundData.playersVoted?.includes(currentUser.uid) ? (
-              // Show "Votes Submitted" message if the user has already voted
               <div className={styles.votesSubmitted}>
                 <Image
                   src="/img/check.svg"
@@ -366,6 +365,7 @@ const RoundPage = ({ currentUser }) => {
                 currentUser={currentUser}
                 onVotesSubmitted={refreshRoundData}
                 players={roundData?.players}
+                stillPonderingUsers={stillPonderingUsers} 
               />
             )}
           </>

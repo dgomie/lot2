@@ -29,7 +29,7 @@ export async function GET(req, res) {
         voteDeadline.setHours(0, 0, 0, 0);
 
         // Check if the voteDeadline matches the current date
-        if (voteDeadline.getTime() === currentDate.getTime()) {
+        if (voteDeadline.getTime() <= currentDate.getTime()) {
           const legionDocRef = legionsRef.doc(legionDoc.id);
 
           // Set the current round status to 'COMPLETED'

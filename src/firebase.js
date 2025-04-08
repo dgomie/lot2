@@ -583,6 +583,44 @@ export const updateLegionStandings = async (legionId) => {
   }
 };
 
+export const updateVoteDeadline = async (legionId, roundId, newDeadline) => {
+  try {
+    const roundRef = doc(db, 'legions', legionId); // Use db instead of adminDb
+    const roundDoc = await getDoc(roundRef);
+
+    if (!roundDoc.exists()) {
+      throw new Error('Legion not found');
+    }
+
+    const legionData = roundDoc.data();
+
+    // Ensure the `rounds` array exists
+    if (!legionData.rounds || !Array.isArray(legionData.rounds)) {
+      throw new Error('Rounds data is missing or invalid');
+    }
+
+    // Update the voteDeadline for the specific round
+    const updatedRounds = legionData.rounds.map((round) => {
+      if (round.roundNumber === parseInt(roundId, 10)) {
+        return {
+          ...round,
+          voteDeadline: newDeadline,
+        };
+      }
+      return round;
+    });
+
+    // Update the Firestore document with the modified rounds array
+    await updateDoc(roundRef, { rounds: updatedRounds });
+
+    console.log('Vote deadline updated successfully');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating vote deadline:', error);
+    return { success: false, error };
+  }
+};
+
 export {
   auth,
   db,
