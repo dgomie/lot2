@@ -35,12 +35,17 @@ export async function GET(req, res) {
           // Set the current round status to 'COMPLETED'
           currentRound.roundStatus = status.COMPLETED;
 
+          let isLegionActive = true;
+
           // Find the next round and set its status to 'ACTIVE'
           const nextRound = legionData.rounds?.find(
             (round) => round.roundNumber === legionData.currentRound + 1
+
           );
           if (nextRound) {
             nextRound.roundStatus = status.ACTIVE;
+          } else {
+            isLegionActive = false;
           }
 
           // Update the Firestore document
@@ -48,11 +53,12 @@ export async function GET(req, res) {
             legionDocRef.update({
               rounds: legionData.rounds, // Update the rounds array with updated statuses
               currentRound: FieldValue.increment(1), // Increment the currentRound
+              isActive: isLegionActive,
             })
           );
 
           // Update the standings for the legion
-          updates.push(updateLegionStandings(legionDoc.id)); // Call the function here
+          updateLegionStandings(legionDoc.id); // Call the function here
 
           // Prepare notifications for players
           if (legionData.players && legionData.players.length > 0) {
