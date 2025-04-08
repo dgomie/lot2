@@ -381,16 +381,16 @@ const resetPassword = async (email) => {
 const fetchLegionsByPlayer = async (userId) => {
   try {
     const legionsRef = collection(db, 'legions');
-    const q = query(
-      legionsRef,
-      where('players', 'array-contains', userId),
-      where('isActive', '==', true)
-    );
+    const q = query(legionsRef, where('isActive', '==', true));
     const querySnapshot = await getDocs(q);
 
     const legions = [];
     querySnapshot.forEach((doc) => {
-      legions.push({ id: doc.id, ...doc.data() });
+      const data = doc.data();
+      const isPlayer = data.players.some((player) => player.userId === userId);
+      if (isPlayer) {
+        legions.push({ id: doc.id, ...data });
+      }
     });
 
     return { success: true, legions };
