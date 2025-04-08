@@ -11,7 +11,7 @@ const VoteCard = ({
   currentUser,
   onVotesSubmitted,
 }) => {
-  const [votes, setVotes] = useState(submissions.map(() => 0)); // Initialize all votes to 0
+  const [votes, setVotes] = useState(submissions.map(() => 0));
   const handleVote = (index, type) => {
     setVotes((prevVotes) => {
       const updatedVotes = [...prevVotes];

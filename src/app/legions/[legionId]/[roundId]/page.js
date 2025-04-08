@@ -43,8 +43,10 @@ const RoundPage = ({ currentUser }) => {
   };
 
   const fetchUsersByUids = async (uids) => {
-    const userIds = uids.map((uid) => (typeof uid === 'object' ? uid.userId : uid));
-  
+    const userIds = uids.map((uid) =>
+      typeof uid === 'object' ? uid.userId : uid
+    );
+
     const users = await Promise.all(
       userIds.map(async (userId) => {
         const user = await getUserProfile(userId);
@@ -58,28 +60,26 @@ const RoundPage = ({ currentUser }) => {
     return users;
   };
 
-  console.log(roundData)
-
   useEffect(() => {
     const fetchUsers = async () => {
       if (!roundData) return;
-  
+
       const submissionUids = roundData.submissions?.map((s) => s.uid) || [];
       const playersVoted = roundData.playersVoted || [];
       const allPlayerUids = roundData.players.map((player) =>
         typeof player === 'object' ? player.userId : player
       );
-  
+
       const now = new Date();
       const isSubmissionPhase = now <= new Date(roundData.submissionDeadline);
-  
+
       // Calculate still pondering users
       const stillPonderingUids = allPlayerUids.filter((uid) =>
         isSubmissionPhase
           ? !submissionUids.includes(uid)
           : !playersVoted.includes(uid)
       );
-  
+
       // Fetch user profiles for still pondering users
       const [
         fetchedUsersWithSubmissions,
@@ -90,12 +90,12 @@ const RoundPage = ({ currentUser }) => {
         fetchUsersByUids(playersVoted),
         fetchUsersByUids(stillPonderingUids),
       ]);
-  
+
       setUsersWithSubmissions(fetchedUsersWithSubmissions);
       setUsersWhoVoted(fetchedUsersWhoVoted);
       setStillPonderingUsers(fetchedStillPonderingUsers);
     };
-  
+
     fetchUsers();
   }, [roundData]);
 
@@ -231,6 +231,7 @@ const RoundPage = ({ currentUser }) => {
     ];
   }
 
+  console.log(roundData.players);
   return (
     <div className={styles.roundPage}>
       <div className={styles.header}>
@@ -305,36 +306,43 @@ const RoundPage = ({ currentUser }) => {
           </div>
         ) : (
           // Show "Submit Song" button if the conditions above are not met
-          <div
-            className={styles.submit}
-            onClick={() => setIsSubmitModalOpen(true)}
-          >
-            <Image
-              src={
-                roundData.submissions?.some(
+          roundData.players.some(
+            (player) => player.userId === currentUser.uid
+          ) && (
+            <div
+              className={styles.submit}
+              onClick={() => setIsSubmitModalOpen(true)}
+            >
+              <Image
+                src={
+                  roundData.submissions?.some(
+                    (submission) => submission.uid === currentUser.uid
+                  )
+                    ? '/img/resubmit.svg'
+                    : '/img/share.svg'
+                }
+                alt="submit"
+                width={50}
+                height={50}
+              />
+              <div className={styles.label}>
+                {roundData.submissions?.some(
                   (submission) => submission.uid === currentUser.uid
                 )
-                  ? '/img/resubmit.svg'
-                  : '/img/share.svg'
-              }
-              alt="submit"
-              width={50}
-              height={50}
-            />
-            <div className={styles.label}>
-              {roundData.submissions?.some(
-                (submission) => submission.uid === currentUser.uid
-              )
-                ? 'Change Submission'
-                : 'Submit Song'}
+                  ? 'Change Submission'
+                  : 'Submit Song'}
+              </div>
             </div>
-          </div>
+          )
         )}
       </div>
 
       {new Date() > new Date(roundData.submissionDeadline) &&
         new Date() <= new Date(roundData.voteDeadline) &&
-        roundData.roundStatus !== 'completed' && (
+        roundData.roundStatus !== 'completed' &&
+        roundData.players.some(
+          (player) => player.userId === currentUser.uid
+        ) && (
           <>
             {roundData.playersVoted?.includes(currentUser.uid) ? (
               // Show "Votes Submitted" message if the user has already voted
@@ -357,6 +365,7 @@ const RoundPage = ({ currentUser }) => {
                 roundId={roundId}
                 currentUser={currentUser}
                 onVotesSubmitted={refreshRoundData}
+                players={roundData?.players}
               />
             )}
           </>
