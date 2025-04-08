@@ -2,7 +2,7 @@ import { adminDb } from '../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { status } from '../../../utils/status';
 import admin from 'firebase-admin'; // Ensure Firebase Admin SDK is initialized
-import { updateLegionStandings } from '../../../firebase'; // Import the function
+import { adminUpdateLegionStandings } from '../../../firebaseAdmin';
 
 export async function GET(req, res) {
   try {
@@ -58,8 +58,11 @@ export async function GET(req, res) {
           );
 
           // Update the standings for the legion
-          updateLegionStandings(legionDoc.id); // Call the function here
-
+          try {
+            await adminUpdateLegionStandings(legionDoc.id);
+          } catch (error) {
+            console.error(`Error updating standings for legion ${legionDoc.id}:`, error);
+          }
           // Prepare notifications for players
           if (legionData.players && legionData.players.length > 0) {
             const playerUids = legionData.players.map((player) => player.userId).filter(Boolean);
