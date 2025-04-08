@@ -21,7 +21,7 @@ const Players = ({ legionPlayers, legionAdmin }) => {
       <div className={styles.playersList}>
         {legionPlayers.slice(0, visibleCount).map((player) => (
           <div
-            key={player.uid}
+            key={player.userId}
             className={styles.playerCard}
             onClick={() => handleProfileClick(player.username)}
           >

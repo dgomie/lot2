@@ -43,11 +43,13 @@ const RoundPage = ({ currentUser }) => {
   };
 
   const fetchUsersByUids = async (uids) => {
+    const userIds = uids.map((uid) => (typeof uid === 'object' ? uid.userId : uid));
+  
     const users = await Promise.all(
-      uids.map(async (uid) => {
-        const user = await getUserProfile(uid);
+      userIds.map(async (userId) => {
+        const user = await getUserProfile(userId);
         return {
-          uid,
+          uid: userId,
           profileImage: user?.profileImg || '/img/user.png',
           username: user?.username,
         };
@@ -56,26 +58,29 @@ const RoundPage = ({ currentUser }) => {
     return users;
   };
 
+  console.log(roundData)
+
   useEffect(() => {
     const fetchUsers = async () => {
       if (!roundData) return;
-
+  
       const submissionUids = roundData.submissions?.map((s) => s.uid) || [];
       const playersVoted = roundData.playersVoted || [];
-      const allPlayerUids = roundData.players || [];
-
+      const allPlayerUids = roundData.players.map((player) =>
+        typeof player === 'object' ? player.userId : player
+      );
+  
       const now = new Date();
       const isSubmissionPhase = now <= new Date(roundData.submissionDeadline);
-      const isVotingPhase =
-        now > new Date(roundData.submissionDeadline) &&
-        now <= new Date(roundData.voteDeadline);
-
+  
+      // Calculate still pondering users
       const stillPonderingUids = allPlayerUids.filter((uid) =>
         isSubmissionPhase
           ? !submissionUids.includes(uid)
           : !playersVoted.includes(uid)
       );
-
+  
+      // Fetch user profiles for still pondering users
       const [
         fetchedUsersWithSubmissions,
         fetchedUsersWhoVoted,
@@ -85,26 +90,14 @@ const RoundPage = ({ currentUser }) => {
         fetchUsersByUids(playersVoted),
         fetchUsersByUids(stillPonderingUids),
       ]);
-
+  
       setUsersWithSubmissions(fetchedUsersWithSubmissions);
       setUsersWhoVoted(fetchedUsersWhoVoted);
       setStillPonderingUsers(fetchedStillPonderingUsers);
     };
-
+  
     fetchUsers();
   }, [roundData]);
-
-  const isSubmissionPhase = useMemo(
-    () => new Date() <= new Date(roundData?.submissionDeadline),
-    [roundData]
-  );
-
-  const isVotingPhase = useMemo(
-    () =>
-      new Date() > new Date(roundData?.submissionDeadline) &&
-      new Date() <= new Date(roundData?.voteDeadline),
-    [roundData]
-  );
 
   const generatePlaylist = () => {
     if (
