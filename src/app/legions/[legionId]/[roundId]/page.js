@@ -231,7 +231,6 @@ const RoundPage = ({ currentUser }) => {
     ];
   }
 
-  console.log(roundData.players);
   return (
     <div className={styles.roundPage}>
       <div className={styles.header}>

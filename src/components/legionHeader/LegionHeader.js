@@ -19,7 +19,6 @@ const LegionHeader = ({
   const { currentUser } = useContext(AuthContext);
   const [isDisabled, setIsDisabled] = useState(false);
 
-  console.log('current user', currentUser)
   const handleJoinLegion = async () => {
     setIsDisabled(true);
     if (!currentUser) {
