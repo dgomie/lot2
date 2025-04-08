@@ -621,6 +621,46 @@ export const updateVoteDeadline = async (legionId, roundId, newDeadline) => {
   }
 };
 
+export const updateProfileImgInLegions = async ({ userId, newProfileImgUrl }) => {
+  try {
+    const legionsRef = collection(db, 'legions');
+    const q = query(legionsRef); // Fetch all legions
+    const querySnapshot = await getDocs(q);
+
+    const updatePromises = [];
+
+    querySnapshot.forEach((doc) => {
+      const legionData = doc.data();
+
+      // Check if the userId exists in the players array
+      const isPlayerInLegion = legionData.players.some(
+        (player) => player.userId === userId
+      );
+
+      if (isPlayerInLegion) {
+        // Update the profileImg for the matching player
+        const updatedPlayers = legionData.players.map((player) => {
+          if (player.userId === userId) {
+            return { ...player, profileImg: newProfileImgUrl };
+          }
+          return player;
+        });
+
+        // Add the update operation to the promises array
+        const updatePromise = updateDoc(doc.ref, { players: updatedPlayers });
+        updatePromises.push(updatePromise);
+      }
+    });
+
+    await Promise.all(updatePromises);
+    console.log('Profile image updated in all relevant legions.');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating profile image in legions:', error);
+    return { success: false, error };
+  }
+};
+
 export {
   auth,
   db,

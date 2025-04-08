@@ -5,6 +5,8 @@ import { uploadProfileImage } from '@/firebase';
 import EditIcon from '../../../public/img/edit.svg';
 import Spinner from '../spinner/Spinner';
 import imageCompression from 'browser-image-compression';
+import { updateProfileImgInLegions } from '@/firebase';
+
 
 const ProfileHeader = ({
   userId,
@@ -25,7 +27,7 @@ const ProfileHeader = ({
         alert('Only JPEG and PNG images are allowed.');
         return;
       }
-
+  
       setLoading(true);
       try {
         // Compress the image
@@ -35,17 +37,22 @@ const ProfileHeader = ({
           useWebWorker: true,
         };
         const compressedFile = await imageCompression(file, options);
-
+  
         // Validate compressed file size
         if (compressedFile.size > 500 * 1024) {
           alert('Compressed image size exceeds 500 KB.');
           setLoading(false);
           return;
         }
-
+  
         // Upload the compressed image
         const url = await uploadProfileImage(compressedFile, userId);
         setImageUrl(url);
+  
+        const result = await updateProfileImgInLegions({userId: userId, newProfileImgUrl: url});
+        if (!result.success) {
+          console.error('Failed to update profile image in legions:', result.error);
+        }
       } catch (error) {
         console.error('Error uploading profile image:', error);
       } finally {
@@ -54,7 +61,7 @@ const ProfileHeader = ({
     } else {
       console.error('File or userId is missing');
     }
-  };
+  }; 
 
   const formatDate = (date) => {
     if (!date) return 'Unknown';
@@ -81,6 +88,7 @@ const ProfileHeader = ({
           alt="Profile Image"
           width={160}
           height={160}
+          onError={() => setImageUrl('/img/user.png')} 
           onClick={() => {
             if (currentUserId === userId) {
               document.getElementById('fileInput').click();
