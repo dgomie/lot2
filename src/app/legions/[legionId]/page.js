@@ -40,6 +40,8 @@ const LegionPage = () => {
     }));
   };
 
+  console.log(legionData)
+
   // const handleTestStandingsUpdate = async () => {
   //   try {
   //     const result = await updateLegionStandings(legionId);
@@ -102,12 +104,12 @@ const LegionPage = () => {
           <div className={styles.playersContainer}>
             <Players
               legionPlayers={legionData.players}
-              legionAdmin={legionData.legionAdmin}
+              legionAdmin={legionData.legionAdmin.userId}
             />
           </div>
         )}
         {activeTab === 'standings' && (
-          <StandingsCard standings={legionData.standings} />
+          <StandingsCard standings={legionData.standings} legionPlayers={legionData.players} />
         )}
       </div>
 

@@ -328,12 +328,12 @@ const fetchLegions = async (lastVisible) => {
   return { legions, lastVisibleDoc };
 };
 
-const joinLegion = async ({ legionId, userId, fcmToken, profileImg }) => {
+const joinLegion = async ({ legionId, userId, fcmToken, profileImg, username }) => {
   try {
     const legionDocRef = doc(db, 'legions', legionId);
 
     await updateDoc(legionDocRef, {
-      players: arrayUnion({ userId, profileImg }),
+      players: arrayUnion({ userId, username, profileImg }),
       playerTokens: arrayUnion(fcmToken),
     });
 

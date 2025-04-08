@@ -108,8 +108,15 @@ const CreateLegionForm = ({ currentUser }) => {
 
         const updatedFormData = {
           ...formData,
-          legionAdmin: currentUser.uid,
-          players: [...formData.players, currentUser.uid],
+          legionAdmin: {
+            userId: currentUser.uid,
+            username: currentUser.username,
+            profileImg: currentUser.profileImg,
+          },
+          players: [
+            ...formData.players,
+            { userId: currentUser.uid, username: currentUser.username, profileImg: currentUser.profileImg },
+          ],
           playerTokens: [...formData.playerTokens, currentUser.fcmToken],
           rounds,
         };

@@ -1,41 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Players.module.css';
-import { getUserProfile } from '@/firebase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import Button from '../button/Button';
 
 const Players = ({ legionPlayers, legionAdmin }) => {
-  const [playersData, setPlayersData] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [visibleCount, setVisibleCount] = useState(6);
   const router = useRouter();
-
-  useEffect(() => {
-    const fetchPlayersData = async () => {
-      try {
-        const players = await Promise.all(
-          legionPlayers.map(async (uid) => {
-            const userData = await getUserProfile(uid);
-            return { uid, ...userData };
-          })
-        );
-        setPlayersData(players);
-      } catch (error) {
-        console.error('Error fetching players data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (legionPlayers?.length) {
-      fetchPlayersData();
-    }
-  }, [legionPlayers]);
-
-  if (loading) {
-    return <div className={styles.loading}>Loading players...</div>;
-  }
 
   const handleProfileClick = (username) => {
     router.push(`/profile/${username}`);
@@ -48,7 +19,7 @@ const Players = ({ legionPlayers, legionAdmin }) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.playersList}>
-        {playersData.slice(0, visibleCount).map((player) => (
+        {legionPlayers.slice(0, visibleCount).map((player) => (
           <div
             key={player.uid}
             className={styles.playerCard}
@@ -62,7 +33,7 @@ const Players = ({ legionPlayers, legionAdmin }) => {
                 width={25}
                 height={25}
               />
-              {player.uid === legionAdmin && (
+              {player.userId === legionAdmin && (
                 <div className={styles.adminBadge}>★</div>
               )}
             </div>
@@ -72,7 +43,7 @@ const Players = ({ legionPlayers, legionAdmin }) => {
           </div>
         ))}
       </div>
-      {visibleCount < playersData.length && (
+      {visibleCount < legionPlayers.length && (
         <div className={styles.showMoreButton}>
           <Button onClick={handleShowMore} variant="transparentGray">
             See More
