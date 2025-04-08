@@ -41,20 +41,20 @@ const LegionPage = () => {
   };
 
 
-  const handleTestStandingsUpdate = async () => {
-    try {
-      const result = await updateLegionStandings(legionId);
-      if (result.success) {
-        console.log('Standings updated successfully:', result.standings);
-      } else {
-        console.error('Error updating standings:', result.error);
+  // const handleTestStandingsUpdate = async () => {
+  //   try {
+  //     const result = await updateLegionStandings(legionId);
+  //     if (result.success) {
+  //       console.log('Standings updated successfully:', result.standings);
+  //     } else {
+  //       console.error('Error updating standings:', result.error);
         
-      }
-    } catch (error) {
-      console.error('Unexpected error:', error);
+  //     }
+  //   } catch (error) {
+  //     console.error('Unexpected error:', error);
      
-    }
-  };
+  //   }
+  // };
 
   useEffect(() => {
     if (legionId) {
@@ -135,12 +135,12 @@ const LegionPage = () => {
       </div>
 
      
-      <button
+      {/* <button
         className={styles.testButton}
         onClick={handleTestStandingsUpdate}
       >
         Test Update Standings
-      </button>
+      </button> */}
     </div>
   );
 };
