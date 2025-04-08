@@ -381,7 +381,7 @@ const resetPassword = async (email) => {
 const fetchLegionsByPlayer = async (userId) => {
   try {
     const legionsRef = collection(db, 'legions');
-    const q = query(legionsRef, where('isActive', '==', true));
+    const q = query(legionsRef);
     const querySnapshot = await getDocs(q);
 
     const legions = [];
