@@ -15,6 +15,7 @@ const LegionPage = () => {
   const params = useParams();
   const legionId = params.legionId;
   const [legionData, setLegionData] = useState(null);
+  const [activeTab, setActiveTab] = useState('players');
 
   const fetchData = async () => {
     const result = await fetchLegionData(legionId);
@@ -74,14 +75,50 @@ const LegionPage = () => {
           onPlayerRemoved={handlePlayerRemoved}
         />
       </div>
-      <div className={styles.playersContainer}>
+
+         {/* Tab Navigation */}
+         <div className={styles.tabContainer}>
+        <button
+          className={`${styles.tabButton1} ${
+            activeTab === 'players' ? styles.activeTab : ''
+          }`}
+          onClick={() => setActiveTab('players')}
+        >
+          Players
+        </button>
+        <button
+          className={`${styles.tabButton2} ${
+            activeTab === 'standings' ? styles.activeTab : ''
+          }`}
+          onClick={() => setActiveTab('standings')}
+        >
+          Standings
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className={styles.tabContent}>
+        {activeTab === 'players' && (
+          <div className={styles.playersContainer}>
+            <Players
+              legionPlayers={legionData.players}
+              legionAdmin={legionData.legionAdmin}
+            />
+          </div>
+        )}
+        {activeTab === 'standings' && (
+          <StandingsCard standings={legionData.standings} />
+        )}
+      </div>
+
+      {/* <div className={styles.playersContainer}>
         <Players
           legionPlayers={legionData.players}
           legionAdmin={legionData.legionAdmin}
         />
       </div>
 
-      <StandingsCard standings={legionData.standings} />
+      <StandingsCard standings={legionData.standings} /> */}
 
       <div className={styles.currentRound}>
         <div className={styles.title}>Current Round</div>

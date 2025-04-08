@@ -47,6 +47,50 @@
   width: 100%;
 }
 
+.tabContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  width: 100%;
+  padding: 1rem;
+}
+
+.tabButton1,
+.tabButton2 {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #d4d4d4;
+  color: black;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  width: 100%;
+  max-width: 20rem;
+  border-radius: 15px 0 0 15px;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tabButton2 {
+  border-radius: 0 15px 15px 0;
+}
+
+.tabButton:hover {
+  background-color: #e0e0e0;
+}
+
+.activeTab {
+  background-color: #00a5cf;
+  color: white;
+  font-weight: bold;
+  box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tabContent {
+  margin-top: 20px;
+}
+
 @media (min-width: 768px) {
   .playersContainer {
     width: 50rem;
