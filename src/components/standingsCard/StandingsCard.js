@@ -1,41 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import styles from './StandingsCard.module.css';
-import { getUserProfile } from '@/firebase';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export const StandingsCard = ({ standings }) => {
+export const StandingsCard = ({ standings, legionPlayers }) => {
   const [userProfiles, setUserProfiles] = useState({});
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchUserProfiles = async () => {
-      const profileMap = {};
-      for (const item of standings) {
-        if (item.uid) {
-          try {
-            const userProfile = await getUserProfile(item.uid);
-            profileMap[item.uid] = {
-              username: userProfile?.username || 'Unknown User',
-              profileImg: userProfile?.profileImg || '/img/user.png',
-            };
-          } catch (error) {
-            console.error(`Error fetching profile for UID ${item.uid}:`, error);
-            profileMap[item.uid] = {
-              username: 'Unknown User',
-              profileImage: '/default-profile.png',
-            };
-          }
-        }
-      }
-      setUserProfiles(profileMap);
-    };
-
-    fetchUserProfiles();
-  }, [standings]);
+    const profileMap = legionPlayers.reduce((map, player) => {
+      map[player.userId] = {
+        username: player.username || 'Unknown User',
+        profileImg: player.profileImg || '/img/user.png',
+      };
+      return map;
+    }, {});
+    setUserProfiles(profileMap);
+  }, [legionPlayers]);
 
   const sortedStandings = standings.sort((a, b) => b.votes - a.votes);
-
-  const router = useRouter();
 
   const handleImageClick = (username) => {
     if (username) {
