@@ -328,12 +328,12 @@ const fetchLegions = async (lastVisible) => {
   return { legions, lastVisibleDoc };
 };
 
-const joinLegion = async (legionId, userId, fcmToken) => {
+const joinLegion = async ({ legionId, userId, fcmToken, profileImg }) => {
   try {
     const legionDocRef = doc(db, 'legions', legionId);
 
     await updateDoc(legionDocRef, {
-      players: arrayUnion(userId),
+      players: arrayUnion({ userId, profileImg }),
       playerTokens: arrayUnion(fcmToken),
     });
 
@@ -348,9 +348,23 @@ const leaveLegion = async (legionId, userId, fcmToken) => {
   try {
     const legionDocRef = doc(db, 'legions', legionId);
 
+    // Fetch the current legion data
+    const legionDoc = await getDoc(legionDocRef);
+    if (!legionDoc.exists()) {
+      throw new Error('Legion not found');
+    }
+
+    const legionData = legionDoc.data();
+
+    // Filter out the tuple containing the userId
+    const updatedPlayers = legionData.players.filter(
+      (player) => player.userId !== userId
+    );
+
+    // Update the Firestore document
     await updateDoc(legionDocRef, {
-      players: arrayRemove(userId),
-      playerTokens: arrayRemove(fcmToken),
+      players: updatedPlayers,
+      playerTokens: arrayRemove(fcmToken), // Remove the FCM token
     });
 
     return { success: true };
@@ -442,7 +456,11 @@ const fetchRoundData = async (legionId, roundId) => {
       // Include legionAdmin in the response
       return {
         success: true,
-        round: { ...round, legionAdmin: legionData.legionAdmin, players: legionData.players },
+        round: {
+          ...round,
+          legionAdmin: legionData.legionAdmin,
+          players: legionData.players,
+        },
       };
     } else {
       console.error('No such document!');

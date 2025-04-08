@@ -27,7 +27,12 @@ const LegionHeader = ({
     }
 
     try {
-      const result = await joinLegion(legionId, currentUser.uid, currentUser.fcmToken);
+      const result = await joinLegion({
+        legionId: legionId,
+        userId: currentUser.uid,
+        fcmToken: currentUser.fcmToken,
+        profileImg: currentUser.profileImg,
+      });
       if (result.success) {
         incrementUserLegions(currentUser.uid);
         onPlayerAdded(currentUser.uid);
@@ -50,7 +55,11 @@ const LegionHeader = ({
     }
 
     try {
-      const result = await leaveLegion(legionId, currentUser.uid, currentUser.fcmToken);
+      const result = await leaveLegion(
+        legionId,
+        currentUser.uid,
+        currentUser.fcmToken
+      );
       if (result.success) {
         decrementUserLegions(currentUser.uid);
         onPlayerRemoved(currentUser.uid);
