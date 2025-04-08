@@ -4,7 +4,6 @@ export const triggerCronJob = async () => {
       if (!response.ok) {
         throw new Error('Failed to trigger cron job');
       }
-      console.log('Cron job triggered successfully');
     } catch (error) {
       console.error('Error triggering cron job:', error);
     }

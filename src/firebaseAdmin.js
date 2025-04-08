@@ -1,12 +1,15 @@
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore'; // Import FieldValue
 import 'dotenv/config';
 
 if (!getApps().length) {
   try {
     // Decode the Base64 string and parse the JSON
     const serviceAccount = JSON.parse(
-      Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_KEY_BASE64, 'base64').toString('utf8')
+      Buffer.from(
+        process.env.FIREBASE_SERVICE_ACCOUNT_KEY_BASE64,
+        'base64'
+      ).toString('utf8')
     );
 
     initializeApp({
@@ -14,7 +17,9 @@ if (!getApps().length) {
     });
   } catch (error) {
     console.error('Error parsing FIREBASE_SERVICE_ACCOUNT_KEY_BASE64:', error);
-    throw new Error('Invalid FIREBASE_SERVICE_ACCOUNT_KEY_BASE64 environment variable');
+    throw new Error(
+      'Invalid FIREBASE_SERVICE_ACCOUNT_KEY_BASE64 environment variable'
+    );
   }
 }
 
@@ -60,10 +65,22 @@ export const adminUpdateLegionStandings = async (legionId) => {
     // Update the legion's standings array in Firestore
     await legionDocRef.update({ standings });
 
-    console.log('Legion standings updated successfully');
     return { success: true, standings };
   } catch (error) {
     console.error('Error updating legion standings:', error);
+    return { success: false, error };
+  }
+};
+
+export const adminIncrementUserVictories = async (userId) => {
+  try {
+    const userDocRef = adminDb.collection('users').doc(userId);
+    await userDocRef.update({
+      numVictories: FieldValue.increment(1), // Use FieldValue from admin.firestore
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error incrementing victories (admin):', error);
     return { success: false, error };
   }
 };

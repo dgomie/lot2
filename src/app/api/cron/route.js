@@ -2,7 +2,7 @@ import { adminDb } from '../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { status } from '../../../utils/status';
 import admin from 'firebase-admin'; // Ensure Firebase Admin SDK is initialized
-import { adminUpdateLegionStandings } from '../../../firebaseAdmin';
+import { adminUpdateLegionStandings, adminIncrementUserVictories } from '../../../firebaseAdmin';
 
 export async function GET(req, res) {
   try {
@@ -40,7 +40,6 @@ export async function GET(req, res) {
           // Find the next round and set its status to 'ACTIVE'
           const nextRound = legionData.rounds?.find(
             (round) => round.roundNumber === legionData.currentRound + 1
-
           );
           if (nextRound) {
             nextRound.roundStatus = status.ACTIVE;
@@ -59,13 +58,39 @@ export async function GET(req, res) {
 
           // Update the standings for the legion
           try {
-            await adminUpdateLegionStandings(legionDoc.id);
+            const { standings } = await adminUpdateLegionStandings(legionDoc.id);
+          
+            if (!Array.isArray(standings)) {
+              throw new Error('Standings is not an array');
+            }
+          
+            if (!isLegionActive) {
+              const topUser = standings.length
+                ? standings.reduce(
+                    (max, user) => (user.votes > max.votes ? user : max),
+                    { votes: -Infinity }
+                  )
+                : null;
+          
+              if (topUser && topUser.uid) {
+                try {
+                  await adminIncrementUserVictories(topUser.uid);
+                  console.log(`Victory incremented for user: ${topUser.uid}`);
+                } catch (error) {
+                  console.error(`Error incrementing victories for user ${topUser.uid}:`, error);
+                }
+              } else {
+                console.warn('No valid top user found in standings.');
+              }
+            }
           } catch (error) {
             console.error(`Error updating standings for legion ${legionDoc.id}:`, error);
           }
           // Prepare notifications for players
           if (legionData.players && legionData.players.length > 0) {
-            const playerUids = legionData.players.map((player) => player.userId).filter(Boolean);
+            const playerUids = legionData.players
+              .map((player) => player.userId)
+              .filter(Boolean);
 
             // Fetch fcmTokens for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
@@ -96,16 +121,10 @@ export async function GET(req, res) {
                       },
                     })
                     .then((response) => {
-                      console.log(
-                        `Notification sent`,
-                        response
-                      );
+                      console.log(`Notification sent`, response);
                     })
                     .catch((error) => {
-                      console.error(
-                        `Error sending notification`,
-                        error
-                      );
+                      console.error(`Error sending notification`, error);
                       // Optionally, handle invalid tokens here
                     })
                 );
