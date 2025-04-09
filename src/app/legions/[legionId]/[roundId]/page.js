@@ -19,6 +19,7 @@ import { RoundResults } from '@/components/results/RoundResults';
 import { status } from '@/utils/status';
 import { RoundPageHeader } from '@/components/roundPageHeader/RoundPageHeader';
 import { VotesSubmitted } from '@/components/vote/votesSubmitted/VotesSubmitted';
+import { RoundPageInfo } from '@/components/roundPageInfo/RoundPageInfo';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -263,6 +264,14 @@ const RoundPage = ({ currentUser }) => {
     setIsModalOpen(true);
   };
 
+  const onSubmitClick = () => {
+    setIsSubmitModalOpen(true);
+  };
+
+  const onPlaylistClick = () => {
+    generatePlaylist();
+  };
+
   return (
     <div className={styles.roundPage}>
       <RoundPageHeader
@@ -272,82 +281,16 @@ const RoundPage = ({ currentUser }) => {
         onBackClick={onBackClick}
         onSettingsClick={onSettingsClick}
       />
-
-      <div className={styles.roundInfo}>
-        <div className={styles.title}>Round {roundData.roundNumber}</div>
-        <div className={styles.prompt}>{roundData.prompt}</div>
-        <p>
-          Submission Deadline:{' '}
-          {new Date(roundData.submissionDeadline).toLocaleDateString()}
-        </p>
-        <p>
-          Vote Deadline: {new Date(roundData.voteDeadline).toLocaleDateString()}
-        </p>
-
-        <UserImageContainer
-          title={
-            new Date() > new Date(roundData.submissionDeadline)
-              ? 'Voted'
-              : 'Submitted'
-          }
-          users={
-            new Date() > new Date(roundData.submissionDeadline)
-              ? usersWhoVoted
-              : usersWithSubmissions
-          }
-        />
-
-        <UserImageContainer
-          title="Still Pondering"
-          users={stillPonderingUsers}
-        />
-
-        {new Date() > new Date(roundData.submissionDeadline) ? (
-          // Show "Listen to Playlist" button if the current date is past the submission deadline
-          // OR if the number of submissions equals the number of players
-          <div className={styles.submit} onClick={generatePlaylist}>
-            <Image
-              src="/img/playlist.svg"
-              alt="playlist"
-              width={50}
-              height={50}
-            />
-            <div className={styles.label}>Listen to Playlist</div>
-          </div>
-        ) : (
-          // Show "Submit Song" button if the conditions above are not met
-          roundData.players.some(
-            (player) => player.userId === currentUser.uid
-          ) &&
-          roundData.roundStatus !== status.PENDING && (
-            <div
-              className={styles.submit}
-              onClick={() => setIsSubmitModalOpen(true)}
-            >
-              <Image
-                src={
-                  roundData.submissions?.some(
-                    (submission) => submission.uid === currentUser.uid
-                  )
-                    ? '/img/resubmit.svg'
-                    : '/img/share.svg'
-                }
-                alt="submit"
-                width={50}
-                height={50}
-              />
-              <div className={styles.label}>
-                {roundData.submissions?.some(
-                  (submission) => submission.uid === currentUser.uid
-                )
-                  ? 'Change Submission'
-                  : 'Submit Song'}
-              </div>
-            </div>
-          )
-        )}
-      </div>
-
+      <RoundPageInfo
+        currentUser={currentUser}
+        roundData={roundData}
+        usersWhoVoted={usersWhoVoted}
+        usersWithSubmissions={usersWithSubmissions}
+        stillPonderingUsers={stillPonderingUsers}
+        onPlaylistClick={onPlaylistClick}
+        onSubmitClick={onSubmitClick}
+      />
+      
       {new Date() > new Date(roundData.submissionDeadline) &&
         new Date() <= new Date(roundData.voteDeadline) &&
         roundData.roundStatus !== 'completed' &&
