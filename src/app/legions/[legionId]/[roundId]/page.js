@@ -165,13 +165,12 @@ const RoundPage = ({ currentUser }) => {
 
   const handleSubmitUrl = async (youtubeUrl) => {
     if (!currentUser) return;
-
+  
     const videoId = youtubeUrl.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/)?.[1];
     if (!videoId) {
-      alert('Invalid YouTube URL');
-      return;
+      return 'Invalid YouTube URL.';
     }
-
+  
     let videoTitle = 'Unknown Video';
     try {
       const response = await fetch(
@@ -183,20 +182,32 @@ const RoundPage = ({ currentUser }) => {
       }
     } catch (error) {
       console.error('Error fetching video title:', error);
+      return 'Error fetching video details. Please try again.';
     }
-
+  
+    // Check if the video ID and title already exist in submissions
+    const existingSubmission = roundData.submissions?.find(
+      (submission) =>
+        submission.youtubeUrl.includes(videoId) ||
+        submission.videoTitle === videoTitle
+    );
+  
+    if (existingSubmission) {
+      return 'Alas! Someone video has already claimed this song. Your next choice is probably better anyway!';
+    }
+  
     const newSubmission = {
       uid: currentUser.uid,
       youtubeUrl,
       videoTitle,
       voteCount: 0,
     };
-
+  
     const existingSubmissions = roundData.submissions || [];
     const updatedSubmissions = existingSubmissions.map((submission) =>
       submission.uid === currentUser.uid ? newSubmission : submission
     );
-
+  
     const isNewSubmission = !existingSubmissions.some(
       (submission) => submission.uid === currentUser.uid
     );
@@ -204,12 +215,12 @@ const RoundPage = ({ currentUser }) => {
       updatedSubmissions.push(newSubmission);
       await incrementUserSongs(currentUser.uid);
     }
-
+  
     const result = await saveRoundData(legionId, roundId, {
       ...roundData,
       submissions: updatedSubmissions,
     });
-
+  
     if (result.success) {
       setRoundData((prev) => ({
         ...prev,
@@ -217,8 +228,10 @@ const RoundPage = ({ currentUser }) => {
       }));
       setLoading(true);
       await fetchRound();
+      return null; // No error
     } else {
       console.error(result.error);
+      return 'Error saving submission. Please try again.';
     }
   };
 
