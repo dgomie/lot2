@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import styles from './VoteCard.module.css';
 import SongCard from '../songCard/SongCard';
 import Button from '@/components/button/Button';
-import { updateRoundSubmissions, incrementUserVotes, updateVoteDeadline } from '@/firebase'; 
+import {
+  updateRoundSubmissions,
+  incrementUserVotes,
+  updateVoteDeadline,
+} from '@/firebase';
 import { triggerCronJob } from '@/utils/cron';
 
 const VoteCard = ({
@@ -30,12 +34,25 @@ const VoteCard = ({
   const canSubmitVotes = votes.some((vote) => vote !== 0);
 
   const handleSubmitVotes = async () => {
-    const updatedSubmissions = submissions.map((submission, index) => ({
-      ...submission,
-      voteCount: (submission.voteCount || 0) + votes[index],
-    }));
-
     try {
+      // Fetch the latest round data to ensure up-to-date submissions
+      const latestRoundDataResult = await fetchRoundData(legionId, roundId);
+      if (!latestRoundDataResult.success) {
+        console.error(
+          'Error fetching the latest round data:',
+          latestRoundDataResult.error
+        );
+        return;
+      }
+      const latestSubmissions = latestRoundDataResult.round.submissions || [];
+
+      // Merge the latest submissions with the current votes
+      const updatedSubmissions = latestSubmissions.map((submission, index) => ({
+        ...submission,
+        voteCount: (submission.voteCount || 0) + (votes[index] || 0),
+      }));
+
+      // Save the updated submissions
       const result = await updateRoundSubmissions(
         legionId,
         roundId,
@@ -47,10 +64,13 @@ const VoteCard = ({
         await incrementUserVotes(currentUser.uid);
 
         // Check if the current user is the last in stillPonderingUsers
-        if (stillPonderingUsers.length === 1 && stillPonderingUsers[0].uid === currentUser.uid) {
-          const today = new Date().toISOString(); 
+        if (
+          stillPonderingUsers.length === 1 &&
+          stillPonderingUsers[0].uid === currentUser.uid
+        ) {
+          const today = new Date().toISOString();
           await updateVoteDeadline(legionId, roundId, today);
-        
+
           // Trigger the cron job
           await triggerCronJob();
         }
