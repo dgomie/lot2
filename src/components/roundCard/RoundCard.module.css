@@ -24,6 +24,7 @@
   color: #0070f3;
 }
 
+
 /* Scrollbar styles */
 .scroll-1::-webkit-scrollbar {
   width: 8px;
@@ -113,5 +114,18 @@
 
 .card__describe {
   color: black;
-  font-size: 14px;
+  font-size: .9rem;
+}
+
+.card__prompt {
+  color: black;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 1rem;
+  text-align: center;
+  display: -webkit-box; 
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
 }

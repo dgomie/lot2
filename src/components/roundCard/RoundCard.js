@@ -14,18 +14,14 @@ const RoundCard = ({ round, legionId }) => {
       <div className={styles.card__image}></div>
       <div className={styles.card__content}>
         <span className={styles.card__title}>Round {round.roundNumber}</span>
-        <p className={styles.card__describe}>
-          Prompt: {round.prompt || 'No prompt available'}
+        <p className={styles.card__prompt}>
+          {round.prompt || 'No prompt available'}
         </p>
         <p className={styles.card__describe}>
-          Submission Deadline:{' '}
-          {new Date(round.submissionDeadline).toLocaleString()}
+          Submission Deadline: {new Date(round.submissionDeadline).toLocaleDateString()}
         </p>
         <p className={styles.card__describe}>
-          Vote Deadline: {new Date(round.voteDeadline).toLocaleString()}
-        </p>
-        <p className={styles.card__describe}>
-          Status: {round.roundStatus}
+          Vote Deadline: {new Date(round.voteDeadline).toLocaleDateString()}
         </p>
       </div>
     </div>
