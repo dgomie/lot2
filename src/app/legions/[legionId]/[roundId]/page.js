@@ -280,12 +280,11 @@ const RoundPage = ({ currentUser }) => {
         <div className={styles.prompt}>{roundData.prompt}</div>
         <p>
           Submission Deadline:{' '}
-          {new Date(roundData.submissionDeadline).toLocaleString()}
+          {new Date(roundData.submissionDeadline).toLocaleDateString()}
         </p>
         <p>
-          Vote Deadline: {new Date(roundData.voteDeadline).toLocaleString()}
+          Vote Deadline: {new Date(roundData.voteDeadline).toLocaleDateString()}
         </p>
-        <p>Status: {roundData.roundStatus}</p>
 
         <UserImageContainer
           title={
