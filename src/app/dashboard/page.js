@@ -18,10 +18,16 @@ const Dashboard = () => {
 
   return (
     <div className={styles.mainContainer}>
-      {currentUser && <p>Welcome, {currentUser.username}!</p>}
-      <DashboardFeed currentUserId={currentUser.uid} />
-      <div className={styles.BubbleMenu}>
-        <BubbleMenu />
+      <div className={styles.dashboardContainer}>
+        {currentUser && (
+          <div className={styles.welcomeMessage}>
+            Welcome, {currentUser.username}!
+          </div>
+        )}
+        <DashboardFeed currentUserId={currentUser.uid} />
+        <div className={styles.BubbleMenu}>
+          <BubbleMenu />
+        </div>
       </div>
     </div>
   );

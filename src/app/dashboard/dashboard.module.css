@@ -6,18 +6,23 @@
 }
 
 .buttonContainer {
-    display: flex;
-    gap: .5rem;
-    padding: 0.5rem;
-    height: 4rem;
-    width: 300rem;
-    max-width: 40%;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  height: 4rem;
+  width: 300rem;
+  max-width: 40%;
+}
+
+.dashboardContainer {
+  margin-top: 1rem;
+  width: 100%;
 }
 
 .title {
-    font-weight: bold;
-    font-size: 2rem;
-    text-align: center;
+  font-weight: bold;
+  font-size: 2rem;
+  text-align: center;
 }
 
 .BubbleMenu {
@@ -27,8 +32,27 @@
   z-index: 1000; /* Ensure it stays above other elements */
 }
 
+.welcomeMessage {
+  margin: .5rem;
+  padding: .5rem;
+}
+
 @media (max-width: 768px) {
-    .buttonContainer {
-      max-width: 100%;
-    }
+  .buttonContainer {
+    max-width: 100%;
   }
+}
+
+@media (min-width: 768px) {
+  .dashboardContainer {
+    width: 60%;
+    margin-top: 1rem;
+  }
+
+  .BubbleMenu {
+    position: fixed;
+    bottom: 7rem; /* Adjust the distance from the bottom */
+    right: 4rem; /* Adjust the distance from the right */
+    z-index: 1000; /* Ensure it stays above other elements */
+  }
+}
