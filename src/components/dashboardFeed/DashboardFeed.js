@@ -54,7 +54,7 @@ const DashboardFeed = ({ currentUserId }) => {
         <p className={styles.error}>Error: {error}</p>
       ) : (
         <>
-          <h2 className={styles.sectionTitle}>Active Legions</h2>
+          <h2 className={styles.sectionTitle}>Current Legions</h2>
           {activeLegions.map((legion) => (
             <DashboardCard
               key={legion.id}
