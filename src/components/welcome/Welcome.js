@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Welcome.module.css';
 import Image from 'next/image';
+import Button from '../button/Button';
 
 const Welcome = () => {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -16,7 +17,10 @@ const Welcome = () => {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener(
+        'beforeinstallprompt',
+        handleBeforeInstallPrompt
+      );
     };
   }, []);
 
@@ -42,9 +46,17 @@ const Welcome = () => {
         height={400}
       />
       {isInstallable && (
-        <button className={styles.installButton} onClick={handleInstallClick}>
-          Add to Home Screen
-        </button>
+        <div className={styles.buttonContainer}>
+          <Button onClick={handleInstallClick} variant='black'>
+            <Image
+              src="/img/download.svg"
+              width={30}
+              height={30}
+              alt="Download App"
+            />
+            Download App
+          </Button>
+        </div>
       )}
     </div>
   );
