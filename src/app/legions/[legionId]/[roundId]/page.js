@@ -18,6 +18,7 @@ import { UserImageContainer } from '@/components/userImageContainer/UserImageCon
 import { RoundResults } from '@/components/results/RoundResults';
 import { status } from '@/utils/status';
 import { RoundPageHeader } from '@/components/roundPageHeader/RoundPageHeader';
+import { VotesSubmitted } from '@/components/vote/votesSubmitted/VotesSubmitted';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -271,7 +272,7 @@ const RoundPage = ({ currentUser }) => {
         onBackClick={onBackClick}
         onSettingsClick={onSettingsClick}
       />
-      
+
       <div className={styles.roundInfo}>
         <div className={styles.title}>Round {roundData.roundNumber}</div>
         <div className={styles.prompt}>{roundData.prompt}</div>
@@ -355,15 +356,7 @@ const RoundPage = ({ currentUser }) => {
         ) && (
           <>
             {roundData.playersVoted?.includes(currentUser.uid) ? (
-              <div className={styles.votesSubmitted}>
-                <Image
-                  src="/img/check.svg"
-                  alt="Votes Submitted"
-                  width={50}
-                  height={50}
-                />
-                <div className={styles.label}>Votes Submitted</div>
-              </div>
+              <VotesSubmitted />
             ) : (
               <VoteCard
                 submissions={randomizedSubmissions.map((submission) => ({
