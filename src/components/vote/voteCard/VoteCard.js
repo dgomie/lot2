@@ -102,9 +102,11 @@ const VoteCard = ({
         ))}
       </div>
       <div className={styles.buttonContainer}>
-        <Button onClick={handleSubmitVotes} disabled={!canSubmitVotes}>
-          Submit Votes
-        </Button>
+        <div className={styles.button}>
+          <Button onClick={handleSubmitVotes} disabled={!canSubmitVotes}>
+            Submit Votes
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -273,7 +273,8 @@ const RoundPage = ({ currentUser }) => {
   };
 
   return (
-    <div className={styles.roundPage}>
+    <div className={styles.mainContainer}>
+      <div className={styles.roundInfoContainer}>
       <RoundPageHeader
         currentUser={currentUser}
         legionId={legionId}
@@ -290,7 +291,7 @@ const RoundPage = ({ currentUser }) => {
         onPlaylistClick={onPlaylistClick}
         onSubmitClick={onSubmitClick}
       />
-      
+
       {new Date() > new Date(roundData.submissionDeadline) &&
         new Date() <= new Date(roundData.voteDeadline) &&
         roundData.roundStatus !== 'completed' &&
@@ -341,6 +342,7 @@ const RoundPage = ({ currentUser }) => {
           onSubmit={handleSubmitUrl}
         />
       )}
+      </div>
     </div>
   );
 };
