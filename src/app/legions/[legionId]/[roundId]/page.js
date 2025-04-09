@@ -17,6 +17,7 @@ import VoteCard from '@/components/vote/voteCard/VoteCard';
 import { UserImageContainer } from '@/components/userImageContainer/UserImageContainer';
 import { RoundResults } from '@/components/results/RoundResults';
 import { status } from '@/utils/status';
+import { RoundPageHeader } from '@/components/roundPageHeader/RoundPageHeader';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -166,12 +167,12 @@ const RoundPage = ({ currentUser }) => {
 
   const handleSubmitUrl = async (youtubeUrl) => {
     if (!currentUser) return;
-  
+
     const videoId = youtubeUrl.match(/(?:v=|\/)([a-zA-Z0-9_-]{11})/)?.[1];
     if (!videoId) {
       return 'Invalid YouTube URL.';
     }
-  
+
     let videoTitle = 'Unknown Video';
     try {
       const response = await fetch(
@@ -185,7 +186,7 @@ const RoundPage = ({ currentUser }) => {
       console.error('Error fetching video title:', error);
       return 'Error fetching video details. Please try again.';
     }
-  
+
     // Fetch the latest roundData to avoid overwriting other submissions
     const latestRoundDataResult = await fetchRoundData(legionId, roundId);
     if (!latestRoundDataResult.success) {
@@ -193,30 +194,30 @@ const RoundPage = ({ currentUser }) => {
       return 'Error fetching the latest round data. Please try again.';
     }
     const latestRoundData = latestRoundDataResult.round;
-  
+
     // Check if the video ID and title already exist in submissions
     const existingSubmission = latestRoundData.submissions?.find(
       (submission) =>
         submission.youtubeUrl.includes(videoId) ||
         submission.videoTitle === videoTitle
     );
-  
+
     if (existingSubmission) {
       return 'Someone already submitted this song. Your next choice is probably better anyway!';
     }
-  
+
     const newSubmission = {
       uid: currentUser.uid,
       youtubeUrl,
       videoTitle,
       voteCount: 0,
     };
-  
+
     const existingSubmissions = latestRoundData.submissions || [];
     const updatedSubmissions = existingSubmissions.map((submission) =>
       submission.uid === currentUser.uid ? newSubmission : submission
     );
-  
+
     const isNewSubmission = !existingSubmissions.some(
       (submission) => submission.uid === currentUser.uid
     );
@@ -224,12 +225,12 @@ const RoundPage = ({ currentUser }) => {
       updatedSubmissions.push(newSubmission);
       await incrementUserSongs(currentUser.uid);
     }
-  
+
     const result = await saveRoundData(legionId, roundId, {
       ...latestRoundData,
       submissions: updatedSubmissions,
     });
-  
+
     if (result.success) {
       setRoundData((prev) => ({
         ...prev,
@@ -253,36 +254,24 @@ const RoundPage = ({ currentUser }) => {
     ];
   }
 
+  const onBackClick = () => {
+    router.push(`/legions/${legionId}`);
+  };
+
+  const onSettingsClick = () => {
+    setIsModalOpen(true);
+  };
+
   return (
     <div className={styles.roundPage}>
-      <div className={styles.header}>
-        <div
-          className={styles.backArrow}
-          onClick={() => router.push(`/legions/${legionId}`)}
-        >
-          <Image
-            src={'/img/arrow-back.svg'}
-            width={25}
-            height={25}
-            alt="Back"
-          />
-        </div>
-        {currentUser &&
-          roundData &&
-          currentUser.uid === roundData.legionAdmin.userId && (
-            <div
-              className={styles.gearIcon}
-              onClick={() => setIsModalOpen(true)}
-            >
-              <Image
-                src={'/img/gear.svg'}
-                width={25}
-                height={25}
-                alt="settings"
-              />
-            </div>
-          )}
-      </div>
+      <RoundPageHeader
+        currentUser={currentUser}
+        legionId={legionId}
+        roundData={roundData}
+        onBackClick={onBackClick}
+        onSettingsClick={onSettingsClick}
+      />
+      
       <div className={styles.roundInfo}>
         <div className={styles.title}>Round {roundData.roundNumber}</div>
         <div className={styles.prompt}>{roundData.prompt}</div>
@@ -328,7 +317,8 @@ const RoundPage = ({ currentUser }) => {
           // Show "Submit Song" button if the conditions above are not met
           roundData.players.some(
             (player) => player.userId === currentUser.uid
-          ) && roundData.roundStatus !== status.PENDING && (
+          ) &&
+          roundData.roundStatus !== status.PENDING && (
             <div
               className={styles.submit}
               onClick={() => setIsSubmitModalOpen(true)}
@@ -385,7 +375,7 @@ const RoundPage = ({ currentUser }) => {
                 currentUser={currentUser}
                 onVotesSubmitted={refreshRoundData}
                 players={roundData?.players}
-                stillPonderingUsers={stillPonderingUsers} 
+                stillPonderingUsers={stillPonderingUsers}
               />
             )}
           </>
