@@ -9,7 +9,7 @@ const DashboardFeed = ({ currentUserId }) => {
   const [activeLegions, setActiveLegions] = useState([]);
   const [inactiveLegions, setInactiveLegions] = useState([]);
   const [error, setError] = useState(null);
-  const [isInactiveCollapsed, setIsInactiveCollapsed] = useState(false); // State to toggle collapse
+  const [isInactiveCollapsed, setIsInactiveCollapsed] = useState(true); // State to toggle collapse
   const router = useRouter();
 
   useEffect(() => {
