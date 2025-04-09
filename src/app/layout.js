@@ -4,8 +4,8 @@ import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
 import Navbar from '../components/navbar/Navbar';
 import { useEffect } from 'react';
-import { onMessageListener } from '../firebase'; // Import your Firebase messaging instance
-import { Footer } from '@/components/footer/Footer';
+import { onMessageListener } from '../firebase';
+
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -64,7 +64,6 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <Navbar />
           {children}
-          <Footer />
         </AuthProvider>
       </body>
     </html>
