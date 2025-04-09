@@ -24,4 +24,11 @@
     justify-content: space-between;
     gap: .5rem
   }
+
+  .error {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    color: red;
+  }
   

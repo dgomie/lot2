@@ -193,7 +193,7 @@ const RoundPage = ({ currentUser }) => {
     );
   
     if (existingSubmission) {
-      return 'Alas! Someone video has already claimed this song. Your next choice is probably better anyway!';
+      return 'Someone already submitted this song. Your next choice is probably better anyway!';
     }
   
     const newSubmission = {
