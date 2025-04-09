@@ -6,6 +6,7 @@ import {
   updateRoundSubmissions,
   incrementUserVotes,
   updateVoteDeadline,
+  fetchRoundData,
 } from '@/firebase';
 import { triggerCronJob } from '@/utils/cron';
 

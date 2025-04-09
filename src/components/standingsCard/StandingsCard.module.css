@@ -3,6 +3,8 @@
     padding: 1rem;
     border-radius: 15px;
     margin: .5rem;
+    background-color: white;
+    width: 100%;
   }
 
   .standingItem {

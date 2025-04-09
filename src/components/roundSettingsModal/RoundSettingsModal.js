@@ -5,7 +5,7 @@ import Button from '@/components/button/Button';
 
 const RoundSettingsModal = ({
   editableRoundData,
-  originalRoundData, // Pass the original round data for comparison
+  originalRoundData, 
   setEditableRoundData,
   onSave,
   onCancel,

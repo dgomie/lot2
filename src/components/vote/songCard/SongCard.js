@@ -1,6 +1,6 @@
 import Button from '@/components/button/Button';
 import styles from './SongCard.module.css';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 
 const extractYouTubeVideoId = (url) => {
@@ -22,7 +22,7 @@ const SongCard = ({
   const getBackgroundColor = () => {
     if (vote === 1) return '#25A18E'; 
     if (vote === -1) return '#a12538'; 
-    return 'transparent';
+    return 'white';
   };
 
   if (!videoId) {

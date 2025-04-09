@@ -133,3 +133,13 @@
     
   }
 }
+
+@media (min-width: 768px) {
+  .container {
+    width: 80%;
+  }
+
+  .headerContainer {
+   width: 80%;
+  }
+}
