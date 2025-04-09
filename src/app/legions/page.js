@@ -57,26 +57,30 @@ const Legions = () => {
 
   return (
     <div className={styles.mainContainer}>
-      {legions.map((legion, index) => (
-        <DashboardCard
-          key={legion.id}
-          legionName={legion.legionName}
-          legionDescription={legion.legionDescription}
-          players={legion.players}
-          maxNumPlayers={legion.maxNumPlayers}
-          numRounds={legion.numRounds}
-          onClick={() => {
-            handleCardClick(legion.id);
-          }}
-        />
-      ))}
-      {loading && <Loader />}
-      {!loading && hasMore && (
-        <Button onClick={loadMoreLegions} variant="transparentWhite">
-          Load More Legions
-        </Button>
-      )}
-      {!loading && !hasMore && <div className={styles.noneLeft}>No more legions left to load</div>}
+      <div className={styles.legionsContainer}>
+        {legions.map((legion, index) => (
+          <DashboardCard
+            key={legion.id}
+            legionName={legion.legionName}
+            legionDescription={legion.legionDescription}
+            players={legion.players}
+            maxNumPlayers={legion.maxNumPlayers}
+            numRounds={legion.numRounds}
+            onClick={() => {
+              handleCardClick(legion.id);
+            }}
+          />
+        ))}
+        {loading && <Loader />}
+        {!loading && hasMore && (
+          <Button onClick={loadMoreLegions} variant="transparentWhite">
+            Load More Legions
+          </Button>
+        )}
+        {!loading && !hasMore && (
+          <div className={styles.noneLeft}>No more legions left to load</div>
+        )}
+      </div>
     </div>
   );
 };

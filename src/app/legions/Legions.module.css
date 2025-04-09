@@ -1,12 +1,28 @@
 .mainContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  margin: 0 0 5rem;
+  width: 100%;
 }
 
 .noneLeft {
     color: lightslategray;
     font-style: italic;
+}
+
+.legionsContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  margin: 0 0 5rem;
+}
+
+@media (min-width: 768px) {
+  .mainContainer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .legionsContainer {
+    width: 60%;
+  }
 }
