@@ -4,7 +4,6 @@
     border-radius: 15px;
     margin: .5rem;
     background-color: white;
-    width: 100%;
   }
 
   .standingItem {
@@ -31,4 +30,10 @@
     justify-content: flex-start;
     align-items: center;
     gap: .5rem;
+  }
+
+  @media (min-width: 768px) {
+    .mainContainer {
+      min-width: 50rem;
+    }
   }
