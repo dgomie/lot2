@@ -1,0 +1,72 @@
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding-bottom: 1rem;
+}
+
+.styleContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5rem;
+  margin: 2rem;
+}
+
+.horizontalRule {
+  width: 80%;
+  margin: .5rem auto;
+  border: 1px solid #ccc;
+}
+
+.copyright {
+  margin: 1rem;
+  font-size: 0.8rem;
+}
+
+.columnTitle {
+  font-weight: bold;
+}
+
+.footerInfo {
+  margin-bottom: 1rem;
+}
+
+.linkColum {
+  display: flex;
+  justify-content: center; /* Space out the columns */
+  align-items: center;
+  gap: 2rem; /* Add spacing between columns */
+  width: 100%; /* Ensure the container spans the full width */
+}
+
+.list {
+  flex: 1; /* Allow each column to grow equally */
+  min-width: 0; /* Prevent columns from shrinking too much */
+}
+
+.list li {
+  white-space: nowrap; /* Prevent text from wrapping */
+  margin: .3rem 0 .3rem 0;
+}
+
+.columnTitle {
+  font-weight: bold;
+  margin-bottom: 0.5rem; /* Add spacing below the title */
+}
+
+.list li {
+  list-style-type: none;
+}
+
+.list li:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .mainContainer {
+    display: none;
+  }
+}
