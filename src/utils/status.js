@@ -1,5 +1,5 @@
 export const status = {
-    INCOMPLETE: 'incomplete',
+    PENDING: 'pending',
     ACTIVE: 'active',
     COMPLETED: 'completed',
   };

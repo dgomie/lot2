@@ -16,6 +16,7 @@ import SubmitModal from '@/components/submitModal/SubmitModal';
 import VoteCard from '@/components/vote/voteCard/VoteCard';
 import { UserImageContainer } from '@/components/userImageContainer/UserImageContainer';
 import { RoundResults } from '@/components/results/RoundResults';
+import { status } from '@/utils/status';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -320,7 +321,7 @@ const RoundPage = ({ currentUser }) => {
           // Show "Submit Song" button if the conditions above are not met
           roundData.players.some(
             (player) => player.userId === currentUser.uid
-          ) && (
+          ) && roundData.roundStatus !== status.PENDING && (
             <div
               className={styles.submit}
               onClick={() => setIsSubmitModalOpen(true)}

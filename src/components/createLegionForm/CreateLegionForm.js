@@ -101,7 +101,7 @@ const CreateLegionForm = ({ currentUser }) => {
               playersVoted: [],
               prompt: randomPrompt,
               roundStatus:
-                roundNumber === 1 ? status.ACTIVE : status.INCOMPLETE,
+                roundNumber === 1 ? status.ACTIVE : status.PENDING,
             };
           }
         );
