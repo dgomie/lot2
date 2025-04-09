@@ -186,8 +186,16 @@ const RoundPage = ({ currentUser }) => {
       return 'Error fetching video details. Please try again.';
     }
   
+    // Fetch the latest roundData to avoid overwriting other submissions
+    const latestRoundDataResult = await fetchRoundData(legionId, roundId);
+    if (!latestRoundDataResult.success) {
+      console.error(latestRoundDataResult.error);
+      return 'Error fetching the latest round data. Please try again.';
+    }
+    const latestRoundData = latestRoundDataResult.round;
+  
     // Check if the video ID and title already exist in submissions
-    const existingSubmission = roundData.submissions?.find(
+    const existingSubmission = latestRoundData.submissions?.find(
       (submission) =>
         submission.youtubeUrl.includes(videoId) ||
         submission.videoTitle === videoTitle
@@ -204,7 +212,7 @@ const RoundPage = ({ currentUser }) => {
       voteCount: 0,
     };
   
-    const existingSubmissions = roundData.submissions || [];
+    const existingSubmissions = latestRoundData.submissions || [];
     const updatedSubmissions = existingSubmissions.map((submission) =>
       submission.uid === currentUser.uid ? newSubmission : submission
     );
@@ -218,7 +226,7 @@ const RoundPage = ({ currentUser }) => {
     }
   
     const result = await saveRoundData(legionId, roundId, {
-      ...roundData,
+      ...latestRoundData,
       submissions: updatedSubmissions,
     });
   
