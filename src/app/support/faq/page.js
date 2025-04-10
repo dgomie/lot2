@@ -4,8 +4,10 @@ import { Footer } from '@/components/footer/Footer';
 
 export default function FaqPage() {
   return (
-    <div>
-      <div>FAQ Page</div>
+    <div className={styles.mainContainer}>
+      <div className={styles.page}>
+        <h1>FAQ Page</h1>
+      </div>
       <Footer />
     </div>
   );
