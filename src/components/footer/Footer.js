@@ -35,12 +35,12 @@ export const Footer = () => {
             <ul className={styles.list}>
               <div className={styles.columnTitle}>Support</div>
               <li>
-                <Link href="/FAQ" className={styles.logo}>
+                <Link href="/support/faq" className={styles.logo}>
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link href="/installation" className={styles.logo}>
+                <Link href="/support/installation" className={styles.logo}>
                   How to Install
                 </Link>
               </li>
