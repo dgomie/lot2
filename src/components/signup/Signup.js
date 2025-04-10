@@ -23,7 +23,16 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
- 
+  const isFormValid = () => {
+    const { email, password, confirmPassword, username } = formData;
+    return (
+      email.trim() !== '' &&
+      password.trim() !== '' &&
+      confirmPassword.trim() !== '' &&
+      username.trim() !== '' &&
+      password === confirmPassword
+    );
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -131,7 +140,7 @@ export default function Signup() {
             isVisible={showConfirmPassword}
           />
           {error && <p className={styles.error}>{error}</p>}
-          <Button type="submit" className={styles.button} variant="green">
+          <Button type="submit" className={styles.button} variant={isFormValid() ? 'blue' : 'disabled'} disabled={!isFormValid()} >
             Signup
           </Button>
         </form>
