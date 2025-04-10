@@ -30,7 +30,7 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
               </div>
               <div className={styles.votes}>{submission.voteCount}pts</div>
             </div>
-            <hr></hr>
+      
           </div>
         );
       })}
