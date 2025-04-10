@@ -37,14 +37,14 @@ const Navbar = () => {
         <div className={styles.links}>
           <Link href="/">Home</Link>
           {currentUser ? (
-            <>
+            <div className={styles.linkContainer}>
               <Link href="/dashboard">Dashboard</Link>
               <Link href="/legions">Legions</Link>
               <Link href="/profile">Profile</Link>
-              <button className={styles.logoutButton} onClick={handleLogout}>
+              <div className={styles.logoutButton} onClick={handleLogout}>
                 Logout
-              </button>
-            </>
+              </div>
+            </div>
           ) : (
             <>
               <Link href="/auth/login">Login</Link>

@@ -8,8 +8,6 @@
   color: black;
 }
 .logoutButton {
-  margin-left: 1rem;
-  font-size: .98rem;
   font-weight: 500;
   background: none;
   border: none;
@@ -26,18 +24,21 @@
   font-weight: bold;
 }
 
-.links a {
-  margin-left: 1rem;
-  color: black;
-  text-decoration: none;
+.links {
   font-weight: 500;
-  transition: color 0.2s ease-in; 
+  display: flex; 
+  gap: 1rem; 
 }
 
 .links a:hover {
   color: purple;
 }
 
+.linkContainer {
+  display: flex; /* Align links and logout button horizontally */
+  align-items: center; /* Vertically align items */
+  gap: 1rem; /* Add spacing between links and the logout button */
+}
 
 @media (max-width: 768px) {
   .navbar {
