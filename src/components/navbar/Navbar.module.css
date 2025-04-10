@@ -9,11 +9,16 @@
 }
 .logoutButton {
   margin-left: 1rem;
-  font-size: 1rem;
+  font-size: .98rem;
+  font-weight: 500;
   background: none;
   border: none;
   cursor: pointer;
   color: black;
+}
+
+.logoutButton:hover {
+  color: purple;
 }
 
 .logo {
@@ -25,6 +30,12 @@
   margin-left: 1rem;
   color: black;
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease-in; 
+}
+
+.links a:hover {
+  color: purple;
 }
 
 
