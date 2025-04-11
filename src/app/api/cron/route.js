@@ -268,6 +268,9 @@ export async function GET(req, res) {
         }
       }
 
+      const voteDeadline = new Date(currentRound.voteDeadline);
+      voteDeadline.setHours(0, 0, 0, 0);
+
       // Existing logic for handling voteDeadline matching the current date
       if (voteDeadline.getTime() <= currentDate.getTime()) {
         const legionDocRef = legionsRef.doc(legionDoc.id);
