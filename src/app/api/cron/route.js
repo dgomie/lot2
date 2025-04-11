@@ -2,7 +2,10 @@ import { adminDb } from '../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { status } from '../../../utils/status';
 import admin from 'firebase-admin'; // Ensure Firebase Admin SDK is initialized
-import { adminUpdateLegionStandings, adminIncrementUserVictories } from '../../../firebaseAdmin';
+import {
+  adminUpdateLegionStandings,
+  adminIncrementUserVictories,
+} from '../../../firebaseAdmin';
 
 export async function GET(req, res) {
   try {
@@ -29,38 +32,91 @@ export async function GET(req, res) {
       );
 
       if (currentRound) {
+        const submissionDeadline = new Date(currentRound.submissionDeadline);
+        submissionDeadline.setHours(0, 0, 0, 0);
+      
+        const dayBeforeSubmissionDeadline = new Date(submissionDeadline);
+        dayBeforeSubmissionDeadline.setDate(dayBeforeSubmissionDeadline.getDate() - 1);
+      
+        const dayOfSubmissionDeadline = new Date(submissionDeadline);
+        dayOfSubmissionDeadline.setDate(dayOfSubmissionDeadline.getDate());
+      
         const voteDeadline = new Date(currentRound.voteDeadline);
         voteDeadline.setHours(0, 0, 0, 0);
-
-        // Check if the voteDeadline matches the next day's date
-        if (voteDeadline.getTime() === nextDay.getTime()) {
+      
+        // Check if the current date is exactly the day after the submission deadline
+        if (dayOfSubmissionDeadline.getTime() === currentDate.getTime()) {
+          // Send playlist notification
           if (legionData.players && legionData.players.length > 0) {
             const playerUids = legionData.players
               .map((player) => player.userId)
               .filter(Boolean);
-
+      
             // Fetch fcmTokens for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
-              const userDoc = await adminDb.collection('users').doc(uid).get(); // Adjust the collection name if needed
+              const userDoc = await adminDb.collection('users').doc(uid).get();
               return userDoc.exists ? userDoc.data().fcmToken : null;
             });
-
+      
             // Resolve all promises and filter out null/undefined tokens
-            const tokens = (await Promise.all(tokenFetchPromises)).filter(
-              Boolean
-            );
+            const tokens = (await Promise.all(tokenFetchPromises)).filter(Boolean);
             const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
-
+      
             if (uniqueTokens.length === 0) {
               console.warn(
                 `No valid FCM tokens found for legion: ${legionData.legionName}`
               );
             } else {
-              const formattedDeadline = new Date(currentRound.submissionDeadline).toLocaleDateString('en-US', {
+              const formattedDeadline = new Date(
+                currentRound.voteDeadline
+              ).toLocaleDateString('en-US', {
                 month: 'long',
                 day: '2-digit',
               });
-
+      
+              uniqueTokens.forEach((token) => {
+                notifications.push(
+                  admin
+                    .messaging()
+                    .send({
+                      token,
+                      notification: {
+                        title: 'New Playlist 🎶',
+                        body: `A new playlist is ready in ${legionData.legionName}!\n\nGet your votes in before ${formattedDeadline}`,
+                      },
+                    })
+                    .then((response) => {
+                      console.log(`Playlist notification sent`, response);
+                    })
+                    .catch((error) => {
+                      console.error(`Error sending playlist notification`, error);
+                    })
+                );
+              });
+            }
+          }
+        } else if (dayBeforeSubmissionDeadline.getTime() === currentDate.getTime()) {
+          // Send submission deadline reminder notification
+          if (legionData.players && legionData.players.length > 0) {
+            const playerUids = legionData.players
+              .map((player) => player.userId)
+              .filter(Boolean);
+      
+            // Fetch fcmTokens for all UIDs
+            const tokenFetchPromises = playerUids.map(async (uid) => {
+              const userDoc = await adminDb.collection('users').doc(uid).get();
+              return userDoc.exists ? userDoc.data().fcmToken : null;
+            });
+      
+            // Resolve all promises and filter out null/undefined tokens
+            const tokens = (await Promise.all(tokenFetchPromises)).filter(Boolean);
+            const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
+      
+            if (uniqueTokens.length === 0) {
+              console.warn(
+                `No valid FCM tokens found for legion: ${legionData.legionName}`
+              );
+            } else {
               uniqueTokens.forEach((token) => {
                 notifications.push(
                   admin
@@ -69,14 +125,17 @@ export async function GET(req, res) {
                       token,
                       notification: {
                         title: 'Submission Deadline Approaches!',
-                        body: `Don't forget to submit for Round ${currentRound.roundNumber} in ${legionData.legionName}!\n\n📆 Deadline is ${formattedDeadline}!`,
+                        body: `Don't forget to submit for Round ${currentRound.roundNumber} in ${legionData.legionName}!`,
                       },
                     })
                     .then((response) => {
-                      console.log(`Reminder notification sent`, response);
+                      console.log(`Submission deadline reminder sent`, response);
                     })
                     .catch((error) => {
-                      console.error(`Error sending reminder notification`, error);
+                      console.error(
+                        `Error sending submission deadline reminder`,
+                        error
+                      );
                     })
                 );
               });
@@ -114,7 +173,9 @@ export async function GET(req, res) {
 
           // Update the standings for the legion
           try {
-            const { standings } = await adminUpdateLegionStandings(legionDoc.id);
+            const { standings } = await adminUpdateLegionStandings(
+              legionDoc.id
+            );
 
             if (!Array.isArray(standings)) {
               throw new Error('Standings is not an array');
@@ -133,14 +194,20 @@ export async function GET(req, res) {
                   await adminIncrementUserVictories(topUser.uid);
                   console.log(`Victory incremented for user: ${topUser.uid}`);
                 } catch (error) {
-                  console.error(`Error incrementing victories for user ${topUser.uid}:`, error);
+                  console.error(
+                    `Error incrementing victories for user ${topUser.uid}:`,
+                    error
+                  );
                 }
               } else {
                 console.warn('No valid top user found in standings.');
               }
             }
           } catch (error) {
-            console.error(`Error updating standings for legion ${legionDoc.id}:`, error);
+            console.error(
+              `Error updating standings for legion ${legionDoc.id}:`,
+              error
+            );
           }
         }
       }
