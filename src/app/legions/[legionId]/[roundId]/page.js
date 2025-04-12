@@ -67,23 +67,23 @@ const RoundPage = ({ currentUser }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       if (!roundData) return;
-
+  
       const submissionUids = roundData.submissions?.map((s) => s.uid) || [];
       const playersVoted = roundData.playersVoted || [];
       const allPlayerUids = roundData.players.map((player) =>
         typeof player === 'object' ? player.userId : player
       );
-
+  
       const now = new Date();
       const isSubmissionPhase = now <= new Date(roundData.submissionDeadline);
-
+  
       // Calculate still pondering users
       const stillPonderingUids = allPlayerUids.filter((uid) =>
         isSubmissionPhase
-          ? !submissionUids.includes(uid)
-          : !playersVoted.includes(uid)
+          ? !submissionUids.includes(uid) // For submission phase
+          : submissionUids.includes(uid) && !playersVoted.includes(uid) // For voting phase
       );
-
+  
       // Fetch user profiles for still pondering users
       const [
         fetchedUsersWithSubmissions,
@@ -94,12 +94,12 @@ const RoundPage = ({ currentUser }) => {
         fetchUsersByUids(playersVoted),
         fetchUsersByUids(stillPonderingUids),
       ]);
-
+  
       setUsersWithSubmissions(fetchedUsersWithSubmissions);
       setUsersWhoVoted(fetchedUsersWhoVoted);
       setStillPonderingUsers(fetchedStillPonderingUsers);
     };
-
+  
     fetchUsers();
   }, [roundData]);
 
@@ -297,6 +297,9 @@ const RoundPage = ({ currentUser }) => {
         roundData.roundStatus !== 'completed' &&
         roundData.players.some(
           (player) => player.userId === currentUser.uid
+        ) &&
+        usersWithSubmissions.some(
+          (user) => user.uid === currentUser.uid // Ensure the user has submitted
         ) && (
           <>
             {roundData.playersVoted?.includes(currentUser.uid) ? (
