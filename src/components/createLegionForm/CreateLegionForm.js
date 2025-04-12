@@ -17,6 +17,8 @@ const CreateLegionForm = ({ currentUser }) => {
     numRounds: 0,
     voteTime: 0,
     submitTime: 0,
+    upVotesPerRound: 0,
+    downVotesPerRound: 0,
     players: [],
     playerTokens: [],
     legionAdmin: '',
@@ -59,6 +61,10 @@ const CreateLegionForm = ({ currentUser }) => {
           formData.voteTime > 0 &&
           formData.submitTime > 0
       );
+    } else if (step === 4) {
+      setIsStepValid(
+        formData.upVotesPerRound > 0 && formData.downVotesPerRound > 0
+      );
     }
   };
 
@@ -100,8 +106,7 @@ const CreateLegionForm = ({ currentUser }) => {
               submissions: [],
               playersVoted: [],
               prompt: randomPrompt,
-              roundStatus:
-                roundNumber === 1 ? status.ACTIVE : status.PENDING,
+              roundStatus: roundNumber === 1 ? status.ACTIVE : status.PENDING,
             };
           }
         );
@@ -115,7 +120,11 @@ const CreateLegionForm = ({ currentUser }) => {
           },
           players: [
             ...formData.players,
-            { userId: currentUser.uid, username: currentUser.username, profileImg: currentUser.profileImg },
+            {
+              userId: currentUser.uid,
+              username: currentUser.username,
+              profileImg: currentUser.profileImg,
+            },
           ],
           playerTokens: [...formData.playerTokens, currentUser.fcmToken],
           rounds,
@@ -215,9 +224,33 @@ const CreateLegionForm = ({ currentUser }) => {
           />
         </div>
       )}
+      {step === 4 && (
+        <div>
+          <NumberInput
+            className={styles.inputField}
+            name="upVotesPerRound"
+            value={formData.upVotesPerRound}
+            onChange={handleChange}
+            label="Number of upvotes per round"
+            required
+            min={1}
+            max={20}
+          />
+          <NumberInput
+            className={styles.inputField}
+            name="downVotesPerRound"
+            value={formData.downVotesPerRound}
+            onChange={handleChange}
+            label="Number of down votes per round"
+            required
+            min={1}
+            max={20}
+          />
+        </div>
+      )}
       <div className={styles.buttonContainer}>
         {step > 1 && <Button onClick={handlePrevious}>Previous</Button>}
-        {step < 3 && (
+        {step < 4 && (
           <Button
             onClick={handleNext}
             disabled={!isStepValid}
@@ -226,7 +259,7 @@ const CreateLegionForm = ({ currentUser }) => {
             Next
           </Button>
         )}
-        {step === 3 && (
+        {step === 4 && (
           <Button
             onClick={handleSubmit}
             disabled={!isStepValid}
