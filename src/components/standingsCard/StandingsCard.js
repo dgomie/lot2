@@ -3,7 +3,7 @@ import styles from './StandingsCard.module.css';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export const StandingsCard = ({ standings, legionPlayers }) => {
+export const StandingsCard = ({ legionStatus, standings, legionPlayers }) => {
   const [userProfiles, setUserProfiles] = useState({});
   const router = useRouter();
 
@@ -36,6 +36,7 @@ export const StandingsCard = ({ standings, legionPlayers }) => {
             className={styles.userInfo}
             onClick={() => handleImageClick(userProfiles[item.uid]?.username)}
           >
+        
             <Image
               src={userProfiles[item.uid]?.profileImg || '/img/user.png'}
               alt={`${
@@ -49,6 +50,15 @@ export const StandingsCard = ({ standings, legionPlayers }) => {
             <div className={styles.name}>
               {userProfiles[item.uid]?.username || 'Loading...'}
             </div>
+            {index === 0 && !legionStatus && (
+              <Image
+                src="/img/grail.svg"
+                alt="Grail Icon"
+                width={45}
+                height={45}
+                className={styles.grailIcon}
+              />
+            )}
           </div>
           <div className={styles.votes}>{item.votes}pts</div>
         </div>

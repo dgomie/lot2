@@ -110,6 +110,7 @@ const LegionPage = () => {
         )}
         {activeTab === 'standings' && (
           <StandingsCard
+            legionStatus= {legionData.isActive}
             standings={legionData.standings}
             legionPlayers={legionData.players}
           />
