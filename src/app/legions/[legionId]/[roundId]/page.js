@@ -1,22 +1,20 @@
 'use client';
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState} from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   fetchRoundData,
+  fetchLegionData,
   saveRoundData,
   getUserProfile,
   incrementUserSongs,
 } from '@/firebase';
 import styles from './RoundPage.module.css';
-import Image from 'next/image';
 import RoundSettingsModal from '@/components/roundSettingsModal/RoundSettingsModal';
 import withAuth from '@/hoc/withAuth';
 import SubmitModal from '@/components/submitModal/SubmitModal';
 import VoteCard from '@/components/vote/voteCard/VoteCard';
-import { UserImageContainer } from '@/components/userImageContainer/UserImageContainer';
 import { RoundResults } from '@/components/results/RoundResults';
-import { status } from '@/utils/status';
 import { RoundPageHeader } from '@/components/roundPageHeader/RoundPageHeader';
 import { VotesSubmitted } from '@/components/vote/votesSubmitted/VotesSubmitted';
 import { RoundPageInfo } from '@/components/roundPageInfo/RoundPageInfo';
@@ -34,6 +32,9 @@ const RoundPage = ({ currentUser }) => {
   const [usersWithSubmissions, setUsersWithSubmissions] = useState([]);
   const [usersWhoVoted, setUsersWhoVoted] = useState([]);
   const [stillPonderingUsers, setStillPonderingUsers] = useState([]);
+  const [upVotesPerRound, setUpVotesPerRound] = useState(0);
+  const [downVotesPerRound, setDownVotesPerRound] = useState(0);
+
 
   const fetchRound = async () => {
     const result = await fetchRoundData(legionId, roundId);
@@ -44,6 +45,21 @@ const RoundPage = ({ currentUser }) => {
       console.error(result.error);
     }
     setLoading(false);
+  };
+
+  const fetchLegionDetails = async () => {
+    try {
+      const result = await fetchLegionData(legionId);
+      if (result.success) {
+        const legionData = result.data;
+        setUpVotesPerRound(legionData.upVotesPerRound || 0);
+        setDownVotesPerRound(legionData.downVotesPerRound || 0);
+      } else {
+        console.error('Error fetching legion data:', result.error);
+      }
+    } catch (error) {
+      console.error('Error fetching legion details:', error);
+    }
   };
 
   const fetchUsersByUids = async (uids) => {
@@ -156,6 +172,7 @@ const RoundPage = ({ currentUser }) => {
   useEffect(() => {
     if (legionId && roundId) {
       fetchRound();
+      fetchLegionDetails();
     }
   }, [legionId, roundId]);
 
@@ -316,6 +333,8 @@ const RoundPage = ({ currentUser }) => {
                 onVotesSubmitted={refreshRoundData}
                 players={roundData?.players}
                 stillPonderingUsers={stillPonderingUsers}
+                upVotesPerRound={upVotesPerRound}
+                downVotesPerRound={downVotesPerRound} 
               />
             )}
           </>

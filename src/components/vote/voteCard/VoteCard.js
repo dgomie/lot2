@@ -16,7 +16,9 @@ const VoteCard = ({
   roundId,
   currentUser,
   onVotesSubmitted,
-  stillPonderingUsers, // Pass stillPonderingUsers as a prop
+  stillPonderingUsers,
+  upVotesPerRound,
+  downVotesPerRound, // Add these props
 }) => {
   const [votes, setVotes] = useState(submissions.map(() => 0));
 
@@ -32,7 +34,13 @@ const VoteCard = ({
     });
   };
 
-  const canSubmitVotes = votes.some((vote) => vote !== 0);
+  // Calculate the number of upvotes and downvotes
+  const upVotesCount = votes.filter((vote) => vote === 1).length;
+  const downVotesCount = votes.filter((vote) => vote === -1).length;
+
+  // Update the condition to enable the submit button
+  const canSubmitVotes =
+    upVotesCount === upVotesPerRound && downVotesCount === downVotesPerRound;
 
   const handleSubmitVotes = async () => {
     try {
@@ -106,6 +114,11 @@ const VoteCard = ({
           <Button onClick={handleSubmitVotes} disabled={!canSubmitVotes}>
             Submit Votes
           </Button>
+        </div>
+        <div className={styles.voteRequirements}>
+          <p>
+            Upvotes: {upVotesCount}/{upVotesPerRound}, Downvotes: {downVotesCount}/{downVotesPerRound}
+          </p>
         </div>
       </div>
     </div>
