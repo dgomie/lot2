@@ -9,6 +9,8 @@ import {
 } from '@/firebase';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/AuthContext';
+import Image from 'next/image';
+import { AdminSettingsModal } from '../adminSettingsModal/AdminSettingsModal';
 
 const LegionHeader = ({
   legionData,
@@ -18,6 +20,7 @@ const LegionHeader = ({
 }) => {
   const { currentUser } = useContext(AuthContext);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleJoinLegion = async () => {
     setIsDisabled(true);
@@ -36,7 +39,11 @@ const LegionHeader = ({
       });
       if (result.success) {
         incrementUserLegions(currentUser.uid);
-        onPlayerAdded({userId: currentUser.uid, username:currentUser.username, profileImg:currentUser.profileImg});
+        onPlayerAdded({
+          userId: currentUser.uid,
+          username: currentUser.username,
+          profileImg: currentUser.profileImg,
+        });
       } else {
         alert('Failed to join the legion. Please try again.');
       }
@@ -75,12 +82,23 @@ const LegionHeader = ({
     }
   };
 
-  const isMember = legionData.players.some(player => player.userId === currentUser?.uid);
+  const isMember = legionData.players.some(
+    (player) => player.userId === currentUser?.uid
+  );
   const isAdmin = legionData.legionAdmin.userId === currentUser?.uid;
   const isFull = legionData.players.length >= legionData.maxNumPlayers;
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className={styles.mainContainer}>
+      
       <div className={styles.container}>
         <div className={styles.title}>{legionData.legionName}</div>
         <div className={styles.subtitle}>{legionData.legionDescription}</div>
@@ -105,6 +123,24 @@ const LegionHeader = ({
             )
           ))}
       </div>
+      {isAdmin && (
+          <div className={styles.gearIcon}>
+            <Image
+              src={'/img/gear.svg'}
+              width={30}
+              height={30}
+              alt="Legion Settings"
+              onClick={handleOpenModal}
+            />
+          </div>
+        )}
+      {isModalOpen && (
+        <AdminSettingsModal
+          legionData={legionData}
+          legionId={legionId}
+          onClose={handleCloseModal}
+        />
+      )}
     </div>
   );
 };
