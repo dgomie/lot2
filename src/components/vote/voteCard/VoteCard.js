@@ -110,15 +110,14 @@ const VoteCard = ({
         ))}
       </div>
       <div className={styles.buttonContainer}>
+        <div className={styles.voteRequirements}>
+          Upvotes: {upVotesCount}/{upVotesPerRound} | Downvotes: {downVotesCount}
+          /{downVotesPerRound}
+        </div>
         <div className={styles.button}>
-          <Button onClick={handleSubmitVotes} disabled={!canSubmitVotes}>
+          <Button onClick={handleSubmitVotes} disabled={!canSubmitVotes} variant={!canSubmitVotes ? 'disabled' : 'blue'}>
             Submit Votes
           </Button>
-        </div>
-        <div className={styles.voteRequirements}>
-          <p>
-            Upvotes: {upVotesCount}/{upVotesPerRound}, Downvotes: {downVotesCount}/{downVotesPerRound}
-          </p>
         </div>
       </div>
     </div>
