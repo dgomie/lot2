@@ -23,21 +23,22 @@ export default function InstallationPage() {
           <h2>Why Install?</h2>
           <ul>
             <li>
-              🎵 <strong>Quick & Convenient</strong> – Launch the game directly
+              <strong>Quick & Convenient</strong> – Launch the game directly
               from your device.
             </li>
             <li>
-              ⚔️ <strong>Full-Screen Mode</strong> – No browser distractions for
-              a smoother experience.
+              <strong>Full-Screen Mode</strong> – No browser distractions for a
+              smoother experience.
             </li>
             <li>
-              🎶 <strong>Push Notifications</strong>  – Get
-              updates on new rounds and results.
+              <strong>Push Notifications</strong> – Get updates on new rounds
+              and results.
             </li>
           </ul>
           <br />
 
           <h2>How to Install the Legion of Tones PWA</h2>
+          <br />
 
           <h3>On Android (Chrome)</h3>
           <ol>
@@ -53,8 +54,8 @@ export default function InstallationPage() {
               Select <strong>&quot;Add to Home screen&quot;</strong>.
             </li>
             <li>
-              Tap <strong>&quot;Install&quot;</strong>, and the app will be added to your
-              home screen.
+              Tap <strong>&quot;Install&quot;</strong>, and the app will be
+              added to your home screen.
             </li>
           </ol>
 
@@ -66,14 +67,21 @@ export default function InstallationPage() {
               Open <a href="#">Legion of Tones</a> in <strong>Safari</strong>.
             </li>
             <li>
-              Tap the <strong>Share button</strong> <Image src='/img/ios-share.svg' height={20} width={20} alt='iOS Share Button' /> at the bottom.
+              Tap the <strong>Share button</strong>{' '}
+              <Image
+                src="/img/ios-share.svg"
+                height={20}
+                width={20}
+                alt="iOS Share Button"
+              />{' '}
+              at the bottom.
             </li>
             <li>
               Select <strong>&quot;Add to Home Screen&quot;</strong>.
             </li>
             <li>
-              Tap <strong>&quot;Add&quot;</strong>, and the app will appear on your home
-              screen.
+              Tap <strong>&quot;Add&quot;</strong>, and the app will appear on
+              your home screen.
             </li>
           </ol>
 
@@ -86,8 +94,14 @@ export default function InstallationPage() {
               <strong>Google Chrome</strong> or <strong>Microsoft Edge</strong>.
             </li>
             <li>
-              Click the <strong>install icon</strong> (a download button) in the
-              address bar.
+              Click the <strong>install icon</strong>{' '}
+              <Image
+                src="/img/desktop-install.svg"
+                height={20}
+                width={20}
+                alt="Desktop Install Button"
+              />{' '}
+              in the address bar.
             </li>
             <li>
               Select <strong>&quot;Install&quot;</strong> when prompted.
@@ -97,10 +111,21 @@ export default function InstallationPage() {
             </li>
           </ol>
 
-   
           <p>Now, you can jump into the musical showdown anytime! 🎶⚔️</p>
         </div>
+
+        <Image
+          src="/img/mockup1.png"
+          width={500}
+          height={500}
+          alt="Legion of Tones PWA"
+          style={{
+            borderRadius: '10px',
+            boxShadow: '1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44)',
+          }}
+        />
       </div>
+
       <Footer />
     </div>
   );

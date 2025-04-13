@@ -7,6 +7,9 @@
 .page {
   flex: 1;
   display: flex;
+  margin: 1rem;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
