@@ -90,9 +90,9 @@
 
 .hero {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 10rem;
   width: 100vw;
   height: 100vh; /* Full screen initially */
   padding: 2rem;
@@ -104,13 +104,40 @@
   padding: 0; /* Remove padding for a more compact appearance */
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .mainContainer {
     justify-content: center;
     background: none;
   }
+} */
+
+@media (max-width: 768px) {
+  .mainContainer {
+    margin: 0 0 5rem 0;
+  }
 
   .infoCard {
-    display: none;
+    flex-direction: column; /* Stack content vertically */
+    gap: 1rem; /* Reduce spacing between elements */
+    width: 90%; /* Reduce width to fit within the screen */
+    padding: 1rem; /* Adjust padding for smaller screens */
+    margin: 1rem 0 1rem 0; /* Center the cards with some margin */
+  }
+
+  .infoCard img {
+    width: 100%; /* Make images responsive */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .cardDescription {
+    text-align: center; /* Center-align text for better readability */
+  }
+
+  .cardDescription h2 {
+    font-size: 1.5rem; /* Adjust heading size for mobile */
+  }
+
+  .cardDescription p {
+    font-size: 1rem; /* Adjust paragraph size for mobile */
   }
 }

@@ -53,12 +53,12 @@ const Welcome = () => {
 
   return (
     <div className={styles.mainContainer}>
-        <div className={styles.hero} ref={heroRef}>
+      <div className={styles.hero} ref={heroRef}>
         <Image
           src="/img/logo.svg"
           alt="Legion of Tones Logo"
-          width={500}
-          height={500}
+          width={450}
+          height={450}
         />
       </div>
       <div
@@ -109,7 +109,7 @@ const Welcome = () => {
           <h2 className={styles.centerTitle}>Join the Legion</h2>
           <p>Start your musical quest today!</p>
           <div className={styles.buttonContainer}>
-            <Button variant='blue'>
+            <Button variant="blue">
               <Link href={'auth/signup'}>Sign Up</Link>
             </Button>
           </div>
