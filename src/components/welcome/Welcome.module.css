@@ -5,6 +5,15 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  background: linear-gradient(to bottom, #57bacb, #e372ed);
+}
+
+.centerTitle {
+  text-align: center;
+}
+
+.buttonContainer {
+  margin: 2rem 0 0 0;
 }
 
 .installButton {
@@ -32,6 +41,43 @@
   border-radius: 5px;
   padding: 1.5rem;
   margin: 1rem 0 1rem 0;
+  opacity: 0; /* Start hidden */
+  transform: translateY(20px); /* Start slightly below */
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.infoCard.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.infoCard.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeOutDown 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 }
 
 .cardDescription {
@@ -47,17 +93,20 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, #57bacb, #e372ed);
   width: 100vw;
-  padding: 1rem;
+  height: 100vh; /* Full screen initially */
+  padding: 2rem;
+  transition: height 0.5s ease, padding 0.5s ease; /* Smooth transition */
+}
+
+.hero.shrink {
+  height: 3vh; /* Shrink to a smaller height */
+  padding: 0; /* Remove padding for a more compact appearance */
 }
 
 @media (max-width: 768px) {
   .mainContainer {
     justify-content: center;
-  }
-
-  .hero {
     background: none;
   }
 

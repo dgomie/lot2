@@ -22,6 +22,15 @@
   opacity: 0.6;
 }
 
+.aquamarine {
+  background-color: var(--aquamarine100);
+  color: white;
+}
+
+.aquamarine:hover {
+  opacity: 0.6;
+}
+
 .transparentWhite {
   background-color: transparent;
   color: var(--navyblue100);
@@ -71,9 +80,9 @@
 .disabled {
   background-color: lightslategray;
   color: white;
-  opacity: .4;
+  opacity: 0.4;
 }
 
-.disabled:hover{
+.disabled:hover {
   cursor: default;
 }

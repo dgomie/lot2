@@ -1,66 +1,70 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styles from './Welcome.module.css';
 import Image from 'next/image';
 import Button from '../button/Button';
+import Link from 'next/link';
 
 const Welcome = () => {
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [isInstallable, setIsInstallable] = useState(false);
+  const infoCardsRef = useRef([]);
+  const heroRef = useRef(null);
 
   useEffect(() => {
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault(); // Prevent the default install prompt
-      setDeferredPrompt(e); // Save the event for later use
-      setIsInstallable(true); // Show the install button
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        heroRef.current.classList.add(styles.shrink);
+      } else {
+        heroRef.current.classList.remove(styles.shrink);
+      }
     };
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener(
-        'beforeinstallprompt',
-        handleBeforeInstallPrompt
-      );
+      window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt(); // Show the install prompt
-      const choiceResult = await deferredPrompt.userChoice;
-      if (choiceResult.outcome === 'accepted') {
-        console.log('User accepted the install prompt');
-      } else {
-        console.log('User dismissed the install prompt');
-      }
-      setDeferredPrompt(null); // Clear the saved prompt
-    }
-  };
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(styles.visible);
+            entry.target.classList.remove(styles.hidden);
+          } else {
+            entry.target.classList.remove(styles.visible);
+            entry.target.classList.add(styles.hidden);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    infoCardsRef.current.forEach((card) => {
+      if (card) observer.observe(card);
+    });
+
+    return () => {
+      infoCardsRef.current.forEach((card) => {
+        if (card) observer.unobserve(card);
+      });
+    };
+  }, []);
 
   return (
     <div className={styles.mainContainer}>
-      <div className={styles.hero}>
+        <div className={styles.hero} ref={heroRef}>
         <Image
           src="/img/logo.svg"
           alt="Legion of Tones Logo"
           width={500}
           height={500}
         />
-        {isInstallable && (
-          <div className={styles.buttonContainer}>
-            <Button onClick={handleInstallClick} variant="black">
-              <Image
-                src="/img/download.svg"
-                width={30}
-                height={30}
-                alt="Download App"
-              />
-              Download App
-            </Button>
-          </div>
-        )}
       </div>
-      <div className={styles.infoCard}>
+      <div
+        className={styles.infoCard}
+        ref={(el) => (infoCardsRef.current[0] = el)}
+      >
         <Image
           src="/img/gnomes.png"
           alt="Legion of Tones on Mobile"
@@ -70,14 +74,18 @@ const Welcome = () => {
         <div className={styles.cardDescription}>
           <h2>Share, Play, Discover</h2>
           <p>
-            A social music game, where players form a legion and submit songs
-            that best match a musical prompt. Players receive a playlist of the
-            submissions and vote for the song that ranks supreme. Find new music
-            and share the songs you love with the Legion of Tones community!
+            Join in our social music game, where players form a legion and
+            submit songs that best match a musical prompt. Once the submissions
+            are in, players receive their playlist and vote for the song that
+            ranks supreme. Find new music and share the songs you love with the
+            Legion of Tones community!
           </p>
         </div>
       </div>
-      <div className={styles.infoCard}>
+      <div
+        className={styles.infoCard}
+        ref={(el) => (infoCardsRef.current[1] = el)}
+      >
         <div className={styles.cardDescription}>
           <h2>Bring the Legion with You</h2>
           <p>
@@ -91,6 +99,21 @@ const Welcome = () => {
           width={400}
           height={400}
         />
+      </div>
+
+      <div
+        className={styles.infoCard}
+        ref={(el) => (infoCardsRef.current[2] = el)}
+      >
+        <div className={styles.cardDescription}>
+          <h2 className={styles.centerTitle}>Join the Legion</h2>
+          <p>Start your musical quest today!</p>
+          <div className={styles.buttonContainer}>
+            <Button variant='blue'>
+              <Link href={'auth/signup'}>Sign Up</Link>
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

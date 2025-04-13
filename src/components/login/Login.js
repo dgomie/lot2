@@ -86,7 +86,7 @@ const Login = () => {
           required
         />
         {error && <p className={styles.error}>Invalid username or password</p>}
-        <Button type="submit" className={styles.button} variant="green">
+        <Button type="submit" className={styles.button} variant="blue">
           Login
         </Button>
       </form>
