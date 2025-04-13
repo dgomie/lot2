@@ -1,6 +1,6 @@
 .mainContainer {
   width: 100%;
-  padding: 1rem;
+  padding: 0 1rem 0 1rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -8,7 +8,7 @@
 }
 
 .installButton {
-  margin-top: 20px;
+  margin: 1rem 0 1rem 0;
   padding: 10px 20px;
   font-size: 16px;
   background-color: #0070f3;
@@ -22,8 +22,46 @@
   background-color: #005bb5;
 }
 
+.infoCard {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  align-items: center;
+  width: 100vw;
+  background-color: white;
+  border-radius: 5px;
+  padding: 1.5rem;
+  margin: 1rem 0 1rem 0;
+}
+
+.cardDescription {
+  max-width: 25rem;
+}
+
+.cardDescription h2 {
+  margin: 0 0 1rem 0;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(to bottom, #57bacb, #e372ed);
+  width: 100vw;
+  padding: 1rem;
+}
+
 @media (max-width: 768px) {
   .mainContainer {
     justify-content: center;
+  }
+
+  .hero {
+    background: none;
+  }
+
+  .infoCard {
+    display: none;
   }
 }
