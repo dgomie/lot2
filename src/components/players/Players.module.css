@@ -32,6 +32,10 @@
   margin-top: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden;    /* Hide overflowed text */
+  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
+  max-width: 5rem;     /* Set a maximum width for the username */
 }
 
 .imageContainer {
