@@ -35,7 +35,6 @@ const Navbar = () => {
           />
         </Link>
         <div className={styles.links}>
-          <Link href="/">Home</Link>
           {currentUser ? (
             <div className={styles.linkContainer}>
               <Link href="/dashboard">Dashboard</Link>
@@ -47,6 +46,7 @@ const Navbar = () => {
             </div>
           ) : (
             <>
+              <Link href="/">Home</Link>
               <Link href="/auth/login">Login</Link>
               <Link href="/auth/signup">Sign Up</Link>
             </>
