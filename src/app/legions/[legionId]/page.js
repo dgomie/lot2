@@ -10,6 +10,7 @@ import LegionHeader from '@/components/legionHeader/LegionHeader';
 import RoundCard from '@/components/roundCard/RoundCard';
 import styles from './LegionPage.module.css';
 import { StandingsCard } from '@/components/standingsCard/StandingsCard';
+import { AddRoundCard } from '@/components/addRoundCard/AddRoundCard';
 
 const LegionPage = () => {
   const params = useParams();
@@ -123,6 +124,7 @@ const LegionPage = () => {
               legionId={legionId}
             />
           ))}
+          <AddRoundCard />
         </div>
       </div>
 
