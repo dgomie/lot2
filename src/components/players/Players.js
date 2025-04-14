@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Button from '../button/Button';
 
 const Players = ({ legionPlayers, legionAdmin }) => {
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [visibleCount, setVisibleCount] = useState(5);
   const router = useRouter();
 
   const handleProfileClick = (username) => {
