@@ -17,6 +17,11 @@
   gap: 20px; /* Space between cards */
 }
 
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
 /* Card styles */
 .card {
   display: flex;

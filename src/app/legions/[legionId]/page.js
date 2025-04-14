@@ -124,7 +124,7 @@ const LegionPage = () => {
               legionId={legionId}
             />
           ))}
-          <AddRoundCard />
+          <AddRoundCard legionId={legionId} rounds={legionData.rounds}/>
         </div>
       </div>
 
