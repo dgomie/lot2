@@ -2,7 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { fetchLegionData } from '@/firebase'; // Import the function
+import { fetchLegionData } from '@/firebase'; 
 import Loader from '@/components/loader/Loader';
 import withAuth from '@/hoc/withAuth';
 import Players from '@/components/players/Players';

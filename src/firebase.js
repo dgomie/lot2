@@ -423,6 +423,19 @@ const saveRoundData = async (legionId, roundId, updatedRoundData) => {
   }
 };
 
+export const addRoundToLegion = async (legionId, newRound) => {
+  try {
+    const legionDocRef = doc(db, 'legions', legionId);
+    await updateDoc(legionDocRef, {
+      rounds: arrayUnion(newRound),
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Error adding new round:', error);
+    return { success: false, error };
+  }
+};
+
 const fetchRoundData = async (legionId, roundId) => {
   try {
     // Validate input parameters

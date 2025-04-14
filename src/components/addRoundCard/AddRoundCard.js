@@ -4,8 +4,7 @@ import Image from 'next/image';
 import Modal from '../modal/Modal';
 import Input from '../input/Input';
 import Button from '../button/Button';
-import { updateDoc, doc } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { addRoundToLegion } from '@/firebase';
 
 export const AddRoundCard = ({ legionId, rounds = [] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,15 +50,12 @@ export const AddRoundCard = ({ legionId, rounds = [] }) => {
       return;
     }
 
-    try {
-      const legionDocRef = doc(db, 'legions', legionId);
-      await updateDoc(legionDocRef, {
-        rounds: [...rounds, newRound],
-      });
+    const result = await addRoundToLegion(legionId, newRound);
+
+    if (result.success) {
       setIsModalOpen(false);
       window.location.reload();
-    } catch (error) {
-      console.error('Error adding new round:', error);
+    } else {
       alert('Failed to add new round. Please try again.');
     }
   };
