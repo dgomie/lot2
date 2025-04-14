@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './AdminSettingsModal.module.css';
-import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { updateLegionSettings, deleteLegion } from '@/firebase';
 import Input from '../input/Input';
 import NumberInput from '../numberInput/NumberInput';
 import Button from '../button/Button';
@@ -88,10 +87,13 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
 
     setIsSaving(true);
     try {
-      const legionDocRef = doc(db, 'legions', legionId);
-      await updateDoc(legionDocRef, formData);
-      onClose();
-      window.location.reload();
+      const result = await updateLegionSettings(legionId, formData);
+      if (result.success) {
+        onClose();
+        window.location.reload();
+      } else {
+        alert('Failed to update settings. Please try again.');
+      }
     } catch (error) {
       console.error('Error updating legion settings:', error);
       alert('Failed to update settings. Please try again.');
@@ -109,10 +111,13 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
 
     setIsSaving(true);
     try {
-      const legionDocRef = doc(db, 'legions', legionId);
-      await deleteDoc(legionDocRef); 
-      onClose();
-      window.location.replace('/legions');
+      const result = await deleteLegion(legionId);
+      if (result.success) {
+        onClose();
+        window.location.replace('/legions');
+      } else {
+        alert('Failed to delete legion. Please try again.');
+      }
     } catch (error) {
       console.error('Error deleting legion:', error);
       alert('Failed to delete legion. Please try again.');
@@ -120,7 +125,7 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
       setIsSaving(false);
     }
   };
-
+  
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>

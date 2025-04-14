@@ -22,6 +22,7 @@ import {
   where,
   arrayUnion,
   arrayRemove,
+  deleteDoc,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -670,6 +671,28 @@ export const updateProfileImgInLegions = async ({ userId, newProfileImgUrl }) =>
     return { success: true };
   } catch (error) {
     console.error('Error updating profile image in legions:', error);
+    return { success: false, error };
+  }
+};
+
+export const updateLegionSettings = async (legionId, updatedData) => {
+  try {
+    const legionDocRef = doc(db, 'legions', legionId);
+    await updateDoc(legionDocRef, updatedData);
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating legion settings:', error);
+    return { success: false, error };
+  }
+};
+
+export const deleteLegion = async (legionId) => {
+  try {
+    const legionDocRef = doc(db, 'legions', legionId);
+    await deleteDoc(legionDocRef);
+    return { success: true };
+  } catch (error) {
+    console.error('Error deleting legion:', error);
     return { success: false, error };
   }
 };
