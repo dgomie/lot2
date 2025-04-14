@@ -50,7 +50,7 @@ export const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="mailto:legionoftones@gmail.com"
+                  href="mailto:support@legionoftones.com"
                   className={styles.logo}
                 >
                   Report an Issue
