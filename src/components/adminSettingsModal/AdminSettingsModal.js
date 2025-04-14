@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './AdminSettingsModal.module.css';
-import { updateDoc, doc } from 'firebase/firestore';
+import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebase';
 import Input from '../input/Input';
 import NumberInput from '../numberInput/NumberInput';
@@ -100,6 +100,27 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
     }
   };
 
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this legion? This action cannot be undone.'
+    );
+
+    if (!confirmed) return;
+
+    setIsSaving(true);
+    try {
+      const legionDocRef = doc(db, 'legions', legionId);
+      await deleteDoc(legionDocRef); 
+      onClose();
+      window.location.replace('/legions');
+    } catch (error) {
+      console.error('Error deleting legion:', error);
+      alert('Failed to delete legion. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -157,8 +178,13 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
           >
             Save
           </Button>
-          <Button onClick={onClose} disabled={isSaving} variant="red">
+          <Button onClick={onClose} disabled={isSaving} variant="gray">
             Cancel
+          </Button>
+        </div>
+        <div className={styles.deleteButton}>
+          <Button onClick={handleDelete} disabled={isSaving} variant="red">
+            Delete Legion
           </Button>
         </div>
       </div>
