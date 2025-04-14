@@ -31,7 +31,7 @@ const NumberInput = ({
         <Button
           onClick={handleDecrement}
         >
-          <Image src='./img/minus.svg' alt='decrement' width={25} height={25}/>
+          <Image src='/img/minus.svg' alt='decrement' width={25} height={25}/>
         </Button>
         <input
           type="number"
@@ -45,7 +45,7 @@ const NumberInput = ({
         <Button
           onClick={handleIncrement}
         >
-          <Image src='./img/plus.svg' alt='increment' width={25} height={25}/>
+          <Image src='/img/plus.svg' alt='increment' width={25} height={25}/>
         </Button>
       </div>
     </div>

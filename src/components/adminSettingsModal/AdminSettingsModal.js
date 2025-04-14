@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './AdminSettingsModal.module.css';
 import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
-import Input from '../input/Input'; // Import the Input component
+import Input from '../input/Input';
+import NumberInput from '../numberInput/NumberInput';
 import Button from '../button/Button';
 
 export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
@@ -20,7 +21,15 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === 'maxNumPlayers' ||
+        name === 'upVotesPerRound' ||
+        name === 'downVotesPerRound'
+          ? parseInt(value, 10) || 0 // Ensure numeric fields are parsed as integers
+          : value,
+    }));
   };
 
   const validateForm = () => {
@@ -55,6 +64,10 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
     }
     if (formData.downVotesPerRound < 0) {
       setError('Downvotes Per Round cannot be less than 0.');
+      return false;
+    }
+    if (formData.downVotesPerRound > 10) {
+      setError('Downvotes Per Round cannot exceed 10.');
       return false;
     }
     setError('');
@@ -108,32 +121,32 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
           required
           type="text"
         />
-        <Input
-          id="maxNumPlayers"
+        <NumberInput
           name="maxNumPlayers"
           label="Max Players"
           value={formData.maxNumPlayers}
           onChange={handleChange}
           required
-          type="number"
+          min={legionData.players.length}
+          max={20}
         />
-        <Input
-          id="upVotesPerRound"
+        <NumberInput
           name="upVotesPerRound"
           label="Upvotes Per Round"
           value={formData.upVotesPerRound}
           onChange={handleChange}
           required
-          type="number"
+          min={1}
+          max={10}
         />
-        <Input
-          id="downVotesPerRound"
+        <NumberInput
           name="downVotesPerRound"
           label="Downvotes Per Round"
           value={formData.downVotesPerRound}
           onChange={handleChange}
           required
-          type="number"
+          min={0}
+          max={10}
         />
         {error && <p className={styles.error}>{error}</p>}
         <div className={styles.actions}>
