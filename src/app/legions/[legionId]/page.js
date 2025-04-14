@@ -12,16 +12,19 @@ import styles from './LegionPage.module.css';
 import { StandingsCard } from '@/components/standingsCard/StandingsCard';
 import { AddRoundCard } from '@/components/addRoundCard/AddRoundCard';
 
-const LegionPage = () => {
+const LegionPage = ({ currentUser }) => {
   const params = useParams();
   const legionId = params.legionId;
   const [legionData, setLegionData] = useState(null);
   const [activeTab, setActiveTab] = useState('players');
+  const [isAdmin, setIsAdmin] = useState(true);
 
   const fetchData = async () => {
     const result = await fetchLegionData(legionId);
     if (result.success) {
-      setLegionData(result.data);
+      const data = result.data;
+      setLegionData(data);
+      setIsAdmin(currentUser.uid === data.legionAdmin.userId);
     } else {
       console.error(result.error);
     }
@@ -65,24 +68,24 @@ const LegionPage = () => {
         />
       </div>
       <div className={styles.tabCentering}>
-      <div className={styles.tabContainer} data-active-tab={activeTab}>
-        <button
-          className={`${styles.tabButton1} ${
-            activeTab === 'players' ? styles.activeTab : ''
-          }`}
-          onClick={() => setActiveTab('players')}
-        >
-          Players
-        </button>
-        <button
-          className={`${styles.tabButton2} ${
-            activeTab === 'standings' ? styles.activeTab : ''
-          }`}
-          onClick={() => setActiveTab('standings')}
-        >
-          Standings
-        </button>
-      </div>
+        <div className={styles.tabContainer} data-active-tab={activeTab}>
+          <button
+            className={`${styles.tabButton1} ${
+              activeTab === 'players' ? styles.activeTab : ''
+            }`}
+            onClick={() => setActiveTab('players')}
+          >
+            Players
+          </button>
+          <button
+            className={`${styles.tabButton2} ${
+              activeTab === 'standings' ? styles.activeTab : ''
+            }`}
+            onClick={() => setActiveTab('standings')}
+          >
+            Standings
+          </button>
+        </div>
       </div>
 
       <div className={styles.tabContent}>
@@ -96,7 +99,7 @@ const LegionPage = () => {
         )}
         {activeTab === 'standings' && (
           <StandingsCard
-            legionStatus= {legionData.isActive}
+            legionStatus={legionData.isActive}
             standings={legionData.standings}
             legionPlayers={legionData.players}
           />
@@ -124,10 +127,11 @@ const LegionPage = () => {
               legionId={legionId}
             />
           ))}
-          <AddRoundCard legionId={legionId} rounds={legionData.rounds}/>
+          {isAdmin && (
+            <AddRoundCard legionId={legionId} rounds={legionData.rounds} />
+          )}
         </div>
       </div>
-
     </div>
   );
 };
