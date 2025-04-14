@@ -26,7 +26,10 @@ export const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="https://donate.stripe.com/3csfZl65kbeE2FG6oo" className={styles.logo}>
+                <Link
+                  href="https://donate.stripe.com/3csfZl65kbeE2FG6oo"
+                  className={styles.logo}
+                >
                   Donate
                 </Link>
               </li>
@@ -34,14 +37,23 @@ export const Footer = () => {
 
             <ul className={styles.list}>
               <div className={styles.columnTitle}>Support</div>
-              <li>
+              {/* <li>
                 <Link href="/support/faq" className={styles.logo}>
                   FAQ
                 </Link>
-              </li>
+              </li> */}
+
               <li>
                 <Link href="/support/installation" className={styles.logo}>
                   How to Install
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="mailto:legionoftones@gmail.com"
+                  className={styles.logo}
+                >
+                  Report an Issue
                 </Link>
               </li>
             </ul>
