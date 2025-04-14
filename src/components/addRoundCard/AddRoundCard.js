@@ -43,6 +43,7 @@ export const AddRoundCard = ({ legionId, rounds = [] }) => {
       submissionDeadline: formData.submissionDeadline,
       voteDeadline: formData.voteDeadline,
       roundStatus: 'pending',
+      submissions: [],
     };
 
     if (!legionId) {
