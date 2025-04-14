@@ -64,3 +64,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.error {
+  text-align: center;
+  color: red;
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 1rem 0 1rem 0;
+}

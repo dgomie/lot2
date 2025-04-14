@@ -8,16 +8,17 @@ import { updateDoc, doc } from 'firebase/firestore';
 import { db } from '@/firebase';
 
 export const AddRoundCard = ({ legionId, rounds = [] }) => {
-  // Default rounds to an empty array
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     prompt: '',
     submissionDeadline: '',
     voteDeadline: '',
   });
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleCardClick = () => {
     setIsModalOpen(true);
+    setErrorMessage('');
   };
 
   const handleInputChange = (e) => {
@@ -31,14 +32,14 @@ export const AddRoundCard = ({ legionId, rounds = [] }) => {
       !formData.submissionDeadline ||
       !formData.voteDeadline
     ) {
-      alert('All fields are required.');
+      setErrorMessage('All fields are required');
       return;
     }
 
     const newRound = {
       playersVoted: [],
       prompt: formData.prompt,
-      roundNumber: rounds.length + 1, // Safely use rounds.length
+      roundNumber: rounds.length + 1,
       submissionDeadline: formData.submissionDeadline,
       voteDeadline: formData.voteDeadline,
       roundStatus: 'pending',
@@ -52,9 +53,9 @@ export const AddRoundCard = ({ legionId, rounds = [] }) => {
     try {
       const legionDocRef = doc(db, 'legions', legionId);
       await updateDoc(legionDocRef, {
-        rounds: [...rounds, newRound], 
+        rounds: [...rounds, newRound],
       });
-      setIsModalOpen(false); 
+      setIsModalOpen(false);
       window.location.reload();
     } catch (error) {
       console.error('Error adding new round:', error);
@@ -105,6 +106,7 @@ export const AddRoundCard = ({ legionId, rounds = [] }) => {
             onChange={handleInputChange}
             required
           />
+          {errorMessage && <p className={styles.error}>{errorMessage}</p>}{' '}
           <div className={styles.actions}>
             <Button onClick={handleSubmit}>Add Round</Button>
             <Button onClick={() => setIsModalOpen(false)} variant="red">
