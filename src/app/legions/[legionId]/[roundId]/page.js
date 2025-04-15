@@ -18,6 +18,7 @@ import { RoundResults } from '@/components/results/RoundResults';
 import { RoundPageHeader } from '@/components/roundPageHeader/RoundPageHeader';
 import { VotesSubmitted } from '@/components/vote/votesSubmitted/VotesSubmitted';
 import { RoundPageInfo } from '@/components/roundPageInfo/RoundPageInfo';
+import { stage } from '@/utils/status';
 
 const RoundPage = ({ currentUser }) => {
   const router = useRouter();
@@ -309,8 +310,7 @@ const RoundPage = ({ currentUser }) => {
         onSubmitClick={onSubmitClick}
       />
 
-      {new Date() > new Date(roundData.submissionDeadline) &&
-        new Date() <= new Date(roundData.voteDeadline) &&
+      {roundData.roundStage === stage.VOTING &&
         roundData.roundStatus !== 'completed' &&
         roundData.players.some(
           (player) => player.userId === currentUser.uid

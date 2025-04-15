@@ -3,3 +3,9 @@ export const status = {
     ACTIVE: 'active',
     COMPLETED: 'completed',
   };
+
+  export const stage = {
+    SUBMISSION: 'submission',
+    VOTING: 'voting',
+    COMPLETED: 'completed'
+  }

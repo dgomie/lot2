@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './RoundPageInfo.module.css';
 import Image from 'next/image';
 import { UserImageContainer } from '../userImageContainer/UserImageContainer';
-import { status } from '@/utils/status';
+import { status, stage } from '@/utils/status';
 
 export const RoundPageInfo = ({currentUser, roundData, usersWhoVoted, usersWithSubmissions, stillPonderingUsers, onPlaylistClick, onSubmitClick }) => {
   return (
@@ -19,12 +19,12 @@ export const RoundPageInfo = ({currentUser, roundData, usersWhoVoted, usersWithS
 
       <UserImageContainer
         title={
-          new Date() > new Date(roundData.submissionDeadline)
+          roundData.roundStage === stage.VOTING
             ? 'Voted'
             : 'Submitted'
         }
         users={
-          new Date() > new Date(roundData.submissionDeadline)
+          roundData.roundStage === stage.VOTING
             ? usersWhoVoted
             : usersWithSubmissions
         }
@@ -32,7 +32,7 @@ export const RoundPageInfo = ({currentUser, roundData, usersWhoVoted, usersWithS
 
       <UserImageContainer title="Still Pondering" users={stillPonderingUsers} />
 
-      {new Date() > new Date(roundData.submissionDeadline) ? (
+      {roundData.roundStage === stage.VOTING ? (
         // Show "Listen to Playlist" button if the current date is past the submission deadline
         // OR if the number of submissions equals the number of players
         <div className={styles.submit} onClick={onPlaylistClick}>

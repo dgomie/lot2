@@ -6,7 +6,7 @@ import NumberInput from '../numberInput/NumberInput';
 import { submitLegion, incrementUserLegions } from '@/firebase';
 import Button from '../button/Button';
 import { musicLeaguePrompts } from '@/data/defaultPrompts';
-import { status } from '@/utils/status';
+import { status, stage } from '@/utils/status';
 
 const CreateLegionForm = ({ currentUser }) => {
   const router = useRouter();
@@ -107,6 +107,7 @@ const CreateLegionForm = ({ currentUser }) => {
               playersVoted: [],
               prompt: randomPrompt,
               roundStatus: roundNumber === 1 ? status.ACTIVE : status.PENDING,
+              roundStage: stage.SUBMISSION,
             };
           }
         );
