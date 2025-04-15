@@ -85,4 +85,35 @@ export const adminIncrementUserVictories = async (userId) => {
   }
 };
 
+export const adminUpdateRoundStage = async (legionId, roundId, newStage) => {
+  try {
+    const legionDocRef = adminDb.collection('legions').doc(legionId);
+    const legionDoc = await legionDocRef.get();
+
+    if (!legionDoc.exists) {
+      throw new Error('Legion not found');
+    }
+
+    const legionData = legionDoc.data();
+
+    if (!legionData.rounds || !Array.isArray(legionData.rounds)) {
+      throw new Error('Rounds data is missing or invalid');
+    }
+
+    const updatedRounds = legionData.rounds.map((round) => {
+      if (round.id === roundId) {
+        return { ...round, roundStage: newStage };
+      }
+      return round;
+    });
+
+    await legionDocRef.update({ rounds: updatedRounds });
+
+    return { success: true, updatedRounds };
+  } catch (error) {
+    console.error('Error updating round stage:', error);
+    return { success: false, error };
+  }
+};
+
 export { adminDb };

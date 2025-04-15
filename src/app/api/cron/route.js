@@ -1,21 +1,22 @@
 import { adminDb } from '../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
-import { status } from '../../../utils/status';
+import { status, stage } from '../../../utils/status';
 import admin from 'firebase-admin'; // Ensure Firebase Admin SDK is initialized
 import {
   adminUpdateLegionStandings,
   adminIncrementUserVictories,
+  adminUpdateRoundStage
 } from '../../../firebaseAdmin';
+
+const normalizeDate = (date) => {
+  const normalized = new Date(date);
+  normalized.setHours(0, 0, 0, 0);
+  return normalized;
+};
 
 export async function GET(req, res) {
   try {
-    // Get the current date (ignoring the time)
-    const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0);
-
-    // Get the next day's date
-    const nextDay = new Date(currentDate);
-    nextDay.setDate(nextDay.getDate() + 1);
+   const currentDate = normalizeDate(new Date());
 
     // Query all active legions
     const legionsRef = adminDb.collection('legions');
@@ -32,24 +33,17 @@ export async function GET(req, res) {
       );
 
       if (currentRound) {
-        const submissionDeadline = new Date(currentRound.submissionDeadline);
-        submissionDeadline.setHours(0, 0, 0, 0);
-
-        const dayBeforeSubmissionDeadline = new Date(submissionDeadline);
-        dayBeforeSubmissionDeadline.setDate(
-          dayBeforeSubmissionDeadline.getDate() - 1
+        const submissionDeadline = normalizeDate(currentRound.submissionDeadline);
+        const dayBeforeSubmissionDeadline = normalizeDate(
+          new Date(submissionDeadline.setDate(submissionDeadline.getDate() - 1))
         );
-
-        const dayAfterSubmissionDeadline = new Date(submissionDeadline);
-        dayAfterSubmissionDeadline.setDate(
-          dayAfterSubmissionDeadline.getDate()
+        const dayAfterSubmissionDeadline = normalizeDate(
+          new Date(submissionDeadline.setDate(submissionDeadline.getDate() + 1))
         );
-
-        const voteDeadline = new Date(currentRound.voteDeadline);
-        voteDeadline.setHours(0, 0, 0, 0);
-
-        const dayBeforeVoteDeadline = new Date(voteDeadline);
-        dayBeforeVoteDeadline.setDate(dayBeforeVoteDeadline.getDate() - 1);
+        const voteDeadline = normalizeDate(currentRound.voteDeadline);
+        const dayBeforeVoteDeadline = normalizeDate(
+          new Date(voteDeadline.setDate(voteDeadline.getDate() - 1))
+        );
 
         // Playlist notification (day after submission deadline)
         if (dayAfterSubmissionDeadline.getTime() === currentDate.getTime()) {
@@ -58,19 +52,17 @@ export async function GET(req, res) {
             const playerUids = legionData.players
               .map((player) => player.userId)
               .filter(Boolean);
-
+        
             // Fetch fcmTokens for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
               const userDoc = await adminDb.collection('users').doc(uid).get();
               return userDoc.exists ? userDoc.data().fcmToken : null;
             });
-
+        
             // Resolve all promises and filter out null/undefined tokens
-            const tokens = (await Promise.all(tokenFetchPromises)).filter(
-              Boolean
-            );
+            const tokens = (await Promise.all(tokenFetchPromises)).filter(Boolean);
             const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
-
+        
             if (uniqueTokens.length === 0) {
               console.warn(
                 `No valid FCM tokens found for legion: ${legionData.legionName}`
@@ -82,7 +74,7 @@ export async function GET(req, res) {
                 month: 'long',
                 day: '2-digit',
               });
-
+        
               uniqueTokens.forEach((token) => {
                 notifications.push(
                   admin
@@ -98,13 +90,22 @@ export async function GET(req, res) {
                       console.log(`Playlist notification sent`, response);
                     })
                     .catch((error) => {
-                      console.error(
-                        `Error sending playlist notification`,
-                        error
-                      );
+                      console.error(`Error sending playlist notification`, error);
                     })
                 );
               });
+        
+              try {
+                await adminUpdateRoundStage(legionDoc.id, currentRound.id, stage.VOTING);
+                console.log(
+                  `Round stage updated to VOTING for legion: ${legionData.legionName}`
+                );
+              } catch (error) {
+                console.error(
+                  `Error updating round stage to VOTING for legion ${legionData.legionName}:`,
+                  error
+                );
+              }
             }
           }
         }
@@ -217,7 +218,7 @@ export async function GET(req, res) {
         }
 
         // Round summary notification (on vote deadline)
-        else if (voteDeadline.getTime() === currentDate.getTime()) {
+        else if (voteDeadline.getTime() <= currentDate.getTime()) {
           // Send round summary notification
           if (legionData.players && legionData.players.length > 0) {
             const playerUids = legionData.players
@@ -286,6 +287,7 @@ export async function GET(req, res) {
         );
         if (nextRound) {
           nextRound.roundStatus = status.ACTIVE;
+          nextRound.roundStage = stage.SUBMISSION;
         } else {
           isLegionActive = false;
         }

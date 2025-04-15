@@ -329,7 +329,13 @@ const fetchLegions = async (lastVisible) => {
   return { legions, lastVisibleDoc };
 };
 
-const joinLegion = async ({ legionId, userId, fcmToken, profileImg, username }) => {
+const joinLegion = async ({
+  legionId,
+  userId,
+  fcmToken,
+  profileImg,
+  username,
+}) => {
   try {
     const legionDocRef = doc(db, 'legions', legionId);
 
@@ -635,7 +641,10 @@ export const updateVoteDeadline = async (legionId, roundId, newDeadline) => {
   }
 };
 
-export const updateProfileImgInLegions = async ({ userId, newProfileImgUrl }) => {
+export const updateProfileImgInLegions = async ({
+  userId,
+  newProfileImgUrl,
+}) => {
   try {
     const legionsRef = collection(db, 'legions');
     const q = query(legionsRef); // Fetch all legions
