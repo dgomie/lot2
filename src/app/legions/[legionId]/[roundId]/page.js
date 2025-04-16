@@ -231,6 +231,7 @@ const RoundPage = ({ currentUser }) => {
       youtubeUrl,
       videoTitle,
       voteCount: 0,
+      comments: [],
     };
 
     const existingSubmissions = latestRoundData.submissions || [];
