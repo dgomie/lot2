@@ -1,7 +1,8 @@
 import Button from '@/components/button/Button';
 import styles from './SongCard.module.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import Input from '@/components/input/Input';
 
 const extractYouTubeVideoId = (url) => {
   const regex =
@@ -16,12 +17,20 @@ const SongCard = ({
   vote,
   onVote,
   isUserSubmission,
+  onCommentChange, // Callback to pass the comment to the parent
 }) => {
+  const [comment, setComment] = useState(''); // Local state for the comment
   const videoId = extractYouTubeVideoId(youtubeUrl);
 
+  const handleCommentChange = (e) => {
+    const newComment = e.target.value;
+    setComment(newComment); // Update local state
+    onCommentChange(newComment); // Pass the comment to the parent
+  };
+
   const getBackgroundColor = () => {
-    if (vote === 1) return '#25A18E'; 
-    if (vote === -1) return '#a12538'; 
+    if (vote === 1) return '#25A18E';
+    if (vote === -1) return '#a12538';
     return 'white';
   };
 
@@ -49,14 +58,30 @@ const SongCard = ({
       {isUserSubmission ? (
         <div className={styles.userSubmissionMessage}>Your Submission</div>
       ) : (
-        <div className={styles.buttonContainer}>
-          <Button onClick={() => onVote('negative')}>
-            <Image src="/img/minus.svg" alt="Downvote" width={25} height={25} />
-          </Button>
-          <Button onClick={() => onVote('positive')}>
-            <Image src="/img/plus.svg" alt="Upvote" width={25} height={25} />
-          </Button>
-        </div>
+        <>
+          <div className={styles.buttonContainer}>
+            <Button onClick={() => onVote('negative')}>
+              <Image
+                src="/img/minus.svg"
+                alt="Downvote"
+                width={25}
+                height={25}
+              />
+            </Button>
+            <Button onClick={() => onVote('positive')}>
+              <Image src="/img/plus.svg" alt="Upvote" width={25} height={25} />
+            </Button>
+          </div>
+          <div className={styles.commentContainer}>
+            <Input
+              type="text"
+              value={comment}
+              onChange={handleCommentChange}
+              placeholder="Add a comment..."
+              className={styles.commentInput}
+            />
+          </div>
+        </>
       )}
     </div>
   );

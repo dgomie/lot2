@@ -39,3 +39,14 @@
     font-style: italic;
     color: gray;
   }
+
+  .commentContainer {
+    width: 15rem;
+  }
+  
+  .commentInput {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }

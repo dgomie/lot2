@@ -48,6 +48,8 @@ const RoundPage = ({ currentUser }) => {
     setLoading(false);
   };
 
+  console.log(roundData?.submissions)
+
   const fetchLegionDetails = async () => {
     try {
       const result = await fetchLegionData(legionId);

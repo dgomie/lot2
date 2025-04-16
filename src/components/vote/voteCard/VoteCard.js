@@ -18,9 +18,10 @@ const VoteCard = ({
   onVotesSubmitted,
   stillPonderingUsers,
   upVotesPerRound,
-  downVotesPerRound, // Add these props
+  downVotesPerRound,
 }) => {
   const [votes, setVotes] = useState(submissions.map(() => 0));
+  const [comments, setComments] = useState(submissions.map(() => ''));
 
   const handleVote = (index, type) => {
     setVotes((prevVotes) => {
@@ -31,6 +32,14 @@ const VoteCard = ({
         updatedVotes[index] = updatedVotes[index] === -1 ? 0 : -1;
       }
       return updatedVotes;
+    });
+  };
+
+  const handleCommentChange = (index, comment) => {
+    setComments((prevComments) => {
+      const updatedComments = [...prevComments];
+      updatedComments[index] = comment;
+      return updatedComments;
     });
   };
 
@@ -55,13 +64,17 @@ const VoteCard = ({
       }
       const latestSubmissions = latestRoundDataResult.round.submissions || [];
 
-      // Merge the latest submissions with the current votes
+      // Merge the latest submissions with the current votes and comments
       const updatedSubmissions = latestSubmissions.map((submission, index) => ({
         ...submission,
         voteCount: (submission.voteCount || 0) + (votes[index] || 0),
+        comments: [
+          ...(submission.comments || []),
+          { uid: currentUser.uid, comment: comments[index] },
+        ],
       }));
 
-      // Save the updated submissions
+      // Save the updated submissions to Firestore
       const result = await updateRoundSubmissions(
         legionId,
         roundId,
@@ -106,16 +119,21 @@ const VoteCard = ({
             vote={votes[index]}
             onVote={(voteType) => handleVote(index, voteType)}
             isUserSubmission={submission.uid === currentUser.uid}
+            onCommentChange={(comment) => handleCommentChange(index, comment)}
           />
         ))}
       </div>
       <div className={styles.buttonContainer}>
         <div className={styles.voteRequirements}>
-          Upvotes: {upVotesCount}/{upVotesPerRound} | Downvotes: {downVotesCount}
-          /{downVotesPerRound}
+          Upvotes: {upVotesCount}/{upVotesPerRound} | Downvotes:{' '}
+          {downVotesCount}/{downVotesPerRound}
         </div>
         <div className={styles.button}>
-          <Button onClick={handleSubmitVotes} disabled={!canSubmitVotes} variant={!canSubmitVotes ? 'disabled' : 'blue'}>
+          <Button
+            onClick={handleSubmitVotes}
+            disabled={!canSubmitVotes}
+            variant={!canSubmitVotes ? 'disabled' : 'blue'}
+          >
             Submit Votes
           </Button>
         </div>
