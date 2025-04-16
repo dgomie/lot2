@@ -14,7 +14,7 @@ const normalizeDate = (date) => {
   return normalized;
 };
 
-export async function GET(req, res) {
+export async function GET(request) {
 
   const authHeader = request.headers.get('authorization');
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
