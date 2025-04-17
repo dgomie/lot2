@@ -63,7 +63,7 @@ const CreateLegionForm = ({ currentUser }) => {
       );
     } else if (step === 4) {
       setIsStepValid(
-        formData.upVotesPerRound > 0 && formData.downVotesPerRound > 0
+        formData.upVotesPerRound > 0 && formData.downVotesPerRound >= 0
       );
     }
   };
