@@ -33,7 +33,7 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
               <div
                 className={`${styles.username} ${userStyle(submission.uid)}`}
               >
-              Submitted by {username}
+                Submitted by {username}
               </div>
               <div className={styles.votes}>{submission.voteCount}pts</div>
             </div>
@@ -41,28 +41,50 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
             {/* Comments Section */}
             <div className={styles.commentsSection}>
               {submission.comments?.length > 0 ? (
-                submission.comments.map((comment, index) => {
-                  const { username, profileImage } = getUserDetails(
-                    comment.uid
-                  );
-                  return (
-                    <div key={index} className={styles.comment}>
-                      <Image
-                        src={profileImage}
-                        alt={`${username}'s profile`}
-                        width={30}
-                        height={30}
-                        className={styles.profileImage}
-                      />
-                      <div className={styles.commentContent}>
-                        <div className={styles.commentUsername}>{username}</div>
-                        <div className={styles.commentText}>{comment.comment}</div>
+                submission.comments
+                  .filter((comment) => comment.uid !== submission.uid) // Filter out comments where comment.uid matches submission.uid
+                  .sort((a, b) => b.vote - a.vote) // Sort comments by vote in descending order (1 to -1)
+                  .map((comment, index) => {
+                    const { username, profileImage } = getUserDetails(
+                      comment.uid
+                    );
+                    return (
+                      <div key={index} className={styles.comment}>
+                        <Image
+                          src={profileImage}
+                          alt={`${username}'s profile`}
+                          width={30}
+                          height={30}
+                          className={styles.profileImage}
+                        />
+                        <div className={styles.commentContent}>
+                          <div className={styles.commentUsername}>
+                            {username}
+                          </div>
+                          <div className={styles.commentText}>
+                            {comment.comment}
+                          </div>
+                          <div
+                            className={styles.commentVote}
+                            style={{
+                              color:
+                                comment.vote === 1
+                                  ? 'green'
+                                  : comment.vote === -1
+                                  ? 'red'
+                                  : 'inherit',
+                            }}
+                          >
+                            {comment.vote === 1
+                              ? `+${comment.vote}`
+                              : comment.vote}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })
+                    );
+                  })
               ) : (
-                <div className={styles.noComments}>No comments yet.</div>
+                <div className={styles.noComments}></div>
               )}
             </div>
           </div>

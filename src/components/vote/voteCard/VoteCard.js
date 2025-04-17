@@ -84,14 +84,11 @@ const VoteCard = ({
         voteCount: (submission.voteCount || 0) + (votes[submission.uid] || 0),
         comments: [
           ...(submission.comments || []), // Preserve existing comments
-          ...(comments[submission.uid] && comments[submission.uid].trim() !== '' // Only add non-empty comments
-            ? [
-                {
-                  uid: currentUser.uid,
-                  comment: comments[submission.uid].trim(),
-                },
-              ]
-            : []),
+          {
+            uid: currentUser.uid,
+            comment: comments[submission.uid]?.trim() || '', // Save the comment even if it's empty
+            vote: votes[submission.uid] || 0, // Include the vote (1, -1, or 0)
+          },
         ],
       }));
 
