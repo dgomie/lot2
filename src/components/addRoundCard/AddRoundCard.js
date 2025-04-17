@@ -81,6 +81,7 @@ export const AddRoundCard = ({ legionId, rounds = [] }) => {
             id="prompt"
             name="prompt"
             label="Prompt"
+            placeholder="New Prompt..."
             value={formData.prompt}
             onChange={handleInputChange}
             required
