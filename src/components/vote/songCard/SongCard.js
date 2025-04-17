@@ -62,14 +62,14 @@ const SongCard = ({
           <div className={styles.buttonContainer}>
             <Button onClick={() => onVote('negative')}>
               <Image
-                src="/img/minus.svg"
+                src="/img/thumb-down.svg"
                 alt="Downvote"
                 width={25}
                 height={25}
               />
             </Button>
             <Button onClick={() => onVote('positive')}>
-              <Image src="/img/plus.svg" alt="Upvote" width={25} height={25} />
+              <Image src="/img/thumb-up.svg" alt="Upvote" width={25} height={25} />
             </Button>
           </div>
           <div className={styles.commentContainer}>
