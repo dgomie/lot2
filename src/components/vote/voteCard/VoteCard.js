@@ -57,7 +57,9 @@ const VoteCard = ({
 
   // Calculate the number of upvotes and downvotes
   const upVotesCount = Object.values(votes).filter((vote) => vote === 1).length;
-  const downVotesCount = Object.values(votes).filter((vote) => vote === -1).length;
+  const downVotesCount = Object.values(votes).filter(
+    (vote) => vote === -1
+  ).length;
 
   // Update the condition to enable the submit button
   const canSubmitVotes =
@@ -132,14 +134,16 @@ const VoteCard = ({
       <div className={styles.carousel}>
         {submissions.map((submission, index) => (
           <SongCard
-          key={submission.uid}
-          youtubeUrl={submission.youtubeUrl}
-          videoTitle={submission.videoTitle}
-          vote={votes[submission.uid]}
-          onVote={(voteType) => handleVote(submission.uid, voteType)}
-          isUserSubmission={submission.uid === currentUser.uid}
-          onCommentChange={(comment) => handleCommentChange(submission.uid, comment)}
-        />
+            key={submission.uid}
+            youtubeUrl={submission.youtubeUrl}
+            videoTitle={submission.videoTitle}
+            vote={votes[submission.uid]}
+            onVote={(voteType) => handleVote(submission.uid, voteType)}
+            isUserSubmission={submission.uid === currentUser.uid}
+            onCommentChange={(comment) =>
+              handleCommentChange(submission.uid, comment)
+            }
+          />
         ))}
       </div>
       <div className={styles.buttonContainer}>

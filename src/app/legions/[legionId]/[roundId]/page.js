@@ -93,8 +93,7 @@ const RoundPage = ({ currentUser }) => {
         typeof player === 'object' ? player.userId : player
       );
   
-      const now = new Date();
-      const isSubmissionPhase = now <= new Date(roundData.submissionDeadline);
+      const isSubmissionPhase = roundData.roundStage === stage.SUBMISSION;
   
       // Calculate still pondering users
       const stillPonderingUids = allPlayerUids.filter((uid) =>
