@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import {
   fetchRoundData,
@@ -36,7 +36,6 @@ const RoundPage = ({ currentUser }) => {
   const [upVotesPerRound, setUpVotesPerRound] = useState(0);
   const [downVotesPerRound, setDownVotesPerRound] = useState(0);
 
-
   const fetchRound = async () => {
     const result = await fetchRoundData(legionId, roundId);
     if (result.success) {
@@ -48,7 +47,7 @@ const RoundPage = ({ currentUser }) => {
     setLoading(false);
   };
 
-  console.log(roundData?.submissions)
+  console.log(roundData?.submissions);
 
   const fetchLegionDetails = async () => {
     try {
@@ -86,22 +85,23 @@ const RoundPage = ({ currentUser }) => {
   useEffect(() => {
     const fetchUsers = async () => {
       if (!roundData) return;
-  
+
       const submissionUids = roundData.submissions?.map((s) => s.uid) || [];
       const playersVoted = roundData.playersVoted || [];
       const allPlayerUids = roundData.players.map((player) =>
         typeof player === 'object' ? player.userId : player
       );
-  
+
       const isSubmissionPhase = roundData.roundStage === stage.SUBMISSION;
-  
+
       // Calculate still pondering users
-      const stillPonderingUids = allPlayerUids.filter((uid) =>
-        isSubmissionPhase
-          ? !submissionUids.includes(uid) // For submission phase
-          : submissionUids.includes(uid) && !playersVoted.includes(uid) // For voting phase
+      const stillPonderingUids = allPlayerUids.filter(
+        (uid) =>
+          isSubmissionPhase
+            ? !submissionUids.includes(uid) // For submission phase
+            : submissionUids.includes(uid) && !playersVoted.includes(uid) // For voting phase
       );
-  
+
       // Fetch user profiles for still pondering users
       const [
         fetchedUsersWithSubmissions,
@@ -112,12 +112,12 @@ const RoundPage = ({ currentUser }) => {
         fetchUsersByUids(playersVoted),
         fetchUsersByUids(stillPonderingUids),
       ]);
-  
+
       setUsersWithSubmissions(fetchedUsersWithSubmissions);
       setUsersWhoVoted(fetchedUsersWhoVoted);
       setStillPonderingUsers(fetchedStillPonderingUsers);
     };
-  
+
     fetchUsers();
   }, [roundData]);
 
@@ -295,77 +295,83 @@ const RoundPage = ({ currentUser }) => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.roundInfoContainer}>
-      <RoundPageHeader
-        currentUser={currentUser}
-        legionId={legionId}
-        roundData={roundData}
-        onBackClick={onBackClick}
-        onSettingsClick={onSettingsClick}
-      />
-      <RoundPageInfo
-        currentUser={currentUser}
-        roundData={roundData}
-        usersWhoVoted={usersWhoVoted}
-        usersWithSubmissions={usersWithSubmissions}
-        stillPonderingUsers={stillPonderingUsers}
-        onPlaylistClick={onPlaylistClick}
-        onSubmitClick={onSubmitClick}
-      />
+        <RoundPageHeader
+          currentUser={currentUser}
+          legionId={legionId}
+          roundData={roundData}
+          onBackClick={onBackClick}
+          onSettingsClick={onSettingsClick}
+        />
+        <RoundPageInfo
+          currentUser={currentUser}
+          roundData={roundData}
+          usersWhoVoted={usersWhoVoted}
+          usersWithSubmissions={usersWithSubmissions}
+          stillPonderingUsers={stillPonderingUsers}
+          onPlaylistClick={onPlaylistClick}
+          onSubmitClick={onSubmitClick}
+        />
 
-      {roundData.roundStage === stage.VOTING &&
-        roundData.roundStatus !== 'completed' &&
-        roundData.players.some(
-          (player) => player.userId === currentUser.uid
-        ) &&
-        usersWithSubmissions.some(
-          (user) => user.uid === currentUser.uid // Ensure the user has submitted
-        ) && (
-          <>
-            {roundData.playersVoted?.includes(currentUser.uid) ? (
-              <VotesSubmitted />
-            ) : (
-              <VoteCard
-                submissions={randomizedSubmissions.map((submission) => ({
-                  ...submission,
-                  videoTitle: submission.videoTitle,
-                }))}
-                legionId={legionId}
-                roundId={roundId}
-                currentUser={currentUser}
-                onVotesSubmitted={refreshRoundData}
-                players={roundData?.players}
-                stillPonderingUsers={stillPonderingUsers}
-                upVotesPerRound={upVotesPerRound}
-                downVotesPerRound={downVotesPerRound} 
-              />
-            )}
-          </>
+        {roundData.roundStage === stage.VOTING &&
+          roundData.roundStatus !== 'completed' &&
+          roundData.players.some(
+            (player) => player.userId === currentUser.uid
+          ) &&
+          usersWithSubmissions.some(
+            (user) => user.uid === currentUser.uid // Ensure the user has submitted
+          ) && (
+            <>
+              {roundData.playersVoted?.includes(currentUser.uid) ? (
+                <VotesSubmitted />
+              ) : (
+                <VoteCard
+                  submissions={randomizedSubmissions.map((submission) => ({
+                    ...submission,
+                    videoTitle: submission.videoTitle,
+                  }))}
+                  legionId={legionId}
+                  roundId={roundId}
+                  currentUser={currentUser}
+                  onVotesSubmitted={refreshRoundData}
+                  players={roundData?.players}
+                  stillPonderingUsers={stillPonderingUsers}
+                  upVotesPerRound={upVotesPerRound}
+                  downVotesPerRound={downVotesPerRound}
+                />
+              )}
+            </>
+          )}
+
+        {roundData.roundStatus === 'completed' && (
+          <RoundResults
+            currentUser={currentUser}
+            roundData={roundData}
+            userProfiles={usersWithSubmissions}
+          />
         )}
 
-      {roundData.roundStatus === 'completed' && (
         <RoundResults
           currentUser={currentUser}
           roundData={roundData}
           userProfiles={usersWithSubmissions}
         />
-      )}
 
-      {isModalOpen && (
-        <RoundSettingsModal
-          editableRoundData={editableRoundData}
-          originalRoundData={roundData}
-          setEditableRoundData={setEditableRoundData}
-          onSave={handleSaveChanges}
-          onCancel={() => setIsModalOpen(false)}
-        />
-      )}
+        {isModalOpen && (
+          <RoundSettingsModal
+            editableRoundData={editableRoundData}
+            originalRoundData={roundData}
+            setEditableRoundData={setEditableRoundData}
+            onSave={handleSaveChanges}
+            onCancel={() => setIsModalOpen(false)}
+          />
+        )}
 
-      {isSubmitModalOpen && (
-        <SubmitModal
-          onClose={() => setIsSubmitModalOpen(false)}
-          onSubmit={handleSubmitUrl}
-        />
-      )}
+        {isSubmitModalOpen && (
+          <SubmitModal
+            onClose={() => setIsSubmitModalOpen(false)}
+            onSubmit={handleSubmitUrl}
+          />
+        )}
       </div>
     </div>
   );

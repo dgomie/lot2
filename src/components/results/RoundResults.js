@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './RoundResults.module.css';
+import Image from 'next/image';
 
 export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
   const sortedSubmissions = [...(roundData.submissions || [])].sort(
@@ -10,14 +11,20 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
     return currentUser.uid === submissionUid ? styles.currentUser : '';
   };
 
+  const getUserDetails = (uid) => {
+    const user = userProfiles.find((user) => user.uid === uid);
+    return {
+      username: user?.username || 'Unknown User',
+      profileImage: user?.profileImage || '/img/user.png',
+    };
+  };
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.title}>Round Results</div>
 
       {sortedSubmissions.map((submission) => {
-        const username =
-          userProfiles.find((user) => user.uid === submission.uid)?.username ||
-          'Unknown User';
+        const { username } = getUserDetails(submission.uid);
 
         return (
           <div key={submission.uid} className={styles.resultInfo}>
@@ -26,11 +33,38 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
               <div
                 className={`${styles.username} ${userStyle(submission.uid)}`}
               >
-                {username}
+              Submitted by {username}
               </div>
               <div className={styles.votes}>{submission.voteCount}pts</div>
             </div>
-      
+
+            {/* Comments Section */}
+            <div className={styles.commentsSection}>
+              {submission.comments?.length > 0 ? (
+                submission.comments.map((comment, index) => {
+                  const { username, profileImage } = getUserDetails(
+                    comment.uid
+                  );
+                  return (
+                    <div key={index} className={styles.comment}>
+                      <Image
+                        src={profileImage}
+                        alt={`${username}'s profile`}
+                        width={30}
+                        height={30}
+                        className={styles.profileImage}
+                      />
+                      <div className={styles.commentContent}>
+                        <div className={styles.commentUsername}>{username}</div>
+                        <div className={styles.commentText}>{comment.comment}</div>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className={styles.noComments}>No comments yet.</div>
+              )}
+            </div>
           </div>
         );
       })}
