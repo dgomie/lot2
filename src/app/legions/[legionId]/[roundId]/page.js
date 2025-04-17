@@ -47,8 +47,6 @@ const RoundPage = ({ currentUser }) => {
     setLoading(false);
   };
 
-  console.log(roundData?.submissions);
-
   const fetchLegionDetails = async () => {
     try {
       const result = await fetchLegionData(legionId);
@@ -349,12 +347,6 @@ const RoundPage = ({ currentUser }) => {
             userProfiles={usersWithSubmissions}
           />
         )}
-
-        <RoundResults
-          currentUser={currentUser}
-          roundData={roundData}
-          userProfiles={usersWithSubmissions}
-        />
 
         {isModalOpen && (
           <RoundSettingsModal
