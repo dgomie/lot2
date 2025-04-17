@@ -20,32 +20,44 @@ const VoteCard = ({
   upVotesPerRound,
   downVotesPerRound,
 }) => {
-  const [votes, setVotes] = useState(submissions.map(() => 0));
-  const [comments, setComments] = useState(submissions.map(() => ''));
+  const [votes, setVotes] = useState(() =>
+    submissions.reduce((acc, submission) => {
+      acc[submission.uid] = 0; // Initialize votes for each submission
+      return acc;
+    }, {})
+  );
 
-  const handleVote = (index, type) => {
-    setVotes((prevVotes) => {
-      const updatedVotes = [...prevVotes];
-      if (type === 'positive') {
-        updatedVotes[index] = updatedVotes[index] === 1 ? 0 : 1;
-      } else if (type === 'negative') {
-        updatedVotes[index] = updatedVotes[index] === -1 ? 0 : -1;
-      }
-      return updatedVotes;
-    });
+  const [comments, setComments] = useState(() =>
+    submissions.reduce((acc, submission) => {
+      acc[submission.uid] = ''; // Initialize comments for each submission
+      return acc;
+    }, {})
+  );
+
+  const handleVote = (uid, type) => {
+    setVotes((prevVotes) => ({
+      ...prevVotes,
+      [uid]:
+        type === 'positive'
+          ? prevVotes[uid] === 1
+            ? 0
+            : 1
+          : prevVotes[uid] === -1
+          ? 0
+          : -1,
+    }));
   };
 
-  const handleCommentChange = (index, comment) => {
-    setComments((prevComments) => {
-      const updatedComments = [...prevComments];
-      updatedComments[index] = comment;
-      return updatedComments;
-    });
+  const handleCommentChange = (uid, comment) => {
+    setComments((prevComments) => ({
+      ...prevComments,
+      [uid]: comment, // Update the comment for the correct submission
+    }));
   };
 
   // Calculate the number of upvotes and downvotes
-  const upVotesCount = votes.filter((vote) => vote === 1).length;
-  const downVotesCount = votes.filter((vote) => vote === -1).length;
+  const upVotesCount = Object.values(votes).filter((vote) => vote === 1).length;
+  const downVotesCount = Object.values(votes).filter((vote) => vote === -1).length;
 
   // Update the condition to enable the submit button
   const canSubmitVotes =
@@ -65,12 +77,19 @@ const VoteCard = ({
       const latestSubmissions = latestRoundDataResult.round.submissions || [];
 
       // Merge the latest submissions with the current votes and comments
-      const updatedSubmissions = latestSubmissions.map((submission, index) => ({
+      const updatedSubmissions = latestSubmissions.map((submission) => ({
         ...submission,
-        voteCount: (submission.voteCount || 0) + (votes[index] || 0),
+        voteCount: (submission.voteCount || 0) + (votes[submission.uid] || 0),
         comments: [
-          ...(submission.comments || []),
-          { uid: currentUser.uid, comment: comments[index] },
+          ...(submission.comments || []), // Preserve existing comments
+          ...(comments[submission.uid] && comments[submission.uid].trim() !== '' // Only add non-empty comments
+            ? [
+                {
+                  uid: currentUser.uid,
+                  comment: comments[submission.uid].trim(),
+                },
+              ]
+            : []),
         ],
       }));
 
@@ -113,14 +132,14 @@ const VoteCard = ({
       <div className={styles.carousel}>
         {submissions.map((submission, index) => (
           <SongCard
-            key={submission.uid}
-            youtubeUrl={submission.youtubeUrl}
-            videoTitle={submission.videoTitle}
-            vote={votes[index]}
-            onVote={(voteType) => handleVote(index, voteType)}
-            isUserSubmission={submission.uid === currentUser.uid}
-            onCommentChange={(comment) => handleCommentChange(index, comment)}
-          />
+          key={submission.uid}
+          youtubeUrl={submission.youtubeUrl}
+          videoTitle={submission.videoTitle}
+          vote={votes[submission.uid]}
+          onVote={(voteType) => handleVote(submission.uid, voteType)}
+          isUserSubmission={submission.uid === currentUser.uid}
+          onCommentChange={(comment) => handleCommentChange(submission.uid, comment)}
+        />
         ))}
       </div>
       <div className={styles.buttonContainer}>
