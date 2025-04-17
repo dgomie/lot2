@@ -63,13 +63,11 @@ export const getFcmToken = async () => {
   }
 
   try {
-    console.log('VAPID KEY:', process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY);
     const currentToken = await getToken(messaging, {
       vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
     });
 
     if (currentToken) {
-      console.log('FCM Token retrieved:', currentToken);
       return currentToken;
     } else {
       console.warn(
@@ -87,10 +85,8 @@ export const requestNotificationPermission = async () => {
   try {
     const permission = await Notification.requestPermission();
     if (permission === 'granted') {
-      console.log('Notification permission granted.');
       return true;
     } else {
-      console.warn('Notification permission denied.');
       return false;
     }
   } catch (error) {
@@ -109,7 +105,6 @@ export const onMessageListener = () =>
     }
 
     onMessage(messaging, (payload) => {
-      console.log('Message received: ', payload);
       resolve(payload);
     });
   });
@@ -547,7 +542,6 @@ export const updateRoundSubmissions = async (
     // Update the Firestore document with the modified rounds array
     await updateDoc(roundDocRef, { rounds: updatedRounds });
 
-    console.log('Submissions and playersVoted updated successfully');
     return { success: true };
   } catch (error) {
     console.error('Error updating submissions:', error);
@@ -595,7 +589,6 @@ export const updateLegionStandings = async (legionId) => {
     // Update the legion's standings array in Firestore
     await updateDoc(legionDocRef, { standings });
 
-    console.log('Legion standings updated successfully');
     return { success: true, standings };
   } catch (error) {
     console.error('Error updating legion standings:', error);
@@ -633,7 +626,6 @@ export const updateVoteDeadline = async (legionId, roundId, newDeadline) => {
     // Update the Firestore document with the modified rounds array
     await updateDoc(roundRef, { rounds: updatedRounds });
 
-    console.log('Vote deadline updated successfully');
     return { success: true };
   } catch (error) {
     console.error('Error updating vote deadline:', error);
@@ -676,7 +668,7 @@ export const updateProfileImgInLegions = async ({
     });
 
     await Promise.all(updatePromises);
-    console.log('Profile image updated in all relevant legions.');
+
     return { success: true };
   } catch (error) {
     console.error('Error updating profile image in legions:', error);

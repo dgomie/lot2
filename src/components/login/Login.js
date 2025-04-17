@@ -32,17 +32,14 @@ const Login = () => {
 
     try {
       const user = await loginUser(email, password);
-      console.log('Logged in user:', user);
 
       // Request notification permission and get FCM token
       const permissionGranted = await requestNotificationPermission();
       if (permissionGranted) {
         const fcmToken = await getFcmToken();
         if (fcmToken) {
-          console.log('Saving FCM token for user:', user.uid);
           const userDocRef = doc(db, 'users', user.uid); // Create a reference to the user's Firestore document
           await updateDoc(userDocRef, { fcmToken }); // Update the document with the FCM token
-          console.log('FCM token saved to Firestore:', fcmToken);
         } else {
           console.warn('Failed to retrieve FCM token.');
         }

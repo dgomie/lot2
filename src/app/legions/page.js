@@ -47,7 +47,7 @@ const Legions = () => {
     const { legions: newLegions, lastVisibleDoc } = await fetchLegions(
       lastVisible
     );
-    console.log('Fetched more legions:', newLegions);
+
     setLegions((prevLegions) => [...prevLegions, ...newLegions]);
     setLastVisible(lastVisibleDoc);
     setHasMore(newLegions.length >= 5);

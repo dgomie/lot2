@@ -58,17 +58,14 @@ export default function Signup() {
 
     try {
       const user = await signupUser(email, password, username);
-      console.log('Signed up user:', user);
 
       // Request notification permission and get FCM token
       const permissionGranted = await requestNotificationPermission();
       if (permissionGranted) {
         const fcmToken = await getFcmToken();
         if (fcmToken) {
-          console.log('Saving FCM token for user:', user.uid);
           const userDocRef = doc(db, 'users', user.uid); // Reference Firestore document
           await updateDoc(userDocRef, { fcmToken }); // Save FCM token
-          console.log('FCM token saved to Firestore:', fcmToken);
         } else {
           console.warn('Failed to retrieve FCM token.');
         }
@@ -140,7 +137,12 @@ export default function Signup() {
             isVisible={showConfirmPassword}
           />
           {error && <p className={styles.error}>{error}</p>}
-          <Button type="submit" className={styles.button} variant={isFormValid() ? 'blue' : 'disabled'} disabled={!isFormValid()} >
+          <Button
+            type="submit"
+            className={styles.button}
+            variant={isFormValid() ? 'blue' : 'disabled'}
+            disabled={!isFormValid()}
+          >
             Signup
           </Button>
         </form>
