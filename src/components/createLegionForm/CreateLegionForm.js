@@ -48,9 +48,9 @@ const CreateLegionForm = ({ currentUser }) => {
   const validateStep = () => {
     if (step === 1) {
       setIsStepValid(
-        formData.legionName.length > 0 &&
+        formData.legionName.length > 5 &&
           formData.legionName.length < 40 &&
-          formData.legionDescription.length > 0 &&
+          formData.legionDescription.length >= 0 &&
           formData.legionDescription.length < 150
       );
     } else if (step === 2) {
