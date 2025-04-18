@@ -1,12 +1,12 @@
-import { adminDb } from '../../../firebaseAdmin';
-import { FieldValue } from 'firebase-admin/firestore';
-import { status, stage } from '../../../utils/status';
-import admin from 'firebase-admin'; // Ensure Firebase Admin SDK is initialized
 import {
+  adminDb,
   adminUpdateLegionStandings,
   adminIncrementUserVictories,
   adminUpdateRoundStage,
-} from '../../../firebaseAdmin';
+} from '../../../../firebaseAdmin';
+import { FieldValue } from 'firebase-admin/firestore';
+import { stage, status } from '@/utils/status';
+import admin from 'firebase-admin'; 
 
 const normalizeDate = (date) => {
   const normalized = new Date(date);

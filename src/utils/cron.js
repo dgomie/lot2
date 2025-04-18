@@ -1,6 +1,6 @@
-export const triggerCronJob = async () => {
+export const triggerCronJob = async ({ legionId }) => {
   try {
-    const response = await fetch('/api/cron', {
+    const response = await fetch(`/api/cron/${legionId}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_LAST_VOTE}`,

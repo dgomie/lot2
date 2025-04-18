@@ -112,7 +112,7 @@ const VoteCard = ({
           await updateVoteDeadline(legionId, roundId, today);
 
           // Trigger the cron job
-          await triggerCronJob();
+          await triggerCronJob({ legionId: legionId });
         }
 
         if (onVotesSubmitted) {
