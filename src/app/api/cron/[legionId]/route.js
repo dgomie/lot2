@@ -2,7 +2,6 @@ import {
   adminDb,
   adminUpdateLegionStandings,
   adminIncrementUserVictories,
-  adminUpdateRoundStage,
 } from '../../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { stage, status } from '@/utils/status';
@@ -62,112 +61,9 @@ export async function GET(request, { params }) {
     const updates = [];
     const notifications = [];
 
-    // Playlist notification (day after submission deadline)
-    if (dayAfterSubmissionDeadline.getTime() === currentDate.getTime()) {
-      if (legionData.players && legionData.players.length > 0) {
-        const playerUids = legionData.players
-          .map((player) => player.userId)
-          .filter(Boolean);
-
-        const tokenFetchPromises = playerUids.map(async (uid) => {
-          const userDoc = await adminDb.collection('users').doc(uid).get();
-          return userDoc.exists ? userDoc.data().fcmToken : null;
-        });
-
-        const tokens = (await Promise.all(tokenFetchPromises)).filter(Boolean);
-        const uniqueTokens = [...new Set(tokens)];
-
-        if (uniqueTokens.length > 0) {
-          const formattedDeadline = new Date(
-            currentRound.voteDeadline
-          ).toLocaleDateString('en-US', {
-            month: 'long',
-            day: '2-digit',
-          });
-
-          uniqueTokens.forEach((token) => {
-            notifications.push(
-              admin
-                .messaging()
-                .send({
-                  token,
-                  notification: {
-                    title: 'New Playlist 🎶',
-                    body: `A new playlist is ready in ${legionData.legionName}!\n\nGet your votes in before ${formattedDeadline}`,
-                  },
-                })
-                .then((response) => {
-                  console.log(`Playlist notification sent`, response);
-                })
-                .catch((error) => {
-                  console.error(`Error sending playlist notification`, error);
-                })
-            );
-          });
-
-          try {
-            await adminUpdateRoundStage(
-              legionDoc.id,
-              currentRound.id,
-              stage.VOTING
-            );
-            console.log(
-              `Round stage updated to VOTING for legion: ${legionData.legionName}`
-            );
-          } catch (error) {
-            console.error(
-              `Error updating round stage to VOTING for legion ${legionData.legionName}:`,
-              error
-            );
-          }
-        }
-      }
-    }
-
-    // Submission deadline reminder (day before submission deadline)
-    else if (dayBeforeSubmissionDeadline.getTime() === currentDate.getTime()) {
-      if (legionData.players && legionData.players.length > 0) {
-        const playerUids = legionData.players
-          .map((player) => player.userId)
-          .filter(Boolean);
-
-        const tokenFetchPromises = playerUids.map(async (uid) => {
-          const userDoc = await adminDb.collection('users').doc(uid).get();
-          return userDoc.exists ? userDoc.data().fcmToken : null;
-        });
-
-        const tokens = (await Promise.all(tokenFetchPromises)).filter(Boolean);
-        const uniqueTokens = [...new Set(tokens)];
-
-        if (uniqueTokens.length > 0) {
-          uniqueTokens.forEach((token) => {
-            notifications.push(
-              admin
-                .messaging()
-                .send({
-                  token,
-                  notification: {
-                    title: 'Submission Deadline Approaches!',
-                    body: `Don't forget to submit for Round ${currentRound.roundNumber} in ${legionData.legionName}!`,
-                  },
-                })
-                .then((response) => {
-                  console.log(`Submission deadline reminder sent`, response);
-                })
-                .catch((error) => {
-                  console.error(
-                    `Error sending submission deadline reminder`,
-                    error
-                  );
-                })
-            );
-          });
-        }
-      }
-    }
 
     // Vote deadline reminder (day before vote deadline)
-    else if (dayBeforeVoteDeadline.getTime() === currentDate.getTime()) {
+    if (dayBeforeVoteDeadline.getTime() === currentDate.getTime()) {
       if (legionData.players && legionData.players.length > 0) {
         const playerUids = legionData.players
           .map((player) => player.userId)
