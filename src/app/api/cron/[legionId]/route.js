@@ -6,7 +6,7 @@ import {
 } from '../../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { stage, status } from '@/utils/status';
-import admin from 'firebase-admin'; 
+import admin from 'firebase-admin';
 
 const normalizeDate = (date) => {
   const normalized = new Date(date);
@@ -198,6 +198,52 @@ export async function GET(request, { params }) {
                 })
                 .catch((error) => {
                   console.error(`Error sending vote deadline reminder`, error);
+                })
+            );
+          });
+        }
+      }
+    } else if (voteDeadline.getTime() <= currentDate.getTime()) {
+      // Send round summary notification
+      if (legionData.players && legionData.players.length > 0) {
+        const playerUids = legionData.players
+          .map((player) => player.userId)
+          .filter(Boolean);
+
+        // Fetch fcmTokens for all UIDs
+        const tokenFetchPromises = playerUids.map(async (uid) => {
+          const userDoc = await adminDb.collection('users').doc(uid).get();
+          return userDoc.exists ? userDoc.data().fcmToken : null;
+        });
+
+        // Resolve all promises and filter out null/undefined tokens
+        const tokens = (await Promise.all(tokenFetchPromises)).filter(Boolean);
+        const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
+
+        if (uniqueTokens.length === 0) {
+          console.warn(
+            `No valid FCM tokens found for legion: ${legionData.legionName}`
+          );
+        } else {
+          uniqueTokens.forEach((token) => {
+            notifications.push(
+              admin
+                .messaging()
+                .send({
+                  token,
+                  notification: {
+                    title: 'Votes are In!',
+                    body: `Legion Cron --- Round ${currentRound.roundNumber} in ${legionData.legionName} is complete. Check the app to see how you did!`,
+                  },
+                })
+                .then((response) => {
+                  console.log(`Round summary notification sent`, response);
+                })
+                .catch((error) => {
+                  console.error(
+                    `Error sending round summary notification`,
+                    error
+                  );
                 })
             );
           });
