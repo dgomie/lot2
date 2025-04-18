@@ -5,7 +5,7 @@ import admin from 'firebase-admin'; // Ensure Firebase Admin SDK is initialized
 import {
   adminUpdateLegionStandings,
   adminIncrementUserVictories,
-  adminUpdateRoundStage
+  adminUpdateRoundStage,
 } from '../../../firebaseAdmin';
 
 const normalizeDate = (date) => {
@@ -15,7 +15,6 @@ const normalizeDate = (date) => {
 };
 
 export async function GET(request) {
-
   const authHeader = request.headers.get('authorization');
   if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new Response('Unauthorized', {
@@ -24,7 +23,7 @@ export async function GET(request) {
   }
 
   try {
-   const currentDate = normalizeDate(new Date());
+    const currentDate = normalizeDate(new Date());
 
     // Query all active legions
     const legionsRef = adminDb.collection('legions');
@@ -41,7 +40,9 @@ export async function GET(request) {
       );
 
       if (currentRound) {
-        const submissionDeadline = normalizeDate(currentRound.submissionDeadline);
+        const submissionDeadline = normalizeDate(
+          currentRound.submissionDeadline
+        );
         const dayBeforeSubmissionDeadline = normalizeDate(
           new Date(submissionDeadline.setDate(submissionDeadline.getDate() - 1))
         );
@@ -60,17 +61,19 @@ export async function GET(request) {
             const playerUids = legionData.players
               .map((player) => player.userId)
               .filter(Boolean);
-        
+
             // Fetch fcmTokens for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
               const userDoc = await adminDb.collection('users').doc(uid).get();
               return userDoc.exists ? userDoc.data().fcmToken : null;
             });
-        
+
             // Resolve all promises and filter out null/undefined tokens
-            const tokens = (await Promise.all(tokenFetchPromises)).filter(Boolean);
+            const tokens = (await Promise.all(tokenFetchPromises)).filter(
+              Boolean
+            );
             const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
-        
+
             if (uniqueTokens.length === 0) {
               console.warn(
                 `No valid FCM tokens found for legion: ${legionData.legionName}`
@@ -82,7 +85,7 @@ export async function GET(request) {
                 month: 'long',
                 day: '2-digit',
               });
-        
+
               uniqueTokens.forEach((token) => {
                 notifications.push(
                   admin
@@ -98,13 +101,20 @@ export async function GET(request) {
                       console.log(`Playlist notification sent`, response);
                     })
                     .catch((error) => {
-                      console.error(`Error sending playlist notification`, error);
+                      console.error(
+                        `Error sending playlist notification`,
+                        error
+                      );
                     })
                 );
               });
-        
+
               try {
-                await adminUpdateRoundStage(legionDoc.id, currentRound.id, stage.VOTING);
+                await adminUpdateRoundStage(
+                  legionDoc.id,
+                  currentRound.id,
+                  stage.VOTING
+                );
                 console.log(
                   `Round stage updated to VOTING for legion: ${legionData.legionName}`
                 );
@@ -318,25 +328,29 @@ export async function GET(request) {
           }
 
           if (!isLegionActive) {
-            const topUser = standings.length
-              ? standings.reduce(
-                  (max, user) => (user.votes > max.votes ? user : max),
-                  { votes: -Infinity }
-                )
-              : null;
+            const maxVotes = Math.max(...standings.map((user) => user.votes));
+            const topUsers = standings.filter(
+              (user) => user.votes === maxVotes
+            );
 
-            if (topUser && topUser.uid) {
-              try {
-                await adminIncrementUserVictories(topUser.uid);
-                console.log(`Victory incremented for user: ${topUser.uid}`);
-              } catch (error) {
-                console.error(
-                  `Error incrementing victories for user ${topUser.uid}:`,
-                  error
-                );
-              }
+            if (topUsers.length > 0) {
+              await Promise.all(
+                topUsers.map(async (user) => {
+                  if (user.uid) {
+                    try {
+                      await adminIncrementUserVictories(user.uid);
+                      console.log(`Victory incremented for user: ${user.uid}`);
+                    } catch (error) {
+                      console.error(
+                        `Error incrementing victories for user ${user.uid}:`,
+                        error
+                      );
+                    }
+                  }
+                })
+              );
             } else {
-              console.warn('No valid top user found in standings.');
+              console.warn('No valid top users found in standings.');
             }
           }
         } catch (error) {

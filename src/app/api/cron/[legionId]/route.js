@@ -311,23 +311,27 @@ export async function GET(request, { params }) {
         }
 
         if (!isLegionActive) {
-          const topUser = standings.reduce(
-            (max, user) => (user.votes > max.votes ? user : max),
-            { votes: -Infinity }
-          );
+          const maxVotes = Math.max(...standings.map((user) => user.votes));
+          const topUsers = standings.filter((user) => user.votes === maxVotes);
 
-          if (topUser && topUser.uid) {
-            try {
-              await adminIncrementUserVictories(topUser.uid);
-              console.log(`Victory incremented for user: ${topUser.uid}`);
-            } catch (error) {
-              console.error(
-                `Error incrementing victories for user ${topUser.uid}:`,
-                error
-              );
-            }
+          if (topUsers.length > 0) {
+            await Promise.all(
+              topUsers.map(async (user) => {
+                if (user.uid) {
+                  try {
+                    await adminIncrementUserVictories(user.uid);
+                    console.log(`Victory incremented for user: ${user.uid}`);
+                  } catch (error) {
+                    console.error(
+                      `Error incrementing victories for user ${user.uid}:`,
+                      error
+                    );
+                  }
+                }
+              })
+            );
           } else {
-            console.warn('No valid top user found in standings.');
+            console.warn('No valid top users found in standings.');
           }
         }
       } catch (error) {
