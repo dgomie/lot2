@@ -37,9 +37,17 @@
   padding: .5rem;
 }
 
+.desktopWelcome {
+  display: flex;
+}
+
 @media (max-width: 768px) {
   .buttonContainer {
     max-width: 100%;
+  }
+
+  .desktopWelcome {
+    display: none;
   }
 }
 
@@ -54,5 +62,9 @@
     bottom: 7rem; /* Adjust the distance from the bottom */
     right: 4rem; /* Adjust the distance from the right */
     z-index: 1000; /* Ensure it stays above other elements */
+  }
+
+  .mobileHeader {
+    display: none;
   }
 }

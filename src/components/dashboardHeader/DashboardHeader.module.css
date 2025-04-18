@@ -1,0 +1,13 @@
+.mainContainer {
+    background: linear-gradient(to right, #57bacb, #e372ed);
+    width: 100vw;
+    height: 4rem;
+    display: flex;
+    padding: 1rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.imageContainer {
+    border-radius: 50%;
+}

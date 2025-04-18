@@ -16,6 +16,13 @@
   margin: 0 0 5rem;
 }
 
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 1rem 0 0 0;
+}
+
 @media (min-width: 768px) {
   .mainContainer {
     display: flex;
@@ -24,5 +31,9 @@
 
   .legionsContainer {
     width: 60%;
+  }
+
+  .mobileHeader {
+    display: none;
   }
 }
