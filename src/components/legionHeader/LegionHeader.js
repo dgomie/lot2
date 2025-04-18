@@ -26,23 +26,43 @@ const LegionHeader = ({
     setIsDisabled(true);
     if (!currentUser) {
       alert('You must be logged in to join a legion.');
+      setIsDisabled(false);
+      return;
+    }
+
+    const {
+      uid,
+      username,
+      fcmToken = null,
+      profileImg = '/img/user.svg',
+    } = currentUser;
+
+    // Validate required fields
+    if (!uid || !username) {
+      console.error('Missing required user fields:', {
+        uid,
+        username,
+        profileImg,
+      });
+      alert('Failed to join the legion. Missing required user information.');
+      setIsDisabled(false);
       return;
     }
 
     try {
       const result = await joinLegion({
         legionId: legionId,
-        userId: currentUser.uid,
-        username: currentUser.username,
-        fcmToken: currentUser.fcmToken,
-        profileImg: currentUser.profileImg,
+        userId: uid,
+        username: username,
+        fcmToken: fcmToken,
+        profileImg: profileImg,
       });
       if (result.success) {
-        incrementUserLegions(currentUser.uid);
+        incrementUserLegions(uid);
         onPlayerAdded({
-          userId: currentUser.uid,
-          username: currentUser.username,
-          profileImg: currentUser.profileImg,
+          userId: uid,
+          username: username,
+          profileImg: profileImg,
         });
       } else {
         alert('Failed to join the legion. Please try again.');
@@ -59,18 +79,17 @@ const LegionHeader = ({
     setIsDisabled(true);
     if (!currentUser) {
       alert('You must be logged in to leave a legion.');
+      setIsDisabled(false);
       return;
     }
 
     try {
-      const result = await leaveLegion(
-        legionId,
-        currentUser.uid,
-        currentUser.fcmToken
-      );
+      const { uid, fcmToken = null } = currentUser;
+
+      const result = await leaveLegion(legionId, uid, fcmToken);
       if (result.success) {
-        decrementUserLegions(currentUser.uid);
-        onPlayerRemoved(currentUser.uid);
+        decrementUserLegions(uid);
+        onPlayerRemoved(uid);
       } else {
         alert('Failed to leave the legion. Please try again.');
       }
@@ -98,7 +117,6 @@ const LegionHeader = ({
 
   return (
     <div className={styles.mainContainer}>
-      
       <div className={styles.container}>
         <div className={styles.title}>{legionData.legionName}</div>
         <div className={styles.subtitle}>{legionData.legionDescription}</div>
@@ -124,16 +142,16 @@ const LegionHeader = ({
           ))}
       </div>
       {isAdmin && (
-          <div className={styles.gearIcon}>
-            <Image
-              src={'/img/gear.svg'}
-              width={30}
-              height={30}
-              alt="Legion Settings"
-              onClick={handleOpenModal}
-            />
-          </div>
-        )}
+        <div className={styles.gearIcon}>
+          <Image
+            src={'/img/gear.svg'}
+            width={30}
+            height={30}
+            alt="Legion Settings"
+            onClick={handleOpenModal}
+          />
+        </div>
+      )}
       {isModalOpen && (
         <AdminSettingsModal
           legionData={legionData}
