@@ -36,10 +36,40 @@ const Login = () => {
       // Request notification permission and get FCM token
       const permissionGranted = await requestNotificationPermission();
       if (permissionGranted) {
-        const fcmToken = await getFcmToken();
-        if (fcmToken) {
-          const userDocRef = doc(db, 'users', user.uid); // Create a reference to the user's Firestore document
-          await updateDoc(userDocRef, { fcmToken }); // Update the document with the FCM token
+        const newFcmToken = await getFcmToken();
+        if (newFcmToken) {
+          const userDocRef = doc(db, 'users', user.uid); // Reference to the user's Firestore document
+
+          // Retrieve the old FCM token from the user's document
+          const userDocSnap = await userDocRef.get();
+          const oldFcmToken = userDocSnap.exists()
+            ? userDocSnap.data().fcmToken
+            : null;
+
+          // Update the user's FCM token
+          await updateDoc(userDocRef, { fcmToken: newFcmToken });
+
+          if (oldFcmToken) {
+            // Query all legions where the old FCM token exists in the playerTokens array
+            const legionsQuery = db
+              .collection('legions')
+              .where('playerTokens', 'array-contains', oldFcmToken)
+              .where('isActive', '==', true);
+            const legionsSnapshot = await legionsQuery.get();
+
+            // Update each legion document
+            const batch = db.batch();
+            legionsSnapshot.forEach((doc) => {
+              const legionRef = doc.ref;
+              const updatedPlayerTokens = doc
+                .data()
+                .playerTokens.map((token) =>
+                  token === oldFcmToken ? newFcmToken : token
+                );
+              batch.update(legionRef, { playerTokens: updatedPlayerTokens });
+            });
+            await batch.commit();
+          }
         } else {
           console.warn('Failed to retrieve FCM token.');
         }
