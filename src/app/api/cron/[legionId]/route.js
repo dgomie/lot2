@@ -20,7 +20,7 @@ export async function GET(request, { params }) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  const { legionId } = params; // Extract legionId from dynamic route
+  const legionId = request.nextUrl.pathname.split('/').pop();
 
   if (!legionId) {
     return new Response('Legion ID is required', { status: 400 });
@@ -233,17 +233,39 @@ export async function GET(request, { params }) {
                   token,
                   notification: {
                     title: 'Votes are In!',
-                    body: `Legion Cron --- Round ${currentRound.roundNumber} in ${legionData.legionName} is complete. Check the app to see how you did!`,
+                    body: `Results for Round ${currentRound.roundNumber} in ${legionData.legionName} are here. Check the app to see how you did!`,
                   },
                 })
                 .then((response) => {
                   console.log(`Round summary notification sent`, response);
                 })
-                .catch((error) => {
-                  console.error(
-                    `Error sending round summary notification`,
-                    error
-                  );
+                .catch(async (error) => {
+                  if (
+                    error.code === 'messaging/registration-token-not-registered'
+                  ) {
+                    console.warn(`Invalid FCM token detected: ${token}`);
+                    // Remove the invalid token only for users in the legion
+                    const invalidTokenUsers = playerUids.map(async (uid) => {
+                      const userDoc = await adminDb
+                        .collection('users')
+                        .doc(uid)
+                        .get();
+                      if (userDoc.exists && userDoc.data().fcmToken === token) {
+                        await userDoc.ref.update({
+                          fcmToken: FieldValue.delete(),
+                        });
+                        console.log(
+                          `Removed invalid FCM token for user: ${uid}`
+                        );
+                      }
+                    });
+                    await Promise.all(invalidTokenUsers);
+                  } else {
+                    console.error(
+                      `Error sending round summary notification`,
+                      error
+                    );
+                  }
                 })
             );
           });

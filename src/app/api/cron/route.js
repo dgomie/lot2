@@ -258,7 +258,7 @@ export async function GET(request) {
                       token,
                       notification: {
                         title: 'Votes are In!',
-                        body: `Round ${currentRound.roundNumber} in ${legionData.legionName} is complete. Check the app to see how you did!`,
+                        body: `Results for Round ${currentRound.roundNumber} in ${legionData.legionName} are here. Check the app to see how you did!`,
                       },
                     })
                     .then((response) => {
