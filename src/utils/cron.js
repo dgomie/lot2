@@ -3,7 +3,7 @@ export const triggerCronJob = async () => {
     const response = await fetch('/api/cron', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${process.env.CRON_SECRET}`,
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_LAST_VOTE}`,
       },
     });
     if (!response.ok) {
