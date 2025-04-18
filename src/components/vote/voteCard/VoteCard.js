@@ -34,6 +34,8 @@ const VoteCard = ({
     }, {})
   );
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const handleVote = (uid, type) => {
     setVotes((prevVotes) => ({
       ...prevVotes,
@@ -66,6 +68,8 @@ const VoteCard = ({
     upVotesCount === upVotesPerRound && downVotesCount === downVotesPerRound;
 
   const handleSubmitVotes = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       // Fetch the latest round data to ensure up-to-date submissions
       const latestRoundDataResult = await fetchRoundData(legionId, roundId);
@@ -151,10 +155,11 @@ const VoteCard = ({
         <div className={styles.button}>
           <Button
             onClick={handleSubmitVotes}
-            disabled={!canSubmitVotes}
-            variant={!canSubmitVotes ? 'disabled' : 'blue'}
+            disabled={!canSubmitVotes || isSubmitting} // Disable if votes are invalid or submission is in progress
+            variant={!canSubmitVotes || isSubmitting ? 'disabled' : 'blue'}
           >
-            Submit Votes
+            {isSubmitting ? 'Submitting...' : 'Submit Votes'}{' '}
+            {/* Show loading text */}
           </Button>
         </div>
       </div>
