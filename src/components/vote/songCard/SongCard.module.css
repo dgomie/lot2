@@ -38,15 +38,10 @@
     font-weight: bold;
     font-style: italic;
     color: gray;
+    margin: 2.7rem;
   }
 
   .commentContainer {
     width: 15rem;
-  }
-  
-  .commentInput {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    margin-top: .25rem;
   }
