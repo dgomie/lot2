@@ -151,7 +151,7 @@ const RoundPage = ({ currentUser }) => {
       ','
     )}`;
 
-    window.location.href = playlistUrl;
+    window.open(playlistUrl, '_blank');
   };
 
   const handleSaveChanges = async () => {
