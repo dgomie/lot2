@@ -81,36 +81,47 @@ const CreateLegionForm = ({ currentUser }) => {
   const handleSubmit = async () => {
     if (isStepValid) {
       try {
-        const rounds = Array.from(
-          { length: formData.numRounds },
-          (_, index) => {
-            const roundNumber = index + 1;
-            const submissionDeadline = new Date();
+        const rounds = [];
+        for (let index = 0; index < formData.numRounds; index++) {
+          const roundNumber = index + 1;
+
+          let submissionDeadline = new Date();
+          if (roundNumber === 1) {
+            // First round submission deadline starts from the current date
             submissionDeadline.setDate(
-              submissionDeadline.getDate() + formData.submitTime * roundNumber
+              submissionDeadline.getDate() + formData.submitTime
             );
-
-            const voteDeadline = new Date(submissionDeadline);
-            voteDeadline.setDate(voteDeadline.getDate() + formData.voteTime);
-
-            // Pick a random prompt
-            const randomPrompt =
-              musicLeaguePrompts[
-                Math.floor(Math.random() * musicLeaguePrompts.length)
-              ];
-
-            return {
-              roundNumber,
-              submissionDeadline: submissionDeadline.toISOString(),
-              voteDeadline: voteDeadline.toISOString(),
-              submissions: [],
-              playersVoted: [],
-              prompt: randomPrompt,
-              roundStatus: roundNumber === 1 ? status.ACTIVE : status.PENDING,
-              roundStage: stage.SUBMISSION,
-            };
+          } else {
+            // Subsequent rounds' submission deadlines start after the previous round's vote deadline
+            const previousVoteDeadline = new Date(
+              rounds[index - 1].voteDeadline
+            );
+            submissionDeadline = new Date(previousVoteDeadline);
+            submissionDeadline.setDate(
+              submissionDeadline.getDate() + formData.submitTime
+            );
           }
-        );
+
+          const voteDeadline = new Date(submissionDeadline);
+          voteDeadline.setDate(voteDeadline.getDate() + formData.voteTime);
+
+          // Pick a random prompt
+          const randomPrompt =
+            musicLeaguePrompts[
+              Math.floor(Math.random() * musicLeaguePrompts.length)
+            ];
+
+          rounds.push({
+            roundNumber,
+            submissionDeadline: submissionDeadline.toISOString(),
+            voteDeadline: voteDeadline.toISOString(),
+            submissions: [],
+            playersVoted: [],
+            prompt: randomPrompt,
+            roundStatus: roundNumber === 1 ? status.ACTIVE : status.PENDING,
+            roundStage: stage.SUBMISSION,
+          });
+        }
 
         const updatedFormData = {
           ...formData,
