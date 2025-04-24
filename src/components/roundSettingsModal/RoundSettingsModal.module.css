@@ -33,3 +33,10 @@
     font-size: 1.2rem;
     font-weight: bold;
 }
+
+.errorMessage {
+  color: red;
+  text-align: center;
+  font-size: .85rem;
+  font-weight: bold;
+}

@@ -1,15 +1,18 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import styles from './RoundSettingsModal.module.css';
 import Input from '@/components/input/Input';
 import Button from '@/components/button/Button';
 
 const RoundSettingsModal = ({
   editableRoundData,
-  originalRoundData, 
+  originalRoundData,
   setEditableRoundData,
   onSave,
   onCancel,
 }) => {
+  const [submissionError, setSubmissionError] = useState('');
+  const [voteError, setVoteError] = useState('');
+
   // Check if there are any changes between editableRoundData and originalRoundData
   const hasChanges = useMemo(() => {
     if (!editableRoundData || !originalRoundData) return false;
@@ -20,6 +23,44 @@ const RoundSettingsModal = ({
       editableRoundData.voteDeadline !== originalRoundData.voteDeadline
     );
   }, [editableRoundData, originalRoundData]);
+
+  const handleSubmissionDeadlineChange = (e) => {
+    const newSubmissionDeadline = new Date(e.target.value).toISOString();
+    const now = new Date().toISOString();
+  
+    if (newSubmissionDeadline <= now) {
+      setSubmissionError('Submission deadline must be a future date.');
+      return;
+    }
+  
+    if (editableRoundData.voteDeadline && newSubmissionDeadline >= editableRoundData.voteDeadline) {
+      setSubmissionError('');
+      setVoteError('Vote deadline must be after the submission deadline.');
+    } else {
+      setVoteError('');
+    }
+  
+    setSubmissionError('');
+    setEditableRoundData({
+      ...editableRoundData,
+      submissionDeadline: newSubmissionDeadline,
+    });
+  };
+  
+  const handleVoteDeadlineChange = (e) => {
+    const newVoteDeadline = new Date(e.target.value).toISOString();
+  
+    if (newVoteDeadline <= editableRoundData.submissionDeadline) {
+      setVoteError('Vote deadline must be after the submission deadline.');
+      return;
+    }
+  
+    setVoteError('');
+    setEditableRoundData({
+      ...editableRoundData,
+      voteDeadline: newVoteDeadline,
+    });
+  };
 
   if (!editableRoundData) return null;
 
@@ -49,14 +90,12 @@ const RoundSettingsModal = ({
           value={new Date(editableRoundData.submissionDeadline)
             .toISOString()
             .slice(0, 16)}
-          onChange={(e) =>
-            setEditableRoundData({
-              ...editableRoundData,
-              submissionDeadline: new Date(e.target.value).toISOString(),
-            })
-          }
+          onChange={handleSubmissionDeadlineChange}
           required
         />
+        {submissionError && (
+          <div className={styles.errorMessage}>{submissionError}</div>
+        )}
         <Input
           id="voteDeadline"
           name="voteDeadline"
@@ -65,16 +104,18 @@ const RoundSettingsModal = ({
           value={new Date(editableRoundData.voteDeadline)
             .toISOString()
             .slice(0, 16)}
-          onChange={(e) =>
-            setEditableRoundData({
-              ...editableRoundData,
-              voteDeadline: new Date(e.target.value).toISOString(),
-            })
-          }
+          onChange={handleVoteDeadlineChange}
           required
         />
+        {voteError && <div className={styles.errorMessage}>{voteError}</div>}
         <div className={styles.modalActions}>
-          <Button onClick={onSave} variant={!hasChanges ? 'disabled' : 'blue'} disabled={!hasChanges}>
+          <Button
+            onClick={onSave}
+            variant={
+              !hasChanges || submissionError || voteError ? 'disabled' : 'blue'
+            }
+            disabled={!hasChanges || submissionError || voteError}
+          >
             Save
           </Button>
           <Button onClick={onCancel} variant="red">
