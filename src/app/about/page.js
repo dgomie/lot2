@@ -1,15 +1,12 @@
 'use client';
 
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import styles from './about.module.css';
 import { Footer } from '@/components/footer/Footer';
 import Button from '@/components/button/Button';
 import Image from 'next/image';
 
 export default function AboutPage() {
-  const router = useRouter();
-
   const handleDonateClick = () => {
     window.location.href = 'https://donate.stripe.com/3csfZl65kbeE2FG6oo';
   };
@@ -20,7 +17,12 @@ export default function AboutPage() {
         <h1>About Legion of Tones</h1>
         <div className={styles.info}>
           <div className={styles.imageContainer}>
-            <Image src={'/img/logo.svg'} width={350} height={350} alt="Legion of Tones Logo" />
+            <Image
+              src={'/img/logo.svg'}
+              width={350}
+              height={350}
+              alt="Legion of Tones Logo"
+            />
           </div>
           <p>
             <strong>Welcome to Legion of Tones</strong> — a social music game
@@ -58,8 +60,9 @@ export default function AboutPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
+      <div className={styles.footerContainer}>
+        <Footer />
+      </div>
     </div>
   );
 }
