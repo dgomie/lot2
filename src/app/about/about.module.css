@@ -7,7 +7,7 @@
 
 .page {
   max-width: 800px;
-  margin: 2rem 1rem 7rem 1rem;
+  margin: 2rem 1rem 3rem 1rem;
 }
 
 .page h1 {
@@ -36,6 +36,7 @@
 .buttonContainer {
   width: 80%;
   max-width: 20rem;
+  margin-top: 2rem;
 }
 
 .imageContainer {
@@ -46,4 +47,14 @@
 
 .footerContainer {
   width: 100vw;
+}
+
+@media (max-width: 768px) { 
+  .page {
+    margin: 2rem 1rem 7rem 1rem;
+  }
+
+  .buttonContainer {
+    margin-top: 1rem;
+  }
 }
