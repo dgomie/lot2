@@ -119,6 +119,7 @@ export default function InstallationPage() {
           width={500}
           height={500}
           alt="Legion of Tones PWA"
+          className={styles.responsiveImage}
           style={{
             borderRadius: '10px',
             boxShadow: '1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44)',
