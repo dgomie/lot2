@@ -11,7 +11,7 @@ export default function AboutPage() {
   const router = useRouter();
 
   const handleDonateClick = () => {
-    router.push('https://donate.stripe.com/3csfZl65kbeE2FG6oo');
+    window.location.href = 'https://donate.stripe.com/3csfZl65kbeE2FG6oo';
   };
 
   return (
