@@ -213,6 +213,14 @@ const getUserProfileByUsername = async (username) => {
   }
 };
 
+export const updateUserInFirebase = async (userData) => {
+  const userRef = doc(db, 'users', userData.uid); 
+  await updateDoc(userRef, {
+    username: userData.username,
+    email: userData.email,
+  });
+};
+
 const submitLegion = async (formData) => {
   try {
     const docRef = await addDoc(collection(db, 'legions'), {
