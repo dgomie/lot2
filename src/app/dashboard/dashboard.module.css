@@ -41,6 +41,10 @@
   display: flex;
 }
 
+.imgContainer {
+  cursor: pointer;
+}
+
 @media (max-width: 768px) {
   .buttonContainer {
     max-width: 100%;

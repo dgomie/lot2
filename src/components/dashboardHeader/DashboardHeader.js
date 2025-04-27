@@ -1,22 +1,22 @@
-'use client'; // Ensure this is a client-side component
+'use client'; 
 
 import React from 'react';
-import { useRouter } from 'next/navigation'; // Use next/navigation for client-side routing
+import { useRouter } from 'next/navigation'; 
 import styles from './DashboardHeader.module.css';
 import Image from 'next/image';
 
-export const DashboardHeader = ({ currentUserImage }) => {
-  const router = useRouter(); // Initialize the router
+export const DashboardHeader = ({ currentUser }) => {
+  const router = useRouter(); 
 
   const handleLogoClick = () => {
     if (router) {
-      router.push('/dashboard'); // Navigate to /dashboard
+      router.push('/dashboard');
     }
   };
 
   const handleIconClick = () => {
     if (router) {
-      router.push('/profile');
+      router.push(`/profile/${currentUser.username}`);
     }
   };
 
@@ -27,11 +27,11 @@ export const DashboardHeader = ({ currentUserImage }) => {
         width={100}
         height={100}
         alt="Legion of Tones Logo"
-        onClick={handleLogoClick} // Add the click handler
+        onClick={handleLogoClick} 
       />
       <div className={styles.imageContainer}>
         <Image
-          src={currentUserImage}
+          src={currentUser.profileImg || '/img/user.png'}
           width={50}
           height={50}
           alt="user profile"

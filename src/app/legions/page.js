@@ -59,7 +59,7 @@ const Legions = ({ currentUser }) => {
   return (
     <>
       <div className={styles.mobileHeader}>
-        <DashboardHeader currentUserImage={currentUser.profileImg} />
+        <DashboardHeader currentUser={currentUser} />
       </div>
       <div className={styles.title}>Explore Active Legions</div>
 

@@ -13,6 +13,8 @@ import Image from 'next/image';
 const Dashboard = () => {
   const { currentUser } = useContext(AuthContext);
 
+  const router = useRouter();
+
   const handleButtonClick = (location) => {
     router.push(location);
   };
@@ -20,18 +22,23 @@ const Dashboard = () => {
   return (
     <div className={styles.mainContainer}>
       <div className={styles.mobileHeader}>
-        <DashboardHeader currentUserImage={currentUser.profileImg} />
+        <DashboardHeader currentUser={currentUser} />
       </div>
       <div className={styles.dashboardContainer}>
         {currentUser && (
           <div className={styles.desktopWelcome}>
-            <Image
-              src={currentUser.profileImg}
-              width={50}
-              height={50}
-              alt="User profile image"
-              style={{ borderRadius: '50%' }}
-            />
+            <div className={styles.imgContainer}>
+              <Image
+                src={currentUser.profileImg || '/img/user.png'}
+                width={50}
+                height={50}
+                alt="User profile image"
+                style={{ borderRadius: '50%' }}
+                onClick={() => {
+                  handleButtonClick(`/profile/${currentUser.username}`);
+                }}
+              />
+            </div>
             <div className={styles.welcomeMessage}>
               Welcome, {currentUser.username}!
             </div>
