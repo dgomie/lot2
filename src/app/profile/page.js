@@ -9,6 +9,7 @@ import ProfileCard from '@/components/profileCard/ProfileCard';
 import profileData from '@/data/profileData';
 import Loader from '@/components/loader/Loader';
 import { getUserProfile } from '@/firebase';
+import Button from '@/components/button/Button';
 
 const Profile = () => {
   const { currentUser, loading } = useContext(AuthContext);
@@ -46,16 +47,7 @@ const Profile = () => {
               currentUserId={currentUser.uid}
             />
           </div>
-          <div className={styles.categories}>
-            {profileData.map((item, index) => (
-              <ProfileCard
-                key={index}
-                title={item.title}
-                numValue={userProfile[item.id]}
-                iconUrl={item.iconUrl}
-              />
-            ))}
-          </div>
+
         </>
       ) : (
         <p>Please log in to view your profile.</p>
