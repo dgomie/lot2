@@ -10,6 +10,7 @@ import profileData from '@/data/profileData';
 import Loader from '@/components/loader/Loader';
 import { getUserProfile } from '@/firebase';
 import Button from '@/components/button/Button';
+import { ProfileSettings } from '@/components/profileSettings/ProfileSettings';
 
 const Profile = () => {
   const { currentUser, loading } = useContext(AuthContext);
@@ -47,7 +48,7 @@ const Profile = () => {
               currentUserId={currentUser.uid}
             />
           </div>
-
+          <ProfileSettings currentUser={currentUser}/>
         </>
       ) : (
         <p>Please log in to view your profile.</p>
