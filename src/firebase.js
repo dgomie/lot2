@@ -138,6 +138,9 @@ const signupUser = async (email, password, username) => {
     );
     const user = userCredential.user;
 
+    // Send email verification
+    await sendEmailVerification(user);
+
     // Add the username to the usernames collection
     await setDoc(usernameDocRef, { uid: user.uid });
 
