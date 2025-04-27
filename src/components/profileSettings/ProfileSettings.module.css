@@ -1,0 +1,9 @@
+.error {
+  color: red;
+  margin: 1rem;
+  text-align: center;
+}
+
+.form {
+  width: 20rem;
+}

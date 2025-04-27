@@ -11,6 +11,7 @@ export const ProfileSettings = ({ currentUser }) => {
     username: currentUser.username,
     email: currentUser.email,
   });
+  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,8 +21,27 @@ export const ProfileSettings = ({ currentUser }) => {
     }));
   };
 
+  const validateForm = () => {
+    if (formData.username.length < 3) {
+      setError('Username must be at least 3 characters');
+      return false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setError('Please enter a valid email address');
+      return false;
+    }
+    setError('');
+    return true;
+  };
+
   const handleEditClick = () => {
     if (isEditing) {
+      // Validate the form before saving
+      if (!validateForm()) {
+        return;
+      }
+
       // Save the updated data to Firebase
       updateUserInFirebase(formData)
         .then(() => {
@@ -37,27 +57,32 @@ export const ProfileSettings = ({ currentUser }) => {
   return (
     <div className={styles.mainContainer}>
       <div>Profile Settings</div>
-      <Input
-        id="username"
-        name="username"
-        label="Username"
-        value={formData.username}
-        onChange={handleInputChange}
-        disabled={!isEditing}
-      />
-      <Input
-        id="email"
-        name="email"
-        label="Email"
-        value={formData.email}
-        onChange={handleInputChange}
-        disabled={!isEditing}
-      />
-      <div className={styles.buttonContainer}>
-        <Button variant="aquamarine" onClick={handleEditClick}>
-          {isEditing ? 'Save Settings' : 'Edit Settings'}
-        </Button>
+
+      <div className={styles.form}>
+        <Input
+          id="username"
+          name="username"
+          label="Username"
+          value={formData.username}
+          onChange={handleInputChange}
+          disabled={!isEditing}
+        />
+        <Input
+          id="email"
+          name="email"
+          label="Email"
+          value={formData.email}
+          onChange={handleInputChange}
+          disabled={!isEditing}
+        />
+        <div className={styles.buttonContainer}>
+          <Button variant="aquamarine" onClick={handleEditClick}>
+            {isEditing ? 'Save Settings' : 'Edit Settings'}
+          </Button>
+          {error && <div className={styles.error}>{error}</div>}
+        </div>
       </div>
+     
     </div>
   );
 };
