@@ -4,6 +4,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  updateEmail,
+  sendEmailVerification,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -234,37 +236,62 @@ export const updateUserInFirebase = async (
   const previousUsernameRef = doc(
     db,
     'usernames',
-    previousUsername.toLowerCase()
+    previousUsername?.toLowerCase()
   );
   const newEmailRef = doc(db, 'emails', userData.email.toLowerCase());
-  const previousEmailRef = doc(db, 'emails', previousEmail.toLowerCase());
+  const previousEmailRef = doc(db, 'emails', previousEmail?.toLowerCase());
 
   try {
-    // Check if the new username already exists
-    const newUsernameDoc = await getDoc(newUsernameRef);
-    if (newUsernameDoc.exists()) {
-      throw new Error('Username is already taken. Please choose another one.');
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error('User is not authenticated.');
     }
 
-    // Check if the new email already exists
-    const newEmailDoc = await getDoc(newEmailRef);
-    if (newEmailDoc.exists()) {
-      throw new Error('Email is already in use. Please use a different email.');
-    }
+    // Check if the username has changed
+    if (
+      previousUsername &&
+      previousUsername.toLowerCase() !== userData.username.toLowerCase()
+    ) {
+      const newUsernameDoc = await getDoc(newUsernameRef);
+      if (newUsernameDoc.exists()) {
+        throw new Error(
+          'Username is already taken. Please choose another one.'
+        );
+      }
 
-    // Add the new username to the usernames collection
-    await setDoc(newUsernameRef, { uid: userData.uid });
-
-    // Delete the previous username from the usernames collection
-    if (previousUsername) {
+      await setDoc(newUsernameRef, { uid: userData.uid });
       await deleteDoc(previousUsernameRef);
     }
 
-    // Add the new email to the emails collection
-    await setDoc(newEmailRef, { uid: userData.uid });
+    // Check if the email has changed
+    if (
+      previousEmail &&
+      previousEmail.toLowerCase() !== userData.email.toLowerCase()
+    ) {
+      const newEmailDoc = await getDoc(newEmailRef);
+      if (newEmailDoc.exists()) {
+        throw new Error(
+          'Email is already in use. Please use a different email.'
+        );
+      }
 
-    // Delete the previous email from the emails collection
-    if (previousEmail) {
+      // Send email verification if the email is not verified
+      if (!user.emailVerified) {
+        await sendEmailVerification(user);
+        throw new Error(
+          'Please verify your current email address before updating.'
+        );
+      }
+
+      // Update the email in Firebase Authentication
+      await updateEmail(user, userData.email);
+
+      // Add the new email to the emails collection
+      await setDoc(newEmailRef, { uid: userData.uid });
+
+      // Delete the previous email from the emails collection
       await deleteDoc(previousEmailRef);
     }
 

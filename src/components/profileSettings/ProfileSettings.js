@@ -21,6 +21,8 @@ export const ProfileSettings = ({ currentUser }) => {
     }));
   };
 
+  console.log(currentUser)
+
   const validateForm = () => {
     if (formData.username.length < 3) {
       setError('Username must be at least 3 characters');
@@ -36,37 +38,46 @@ export const ProfileSettings = ({ currentUser }) => {
   };
 
   const handleEditClick = async () => {
-    if (isEditing) {
-      // Validate the form before saving
-      if (!validateForm()) {
+  if (isEditing) {
+    // Check if any changes were made
+    if (
+      formData.username === currentUser.username &&
+      formData.email === currentUser.email
+    ) {
+      setIsEditing(false); // Reset editing state without making API calls
+      return;
+    }
+
+    // Validate the form before saving
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      const result = await updateUserInFirebase(
+        formData,
+        currentUser.username,
+        currentUser.email
+      );
+      if (!result.success) {
+        setError(result.error); // Display the error if the username or email is taken
         return;
       }
 
-      try {
-        const result = await updateUserInFirebase(
-          formData,
-          currentUser.username,
-          currentUser.email
-        );
-        if (!result.success) {
-          setError(result.error); // Display the error if the username or email is taken
-          return;
-        }
-
-        console.log('User updated successfully');
-        window.location.reload(); // Refresh the page after successful save
-      } catch (error) {
-        console.error('Error updating user:', error);
-        setError('An error occurred while updating your profile.');
-      }
+      console.log('User updated successfully');
+      window.location.reload(); // Refresh the page after successful save
+    } catch (error) {
+      console.error('Error updating user:', error);
+      setError('An error occurred while updating your profile.');
     }
-    setIsEditing(!isEditing);
-  };
+  } else {
+    setIsEditing(true); // Enable editing mode
+  }
+};
 
   return (
     <div className={styles.mainContainer}>
       <div className={styles.title}>Profile Settings</div>
-
       <div className={styles.form}>
         <Input
           id="username"
