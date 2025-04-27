@@ -57,7 +57,9 @@ export default function Signup() {
     }
 
     try {
-      const user = await signupUser(email, password, username);
+      const normalizedUsername = username.toLowerCase();
+
+      const user = await signupUser(email, password, normalizedUsername);
 
       // Request notification permission and get FCM token
       const permissionGranted = await requestNotificationPermission();
