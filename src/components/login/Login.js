@@ -4,7 +4,16 @@ import {
   getFcmToken,
   requestNotificationPermission,
 } from '../../firebase';
-import { doc, updateDoc } from 'firebase/firestore'; // Import Firestore functions
+import {
+  doc,
+  updateDoc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+  writeBatch,
+} from 'firebase/firestore'; // Import necessary Firestore functions
 import { db } from '../../firebase'; // Import the Firestore instance
 import styles from './Login.module.css';
 import Input from '../input/Input';
@@ -29,39 +38,41 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
-
+  
     try {
       const user = await loginUser(email, password);
-
+  
       // Request notification permission and get FCM token
       const permissionGranted = await requestNotificationPermission();
       if (permissionGranted) {
         const newFcmToken = await getFcmToken();
         if (newFcmToken) {
           const userDocRef = doc(db, 'users', user.uid); // Reference to the user's Firestore document
-
+  
           // Retrieve the old FCM token from the user's document
-          const userDocSnap = await userDocRef.get();
+          const userDocSnap = await getDoc(userDocRef);
           const oldFcmToken = userDocSnap.exists()
             ? userDocSnap.data().fcmToken
             : null;
-
+  
           // Update the user's FCM token
           await updateDoc(userDocRef, { fcmToken: newFcmToken });
-
+  
           if (oldFcmToken) {
             // Query all legions where the old FCM token exists in the playerTokens array
-            const legionsQuery = db
-              .collection('legions')
-              .where('playerTokens', 'array-contains', oldFcmToken)
-              .where('isActive', '==', true);
-            const legionsSnapshot = await legionsQuery.get();
-
+            const legionsCollection = collection(db, 'legions'); // Use collection function
+            const legionsQuery = query(
+              legionsCollection,
+              where('playerTokens', 'array-contains', oldFcmToken),
+              where('isActive', '==', true)
+            );
+            const legionsSnapshot = await getDocs(legionsQuery); // Use getDocs to fetch the query results
+  
             // Update each legion document
-            const batch = db.batch();
-            legionsSnapshot.forEach((doc) => {
-              const legionRef = doc.ref;
-              const updatedPlayerTokens = doc
+            const batch = writeBatch(db); // Use writeBatch for batch updates
+            legionsSnapshot.forEach((legionDoc) => {
+              const legionRef = legionDoc.ref;
+              const updatedPlayerTokens = legionDoc
                 .data()
                 .playerTokens.map((token) =>
                   token === oldFcmToken ? newFcmToken : token
@@ -74,7 +85,7 @@ const Login = () => {
           console.warn('Failed to retrieve FCM token.');
         }
       }
-
+  
       // Redirect after completing all tasks
       window.location.href = '/dashboard';
     } catch (error) {
