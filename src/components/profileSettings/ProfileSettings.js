@@ -35,28 +35,37 @@ export const ProfileSettings = ({ currentUser }) => {
     return true;
   };
 
-  const handleEditClick = () => {
+  const handleEditClick = async () => {
     if (isEditing) {
       // Validate the form before saving
       if (!validateForm()) {
         return;
       }
 
-      // Save the updated data to Firebase
-      updateUserInFirebase(formData)
-        .then(() => {
-          console.log('User updated successfully');
-        })
-        .catch((error) => {
-          console.error('Error updating user:', error);
-        });
+      try {
+        const result = await updateUserInFirebase(
+          formData,
+          currentUser.username,
+          currentUser.email
+        );
+        if (!result.success) {
+          setError(result.error); // Display the error if the username or email is taken
+          return;
+        }
+
+        console.log('User updated successfully');
+        window.location.reload(); // Refresh the page after successful save
+      } catch (error) {
+        console.error('Error updating user:', error);
+        setError('An error occurred while updating your profile.');
+      }
     }
     setIsEditing(!isEditing);
   };
 
   return (
     <div className={styles.mainContainer}>
-      <div>Profile Settings</div>
+      <div className={styles.title}>Profile Settings</div>
 
       <div className={styles.form}>
         <Input
@@ -82,7 +91,6 @@ export const ProfileSettings = ({ currentUser }) => {
           {error && <div className={styles.error}>{error}</div>}
         </div>
       </div>
-     
     </div>
   );
 };

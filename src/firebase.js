@@ -113,11 +113,19 @@ export const onMessageListener = () =>
 const signupUser = async (email, password, username) => {
   try {
     // Check if the username already exists
-    const usernameDocRef = doc(db, 'usernames', username);
+    const usernameDocRef = doc(db, 'usernames', username.toLowerCase());
     const usernameDoc = await getDoc(usernameDocRef);
 
     if (usernameDoc.exists()) {
       throw new Error('Username is already taken. Please choose another one.');
+    }
+
+    // Check if the email already exists
+    const emailDocRef = doc(db, 'emails', email.toLowerCase());
+    const emailDoc = await getDoc(emailDocRef);
+
+    if (emailDoc.exists()) {
+      throw new Error('Email is already in use. Please use a different email.');
     }
 
     // Create the user
@@ -131,11 +139,14 @@ const signupUser = async (email, password, username) => {
     // Add the username to the usernames collection
     await setDoc(usernameDocRef, { uid: user.uid });
 
+    // Add the email to the emails collection
+    await setDoc(emailDocRef, { uid: user.uid });
+
     // Add the user to the users collection
     await setDoc(doc(db, 'users', user.uid), {
       email: user.email,
       uid: user.uid,
-      username: username,
+      username: username.toLowerCase(),
       createdAt: new Date(),
       profileImg: null,
       numVotes: 0,
@@ -213,12 +224,61 @@ const getUserProfileByUsername = async (username) => {
   }
 };
 
-export const updateUserInFirebase = async (userData) => {
-  const userRef = doc(db, 'users', userData.uid); 
-  await updateDoc(userRef, {
-    username: userData.username,
-    email: userData.email,
-  });
+export const updateUserInFirebase = async (
+  userData,
+  previousUsername,
+  previousEmail
+) => {
+  const userRef = doc(db, 'users', userData.uid);
+  const newUsernameRef = doc(db, 'usernames', userData.username.toLowerCase());
+  const previousUsernameRef = doc(
+    db,
+    'usernames',
+    previousUsername.toLowerCase()
+  );
+  const newEmailRef = doc(db, 'emails', userData.email.toLowerCase());
+  const previousEmailRef = doc(db, 'emails', previousEmail.toLowerCase());
+
+  try {
+    // Check if the new username already exists
+    const newUsernameDoc = await getDoc(newUsernameRef);
+    if (newUsernameDoc.exists()) {
+      throw new Error('Username is already taken. Please choose another one.');
+    }
+
+    // Check if the new email already exists
+    const newEmailDoc = await getDoc(newEmailRef);
+    if (newEmailDoc.exists()) {
+      throw new Error('Email is already in use. Please use a different email.');
+    }
+
+    // Add the new username to the usernames collection
+    await setDoc(newUsernameRef, { uid: userData.uid });
+
+    // Delete the previous username from the usernames collection
+    if (previousUsername) {
+      await deleteDoc(previousUsernameRef);
+    }
+
+    // Add the new email to the emails collection
+    await setDoc(newEmailRef, { uid: userData.uid });
+
+    // Delete the previous email from the emails collection
+    if (previousEmail) {
+      await deleteDoc(previousEmailRef);
+    }
+
+    // Update the user's profile in the users collection
+    await updateDoc(userRef, {
+      username: userData.username.toLowerCase(),
+      email: userData.email.toLowerCase(),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating user in Firebase:', error);
+    return { success: false, error: error.message };
+  }
 };
 
 const submitLegion = async (formData) => {
