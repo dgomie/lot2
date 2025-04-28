@@ -62,7 +62,6 @@ export const ProfileSettings = ({ currentUser }) => {
           return;
         }
 
-        console.log('User updated successfully');
         window.location.reload();
       } catch (error) {
         console.error('Error updating user:', error);
@@ -87,7 +86,6 @@ export const ProfileSettings = ({ currentUser }) => {
 
     try {
       await deleteUserFromFirebase(currentUser.uid, currentUser.email, password);
-      console.log('User deleted successfully');
       window.location.href = '/'; // Redirect to home or login page
     } catch (error) {
       console.error('Error deleting user:', error);

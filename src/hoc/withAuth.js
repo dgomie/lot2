@@ -12,11 +12,9 @@ const withAuth = (WrappedComponent) => {
     const { currentUser, loading } = useContext(AuthContext);
 
     useEffect(() => {
-      console.log('Auth state in withAuth:', { loading, currentUser }); // Debug log
-
       if (!loading && !currentUser) {
         console.log('Redirecting to login...');
-        router.push('/auth/login'); // Redirect to login if not authenticated
+        router.push('/auth/login');
       }
     }, [loading, currentUser, router]);
 
