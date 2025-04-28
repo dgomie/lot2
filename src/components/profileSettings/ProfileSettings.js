@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './ProfileSettings.module.css';
 import Button from '../button/Button';
 import Input from '../input/Input';
-import { updateUserInFirebase } from '@/firebase';
+import { updateUserInFirebase, deleteUserFromFirebase } from '@/firebase'; // Import delete function
 
 export const ProfileSettings = ({ currentUser }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -21,8 +21,6 @@ export const ProfileSettings = ({ currentUser }) => {
     }));
   };
 
-  console.log(currentUser);
-
   const validateForm = () => {
     if (formData.username.length < 3) {
       setError('Username must be at least 3 characters');
@@ -39,16 +37,14 @@ export const ProfileSettings = ({ currentUser }) => {
 
   const handleEditClick = async () => {
     if (isEditing) {
-      // Check if any changes were made
       if (
         formData.username === currentUser.username &&
         formData.email === currentUser.email
       ) {
-        setIsEditing(false); // Reset editing state without making API calls
+        setIsEditing(false);
         return;
       }
 
-      // Validate the form before saving
       if (!validateForm()) {
         return;
       }
@@ -60,18 +56,48 @@ export const ProfileSettings = ({ currentUser }) => {
           currentUser.email
         );
         if (!result.success) {
-          setError(result.error); // Display the error if the username or email is taken
+          setError(result.error);
           return;
         }
 
         console.log('User updated successfully');
-        window.location.reload(); // Refresh the page after successful save
+        window.location.reload();
       } catch (error) {
         console.error('Error updating user:', error);
         setError('An error occurred while updating your profile.');
       }
     } else {
-      setIsEditing(true); // Enable editing mode
+      setIsEditing(true);
+    }
+  };
+
+  const handleDeleteClick = async () => {
+    const confirmDelete = window.confirm(
+      'Are you sure you want to delete your account? This action cannot be undone.'
+    );
+    if (!confirmDelete) return;
+
+    const password = prompt(
+      'Please enter your password to confirm account deletion:'
+    );
+    if (!password) {
+      setError('Password is required to delete your account.');
+      return;
+    }
+
+    try {
+      await deleteUserFromFirebase(
+        currentUser.uid,
+        currentUser.email,
+        password
+      );
+      console.log('User deleted successfully');
+      window.location.href = '/'; // Redirect to home or login page
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      setError(
+        error.message || 'An error occurred while deleting your account.'
+      );
     }
   };
 
@@ -103,7 +129,9 @@ export const ProfileSettings = ({ currentUser }) => {
           {error && <div className={styles.error}>{error}</div>}
         </div>
         <div className={styles.deleteButtonContainer}>
-          <Button variant="red">Delete Account</Button>
+          <Button variant="red" onClick={handleDeleteClick}>
+            Delete Account
+          </Button>
         </div>
       </div>
     </div>

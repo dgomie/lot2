@@ -6,6 +6,9 @@ import {
   sendPasswordResetEmail,
   updateEmail,
   sendEmailVerification,
+  deleteUser,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -313,6 +316,33 @@ export const updateUserInFirebase = async (
   } catch (error) {
     console.error('Error updating user in Firebase:', error);
     return { success: false, error: error.message };
+  }
+};
+
+export const deleteUserFromFirebase = async (uid, email, password) => {
+  try {
+    const user = auth.currentUser;
+
+    if (!user || user.uid !== uid) {
+      throw new Error('User is not authenticated or does not match.');
+    }
+
+    // Reauthenticate the user
+    const credential = EmailAuthProvider.credential(email, password);
+    await reauthenticateWithCredential(user, credential);
+
+    // Delete user data from Firestore collections
+    await deleteDoc(doc(db, 'usernames', uid));
+    await deleteDoc(doc(db, 'emails', uid));
+    await deleteDoc(doc(db, 'users', uid));
+
+    // Delete user from Firebase Authentication
+    await deleteUser(user);
+
+    console.log('User and associated data deleted successfully');
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
   }
 };
 
