@@ -85,16 +85,30 @@ export const ProfileSettings = ({ currentUser }) => {
     }
 
     try {
-      await deleteUserFromFirebase(currentUser.uid, currentUser.email, password);
-      window.location.href = '/'; // Redirect to home or login page
+      await deleteUserFromFirebase(
+        currentUser.uid,
+        currentUser.email,
+        password
+      );
     } catch (error) {
       console.error('Error deleting user:', error);
-      setError(error.message || 'An error occurred while deleting your account.');
+
+      // Map Firebase error codes to user-friendly messages
+      let errorMessage = 'An error occurred while deleting your account.';
+      if (error.code === 'auth/invalid-credential') {
+        errorMessage =
+          'The password you entered is incorrect. Please try again.';
+      } else if (error.code === 'auth/requires-recent-login') {
+        errorMessage =
+          'For security reasons, please log in again to delete your account.';
+      }
+
+      setError(errorMessage);
     }
   };
 
   const handlePasswordCancel = () => {
-    setShowPasswordModal(false); // Hide the modal
+    setShowPasswordModal(false); 
   };
 
   return (
