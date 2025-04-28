@@ -86,8 +86,6 @@ const Login = () => {
         }
       }
   
-      // Redirect after completing all tasks
-      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Error during login:', error);
       setError(error.message);
