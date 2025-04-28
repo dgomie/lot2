@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter
 import withAuth from '../../hoc/withAuth';
 import styles from './dashboard.module.css';
 import DashboardFeed from '@/components/dashboardFeed/DashboardFeed';
@@ -9,8 +10,10 @@ import { DashboardHeader } from '@/components/dashboardHeader/DashboardHeader';
 import Image from 'next/image';
 
 const Dashboard = ({ currentUser }) => {
+  const router = useRouter(); // Initialize the router
+
   const handleButtonClick = (location) => {
-    router.push(location);
+    router.push(location); // Use router.push to navigate
   };
 
   return (
