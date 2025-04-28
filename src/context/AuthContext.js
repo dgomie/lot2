@@ -13,22 +13,28 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists()) {
-          setCurrentUser({
-            ...user,
-            username: userDoc.data().username,
-            profileImg: userDoc.data().profileImg,
-            fcmToken: userDoc.data().fcmToken
-          });
+      try {
+        if (user) {
+          const userDoc = await getDoc(doc(db, 'users', user.uid));
+          if (userDoc.exists()) {
+            setCurrentUser({
+              ...user,
+              username: userDoc.data().username,
+              profileImg: userDoc.data().profileImg,
+              fcmToken: userDoc.data().fcmToken,
+            });
+          } else {
+            setCurrentUser(user);
+          }
         } else {
-          setCurrentUser(user);
+          setCurrentUser(null);
         }
-      } else {
+      } catch (error) {
+        console.error('Error fetching user data:', error);
         setCurrentUser(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();

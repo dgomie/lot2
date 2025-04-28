@@ -1,20 +1,14 @@
 'use client';
 
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import withAuth from '../../hoc/withAuth';
-import { AuthContext } from '@/context/AuthContext';
-import { useRouter } from 'next/navigation';
 import styles from './dashboard.module.css';
 import DashboardFeed from '@/components/dashboardFeed/DashboardFeed';
 import BubbleMenu from '@/components/bubbleMenu/BubbleMenu';
 import { DashboardHeader } from '@/components/dashboardHeader/DashboardHeader';
 import Image from 'next/image';
 
-const Dashboard = () => {
-  const { currentUser } = useContext(AuthContext);
-
-  const router = useRouter();
-
+const Dashboard = ({ currentUser }) => {
   const handleButtonClick = (location) => {
     router.push(location);
   };

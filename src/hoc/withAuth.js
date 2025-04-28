@@ -4,6 +4,7 @@ import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthContext } from '../context/AuthContext';
 import Loader from '@/components/loader/Loader';
+import { ValidateEmail } from '@/components/validateEmail/ValidateEmail';
 
 const withAuth = (WrappedComponent) => {
   const WithAuth = (props) => {
@@ -12,7 +13,7 @@ const withAuth = (WrappedComponent) => {
 
     useEffect(() => {
       if (!loading && !currentUser) {
-        router.push('/auth/login');
+        router.replace('/auth/login'); 
       }
     }, [loading, currentUser, router]);
 
@@ -20,7 +21,10 @@ const withAuth = (WrappedComponent) => {
       return <Loader />;
     }
 
-    // Pass currentUser to the WrappedComponent
+    if (currentUser && !currentUser.emailVerified) {
+      return <ValidateEmail />;
+    }
+
     return <WrappedComponent {...props} currentUser={currentUser} />;
   };
 

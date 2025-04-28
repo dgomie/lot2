@@ -4,6 +4,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
+  updateEmail,
+  sendEmailVerification,
+  deleteUser,
+  reauthenticateWithCredential,
+  EmailAuthProvider,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -113,11 +118,19 @@ export const onMessageListener = () =>
 const signupUser = async (email, password, username) => {
   try {
     // Check if the username already exists
-    const usernameDocRef = doc(db, 'usernames', username);
+    const usernameDocRef = doc(db, 'usernames', username.toLowerCase());
     const usernameDoc = await getDoc(usernameDocRef);
 
     if (usernameDoc.exists()) {
       throw new Error('Username is already taken. Please choose another one.');
+    }
+
+    // Check if the email already exists
+    const emailDocRef = doc(db, 'emails', email.toLowerCase());
+    const emailDoc = await getDoc(emailDocRef);
+
+    if (emailDoc.exists()) {
+      throw new Error('Email is already in use. Please use a different email.');
     }
 
     // Create the user
@@ -128,14 +141,20 @@ const signupUser = async (email, password, username) => {
     );
     const user = userCredential.user;
 
+    // Send email verification
+    await sendEmailVerification(user);
+
     // Add the username to the usernames collection
     await setDoc(usernameDocRef, { uid: user.uid });
+
+    // Add the email to the emails collection
+    await setDoc(emailDocRef, { uid: user.uid });
 
     // Add the user to the users collection
     await setDoc(doc(db, 'users', user.uid), {
       email: user.email,
       uid: user.uid,
-      username: username,
+      username: username.toLowerCase(),
       createdAt: new Date(),
       profileImg: null,
       numVotes: 0,
@@ -146,8 +165,13 @@ const signupUser = async (email, password, username) => {
 
     return user;
   } catch (error) {
+    if (error.code === 'auth/email-already-in-use') {
+      throw new Error(
+        'This email is already in use. Please use a different email.'
+      );
+    }
     console.error('Error signing up user:', error);
-    throw error;
+    throw error; // Re-throw other errors
   }
 };
 
@@ -209,6 +233,127 @@ const getUserProfileByUsername = async (username) => {
     }
   } catch (error) {
     console.error('Error fetching user profile by username:', error);
+    throw error;
+  }
+};
+
+export const updateUserInFirebase = async (
+  userData,
+  previousUsername,
+  previousEmail
+) => {
+  const userRef = doc(db, 'users', userData.uid);
+  const newUsernameRef = doc(db, 'usernames', userData.username.toLowerCase());
+  const previousUsernameRef = doc(
+    db,
+    'usernames',
+    previousUsername?.toLowerCase()
+  );
+  const newEmailRef = doc(db, 'emails', userData.email.toLowerCase());
+  const previousEmailRef = doc(db, 'emails', previousEmail?.toLowerCase());
+
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+
+    if (!user) {
+      throw new Error('User is not authenticated.');
+    }
+
+    // Check if the username has changed
+    if (
+      previousUsername &&
+      previousUsername.toLowerCase() !== userData.username.toLowerCase()
+    ) {
+      const newUsernameDoc = await getDoc(newUsernameRef);
+      if (newUsernameDoc.exists()) {
+        throw new Error(
+          'Username is already taken. Please choose another one.'
+        );
+      }
+
+      await setDoc(newUsernameRef, { uid: userData.uid });
+      await deleteDoc(previousUsernameRef);
+    }
+
+    // Check if the email has changed
+    if (
+      previousEmail &&
+      previousEmail.toLowerCase() !== userData.email.toLowerCase()
+    ) {
+      const newEmailDoc = await getDoc(newEmailRef);
+      if (newEmailDoc.exists()) {
+        throw new Error(
+          'Email is already in use. Please use a different email.'
+        );
+      }
+
+      // Send email verification if the email is not verified
+      if (!user.emailVerified) {
+        await sendEmailVerification(user);
+        throw new Error(
+          'Please verify your current email address before updating.'
+        );
+      }
+
+      // Update the email in Firebase Authentication
+      await updateEmail(user, userData.email);
+
+      // Add the new email to the emails collection
+      await setDoc(newEmailRef, { uid: userData.uid });
+
+      // Delete the previous email from the emails collection
+      await deleteDoc(previousEmailRef);
+    }
+
+    // Update the user's profile in the users collection
+    await updateDoc(userRef, {
+      username: userData.username.toLowerCase(),
+      email: userData.email.toLowerCase(),
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating user in Firebase:', error);
+    return { success: false, error: error.message };
+  }
+};
+
+export const deleteUserFromFirebase = async (uid, email, password) => {
+  try {
+    const user = auth.currentUser;
+
+    if (!user || user.uid !== uid) {
+      throw new Error('User is not authenticated or does not match.');
+    }
+
+    // Reauthenticate the user
+    const credential = EmailAuthProvider.credential(email, password);
+    await reauthenticateWithCredential(user, credential);
+
+    // Retrieve the username from the Firestore `users` collection
+    const userDocRef = doc(db, 'users', uid);
+    const userDoc = await getDoc(userDocRef);
+
+    if (!userDoc.exists()) {
+      throw new Error('User data not found in Firestore.');
+    }
+
+    const username = userDoc.data().username;
+
+    // Delete user data from Firestore collections
+    const usernameDocRef = doc(db, 'usernames', username.toLowerCase());
+    const emailDocRef = doc(db, 'emails', email.toLowerCase());
+
+    await deleteDoc(usernameDocRef); 
+    await deleteDoc(emailDocRef);
+    await deleteDoc(userDocRef); 
+
+    await deleteUser(user);
+
+    console.log('User and associated data deleted successfully');
+  } catch (error) {
+    console.error('Error deleting user:', error);
     throw error;
   }
 };

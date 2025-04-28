@@ -16,7 +16,8 @@ const Input = ({
   toggleVisibility,
   isVisible,
   maxLength,
-  placeholder = '', // Add placeholder prop with a default value
+  placeholder = '',
+  disabled = false,
 }) => {
   return (
     <div className={styles.inputGroup}>
@@ -31,9 +32,10 @@ const Input = ({
           value={value}
           onChange={onChange}
           required={required}
-          className={styles.input}
+          className={`${styles.input} ${disabled ? styles.disabled : ''}`}
           maxLength={maxLength}
-          placeholder={placeholder} 
+          placeholder={placeholder}
+          disabled={disabled}
         />
         {showToggle && (
           <span className={styles.eyeIcon} onClick={toggleVisibility}>
