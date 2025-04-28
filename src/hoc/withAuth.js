@@ -17,8 +17,8 @@ const withAuth = (WrappedComponent) => {
       }
     }, [loading, currentUser, router]);
 
-    if (loading || (!loading && !currentUser)) {
-      return <Loader />; 
+    if (loading || !currentUser) {
+      return <Loader />;
     }
 
     if (currentUser && !currentUser.emailVerified) {
