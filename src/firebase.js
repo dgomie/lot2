@@ -162,8 +162,13 @@ const signupUser = async (email, password, username) => {
 
     return user;
   } catch (error) {
+    if (error.code === 'auth/email-already-in-use') {
+      throw new Error(
+        'This email is already in use. Please use a different email.'
+      );
+    }
     console.error('Error signing up user:', error);
-    throw error;
+    throw error; // Re-throw other errors
   }
 };
 
