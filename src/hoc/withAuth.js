@@ -13,20 +13,16 @@ const withAuth = (WrappedComponent) => {
 
     useEffect(() => {
       if (!loading && !currentUser) {
-        console.log('Redirecting to login...');
-        router.push('/auth/login');
+        router.replace('/auth/login'); 
       }
     }, [loading, currentUser, router]);
 
-
-    if (loading) {
-      return <Loader />;
+    if (loading || (!loading && !currentUser)) {
+      return <Loader />; 
     }
 
     if (currentUser && !currentUser.emailVerified) {
-      return (
-        <ValidateEmail />
-      );
+      return <ValidateEmail />;
     }
 
     return <WrappedComponent {...props} currentUser={currentUser} />;
