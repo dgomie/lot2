@@ -331,12 +331,24 @@ export const deleteUserFromFirebase = async (uid, email, password) => {
     const credential = EmailAuthProvider.credential(email, password);
     await reauthenticateWithCredential(user, credential);
 
-    // Delete user data from Firestore collections
-    await deleteDoc(doc(db, 'usernames', uid));
-    await deleteDoc(doc(db, 'emails', uid));
-    await deleteDoc(doc(db, 'users', uid));
+    // Retrieve the username from the Firestore `users` collection
+    const userDocRef = doc(db, 'users', uid);
+    const userDoc = await getDoc(userDocRef);
 
-    // Delete user from Firebase Authentication
+    if (!userDoc.exists()) {
+      throw new Error('User data not found in Firestore.');
+    }
+
+    const username = userDoc.data().username;
+
+    // Delete user data from Firestore collections
+    const usernameDocRef = doc(db, 'usernames', username.toLowerCase());
+    const emailDocRef = doc(db, 'emails', email.toLowerCase());
+
+    await deleteDoc(usernameDocRef); 
+    await deleteDoc(emailDocRef);
+    await deleteDoc(userDocRef); 
+
     await deleteUser(user);
 
     console.log('User and associated data deleted successfully');
