@@ -3,6 +3,7 @@ import styles from './ProfileSettings.module.css';
 import Button from '../button/Button';
 import Input from '../input/Input';
 import { updateUserInFirebase, deleteUserFromFirebase } from '@/firebase'; // Import delete function
+import PasswordModal from '../passwordModal/PasswordModal';
 
 export const ProfileSettings = ({ currentUser }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -12,6 +13,7 @@ export const ProfileSettings = ({ currentUser }) => {
     email: currentUser.email,
   });
   const [error, setError] = useState('');
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -71,34 +73,30 @@ export const ProfileSettings = ({ currentUser }) => {
     }
   };
 
-  const handleDeleteClick = async () => {
-    const confirmDelete = window.confirm(
-      'Are you sure you want to delete your account? This action cannot be undone.'
-    );
-    if (!confirmDelete) return;
+  const handleDeleteClick = () => {
+    setShowPasswordModal(true); // Show the password modal
+  };
 
-    const password = prompt(
-      'Please enter your password to confirm account deletion:'
-    );
+  const handlePasswordConfirm = async (password) => {
+    setShowPasswordModal(false); // Hide the modal
+
     if (!password) {
       setError('Password is required to delete your account.');
       return;
     }
 
     try {
-      await deleteUserFromFirebase(
-        currentUser.uid,
-        currentUser.email,
-        password
-      );
+      await deleteUserFromFirebase(currentUser.uid, currentUser.email, password);
       console.log('User deleted successfully');
       window.location.href = '/'; // Redirect to home or login page
     } catch (error) {
       console.error('Error deleting user:', error);
-      setError(
-        error.message || 'An error occurred while deleting your account.'
-      );
+      setError(error.message || 'An error occurred while deleting your account.');
     }
+  };
+
+  const handlePasswordCancel = () => {
+    setShowPasswordModal(false); // Hide the modal
   };
 
   return (
@@ -134,6 +132,12 @@ export const ProfileSettings = ({ currentUser }) => {
           </Button>
         </div>
       </div>
+      {showPasswordModal && (
+        <PasswordModal
+          onConfirm={handlePasswordConfirm}
+          onCancel={handlePasswordCancel}
+        />
+      )}
     </div>
   );
 };
