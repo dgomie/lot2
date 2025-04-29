@@ -73,6 +73,7 @@ const Legions = ({ currentUser }) => {
               players={legion.players}
               maxNumPlayers={legion.maxNumPlayers}
               numRounds={legion.numRounds}
+              currentRound={legion.currentRound}
               onClick={() => {
                 handleCardClick(legion.id);
               }}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './DashboardCard.module.css';
+import Image from 'next/image';
 
 const DashboardCard = ({
   legionName,
@@ -7,64 +8,65 @@ const DashboardCard = ({
   players,
   maxNumPlayers,
   numRounds,
+  currentRound,
   onClick,
+  backgroundColor,
 }) => {
-  const [background, setBackground] = useState('');
-  const [shapeStyles, setShapeStyles] = useState({});
-  
-
-  useEffect(() => {
-    const predefinedColors = [
-      '#FF5733',
-      '#33FF57',
-      '#3357FF',
-      '#FF33A1',
-      '#A133FF',
+  const getRandomColor = () => {
+    const colors = [
+      '#f9b234',
+      '#3ecd5e',
+      '#4bb9f0',
+      '#b070f0',
+      '#cd3e94',
+      '#ea9449',
     ];
-
-    const getRandomColor = () => {
-      return predefinedColors[
-        Math.floor(Math.random() * predefinedColors.length)
-      ];
-    };
-
-    const getRandomPosition = () => {
-      const top = Math.floor(Math.random() * 100) - 50; // Random value between -50 and 50
-      const left = Math.floor(Math.random() * 100) - 50; // Random value between -50 and 50
-      return { top: `${top}%`, left: `${left}%` };
-    };
-
-    const color1 = getRandomColor();
-    const color2 = getRandomColor();
-    const color3 = getRandomColor();
-
-    setBackground(`linear-gradient(135deg, ${color1}, ${color2}, ${color3})`);
-
-    setShapeStyles({
-      before: getRandomPosition(),
-      after: getRandomPosition(),
-    });
-  }, []);
+    return colors[Math.floor(Math.random() * colors.length)];
+  };
 
   return (
-    <div onClick={onClick} className={styles.mainContainer} style={{ background }}>
-      <div
-        className={styles.shape}
-        style={{
-          ...shapeStyles.before,
-          background: 'rgba(255, 255, 255, 0.2)',
-        }}
-      />
-      <div
-        className={styles.shape}
-        style={{ ...shapeStyles.after, background: 'rgba(255, 255, 255, 0.1)' }}
-      />
-      <div className={styles.title}>{legionName}</div>
-      <div className={styles.description}>{legionDescription}</div>
-      <div className={styles.info}>
-        {players.length} / {maxNumPlayers} Players
+    <div className={styles['ag-format-container']} onClick={onClick}>
+      <div className={styles['ag-courses_item']}>
+        <div className={styles['ag-courses-item_link']} onClick={onClick}>
+          <div
+            className={styles['ag-courses-item_bg']}
+            style={{ backgroundColor: getRandomColor() }}
+          ></div>
+
+          <div className={styles['ag-courses-item_title']}>{legionName}</div>
+          <div className={styles['ag-courses-item_description']}>
+            {legionDescription}
+          </div>
+          <div className={styles.roundInfo}>
+            <>
+              <Image
+                src={'/img/group.svg'}
+                width={25}
+                height={25}
+                alt="Group"
+              />
+              <div className={styles['ag-courses-item_description']}>
+                {players.length} / {maxNumPlayers} Players
+              </div>
+            </>
+            <>
+              <Image
+                src={'/img/swords.svg'}
+                width={25}
+                height={25}
+                alt="Group"
+              />
+              <div className={styles['ag-courses-item_description']}>
+                {currentRound} / {numRounds} Rounds
+              </div>
+            </>
+          </div>
+          {/* <div className={styles['ag-courses-item_date-box']}>
+            Start:
+            <span className={styles['ag-courses-item_date']}>04.11.2022</span>
+          </div> */}
+        </div>
       </div>
-      <div className={styles.info}>{numRounds} Rounds</div>
     </div>
   );
 };
