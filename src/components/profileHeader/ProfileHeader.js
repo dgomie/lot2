@@ -6,7 +6,7 @@ import EditIcon from '../../../public/img/edit.svg';
 import Spinner from '../spinner/Spinner';
 import imageCompression from 'browser-image-compression';
 import { updateProfileImgInLegions } from '@/firebase';
-
+import { useUser } from '@/context/AuthContext';
 
 const ProfileHeader = ({
   userId,
@@ -15,43 +15,53 @@ const ProfileHeader = ({
   createdAt,
   profileImg,
 }) => {
+  const { setCurrentUser } = useUser();
   const [imageUrl, setImageUrl] = useState(profileImg);
   const [loading, setLoading] = useState(false);
 
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (file && userId) {
-      // Validate file type
       const validTypes = ['image/jpeg', 'image/png'];
       if (!validTypes.includes(file.type)) {
         alert('Only JPEG and PNG images are allowed.');
         return;
       }
-  
+
       setLoading(true);
       try {
-        // Compress the image
         const options = {
-          maxSizeMB: 0.5, // Maximum size in MB (500 KB)
-          maxWidthOrHeight: 1920, // Optional: Resize the image if needed
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1920,
           useWebWorker: true,
         };
         const compressedFile = await imageCompression(file, options);
-  
-        // Validate compressed file size
+
         if (compressedFile.size > 500 * 1024) {
           alert('Compressed image size exceeds 500 KB.');
           setLoading(false);
           return;
         }
-  
-        // Upload the compressed image
+
         const url = await uploadProfileImage(compressedFile, userId);
         setImageUrl(url);
-  
-        const result = await updateProfileImgInLegions({userId: userId, newProfileImgUrl: url});
-        if (!result.success) {
-          console.error('Failed to update profile image in legions:', result.error);
+
+        const result = await updateProfileImgInLegions({
+          userId: userId,
+          newProfileImgUrl: url,
+        });
+
+        if (result.success) {
+          // Update the currentUser context with the new image URL
+          setCurrentUser((prev) => ({
+            ...prev,
+            profileImg: url,
+          }));
+        } else {
+          console.error(
+            'Failed to update profile image in legions:',
+            result.error
+          );
         }
       } catch (error) {
         console.error('Error uploading profile image:', error);
@@ -61,7 +71,7 @@ const ProfileHeader = ({
     } else {
       console.error('File or userId is missing');
     }
-  }; 
+  };
 
   const formatDate = (date) => {
     if (!date) return 'Unknown';
@@ -88,7 +98,7 @@ const ProfileHeader = ({
           alt="Profile Image"
           width={160}
           height={160}
-          onError={() => setImageUrl('/img/user.png')} 
+          onError={() => setImageUrl('/img/user.png')}
           onClick={() => {
             if (currentUserId === userId) {
               document.getElementById('fileInput').click();
