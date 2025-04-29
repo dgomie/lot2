@@ -24,6 +24,7 @@ const CreateLegionForm = ({ currentUser }) => {
     legionAdmin: '',
     currentRound: 1,
     standings: [],
+    isPrivate: false,
     isActive: true,
   });
 
@@ -189,6 +190,23 @@ const CreateLegionForm = ({ currentUser }) => {
             required
             maxLength={100}
           />
+          <div className={styles.checkboxGroup}>
+            Private Legion
+            <label className={styles.container}>
+              <input
+                type="checkbox"
+                name="isPrivate"
+                checked={formData.isPrivate}
+                onChange={() =>
+                  setFormData((prevData) => ({
+                    ...prevData,
+                    isPrivate: !prevData.isPrivate,
+                  }))
+                }
+              />
+              <div className={styles.checkmark}></div>
+            </label>
+          </div>
         </div>
       )}
       {step === 2 && (
