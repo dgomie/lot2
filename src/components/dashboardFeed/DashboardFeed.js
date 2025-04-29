@@ -69,26 +69,28 @@ const DashboardFeed = ({ currentUserId }) => {
           ))}
 
           <div className={styles.sectionHeader}>
-            <h2 className={styles.sectionTitle}>Completed Legions</h2>
-            <div
-              className={styles.expandCollapseButtons}
-              onClick={toggleInactiveLegions}
-            >
-              {isInactiveCollapsed ? (
-                <Image
-                  src="/img/down.svg" // Path to the "down" icon
-                  width={35}
-                  height={35}
-                  alt="Expand"
-                />
-              ) : (
-                <Image
-                  src="/img/up.svg" // Path to the "up" icon
-                  width={35}
-                  height={35}
-                  alt="Collapse"
-                />
-              )}
+            <div className={styles.sectionTitle}>
+              Completed Legions{' '}
+              <div
+                className={styles.expandCollapseButtons}
+                onClick={toggleInactiveLegions}
+              >
+                {isInactiveCollapsed ? (
+                  <Image
+                    src="/img/down.svg" // Path to the "down" icon
+                    width={35}
+                    height={35}
+                    alt="Expand"
+                  />
+                ) : (
+                  <Image
+                    src="/img/up.svg" // Path to the "up" icon
+                    width={35}
+                    height={35}
+                    alt="Collapse"
+                  />
+                )}
+              </div>
             </div>
           </div>
 
@@ -107,6 +109,7 @@ const DashboardFeed = ({ currentUserId }) => {
                 numRounds={legion.numRounds}
                 currentRound={legion.currentRound}
                 onClick={() => handleCardClick(legion.id)}
+                isActive={legion.isActive}
               />
             ))}
           </div>

@@ -10,6 +10,7 @@ const DashboardCard = ({
   numRounds,
   currentRound,
   onClick,
+  isActive = true,
 }) => {
   const getRandomColor = () => {
     const colors = [
@@ -23,13 +24,15 @@ const DashboardCard = ({
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
+  const backgroundColor = isActive ? getRandomColor() : '#ced0d7';
+
   return (
     <div className={styles['ag-format-container']} onClick={onClick}>
       <div className={styles['ag-courses_item']}>
         <div className={styles['ag-courses-item_link']}>
           <div
             className={styles['ag-courses-item_bg']}
-            style={{ backgroundColor: getRandomColor() }}
+            style={{ backgroundColor }}
           ></div>
 
           <div className={styles['ag-courses-item_title']}>{legionName}</div>
