@@ -273,6 +273,10 @@ export const updateUserInFirebase = async (
       }
 
       await setDoc(newUsernameRef, { uid: userData.uid });
+      await updateUsernameInLegions({
+        userId: userData.uid,
+        newUsername: userData.username.toLowerCase(),
+      });
       await deleteDoc(previousUsernameRef);
     }
 
@@ -820,6 +824,46 @@ export const updateProfileImgInLegions = async ({
     return { success: true };
   } catch (error) {
     console.error('Error updating profile image in legions:', error);
+    return { success: false, error };
+  }
+};
+
+export const updateUsernameInLegions = async ({ userId, newUsername }) => {
+  try {
+    const legionsRef = collection(db, 'legions');
+    const q = query(legionsRef); // Fetch all legions
+    const querySnapshot = await getDocs(q);
+
+    const updatePromises = [];
+
+    querySnapshot.forEach((doc) => {
+      const legionData = doc.data();
+
+      // Check if the userId exists in the players array
+      const isPlayerInLegion = legionData.players.some(
+        (player) => player.userId === userId
+      );
+
+      if (isPlayerInLegion) {
+        // Update the profileImg for the matching player
+        const updatedPlayers = legionData.players.map((player) => {
+          if (player.userId === userId) {
+            return { ...player, username: newUsername };
+          }
+          return player;
+        });
+
+        // Add the update operation to the promises array
+        const updatePromise = updateDoc(doc.ref, { players: updatedPlayers });
+        updatePromises.push(updatePromise);
+      }
+    });
+
+    await Promise.all(updatePromises);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating username in legions:', error);
     return { success: false, error };
   }
 };
