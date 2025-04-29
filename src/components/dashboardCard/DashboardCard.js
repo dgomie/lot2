@@ -54,7 +54,7 @@ const DashboardCard = ({
                 src={'/img/swords.svg'}
                 width={25}
                 height={25}
-                alt="Group"
+                alt="Swords"
               />
               <div className={styles['ag-courses-item_description']}>
                 {currentRound} / {numRounds} Rounds
