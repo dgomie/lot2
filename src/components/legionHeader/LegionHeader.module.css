@@ -31,7 +31,7 @@
   cursor: pointer;
   width: auto;
   position: absolute; /* Add this */
-  top: 0.5rem; /* Adjust as needed */
+  top: 1.0rem; /* Adjust as needed */
   right: .8rem; /* Adjust as needed */
 
 }
@@ -48,14 +48,14 @@
 
 .dropdownMenu {
   position: absolute;
-  top: 40px;
+  top: 3rem;
   right: 0.5rem;
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 150px;
+  width: 10rem;
   opacity: 0; /* Start hidden */
   transform: scale(0.95); /* Slightly shrink */
   transition: opacity 0.2s ease, transform 0.2s ease; /* Smooth animation */
@@ -71,7 +71,7 @@
 .dropdownItem {
   padding: 10px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1rem;
   color: #333;
 }
 
