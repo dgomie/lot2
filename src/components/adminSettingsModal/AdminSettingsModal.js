@@ -4,6 +4,7 @@ import { updateLegionSettings, deleteLegion } from '@/firebase';
 import Input from '../input/Input';
 import NumberInput from '../numberInput/NumberInput';
 import Button from '../button/Button';
+import Modal from '../modal/Modal'; // Import the Modal component
 
 export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
   const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState('');
   const [isValid, setIsValid] = useState(true);
+  const [showConfirmModal, setShowConfirmModal] = useState(false); // State for confirmation modal
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,7 +28,7 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
         name === 'maxNumPlayers' ||
         name === 'upVotesPerRound' ||
         name === 'downVotesPerRound'
-          ? parseInt(value, 10) || 0 // Ensure numeric fields are parsed as integers
+          ? parseInt(value, 10) || 0
           : value,
     }));
   };
@@ -36,11 +38,8 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
       setError('Legion Name must be between 5 and 40 characters.');
       return false;
     }
-    if (
-      formData.legionDescription.length < 5 ||
-      formData.legionDescription.length > 150
-    ) {
-      setError('Description must be between 5 and 150 characters.');
+    if (formData.legionDescription.length > 150) {
+      setError('Description must be less than 150 characters.');
       return false;
     }
     if (formData.maxNumPlayers < legionData.players.length) {
@@ -103,11 +102,7 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
   };
 
   const handleDelete = async () => {
-    const confirmed = window.confirm(
-      'Are you sure you want to delete this legion? This action cannot be undone.'
-    );
-
-    if (!confirmed) return;
+    setShowConfirmModal(false); // Close the confirmation modal
 
     setIsSaving(true);
     try {
@@ -125,7 +120,7 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
       setIsSaving(false);
     }
   };
-  
+
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
@@ -188,11 +183,31 @@ export const AdminSettingsModal = ({ legionData, legionId, onClose }) => {
           </Button>
         </div>
         <div className={styles.deleteButton}>
-          <Button onClick={handleDelete} disabled={isSaving} variant="red">
+          <Button
+            onClick={() => setShowConfirmModal(true)} // Show confirmation modal
+            disabled={isSaving}
+            variant="red"
+          >
             Delete Legion
           </Button>
         </div>
       </div>
+
+      {showConfirmModal && (
+        <Modal onClose={() => setShowConfirmModal(false)}>
+          <div className={styles.confirmationContent}>
+            <p>Are you sure you want to delete this legion? This action cannot be undone.</p>
+            <div className={styles.actions}>
+              <Button onClick={handleDelete} variant="red">
+                Confirm
+              </Button>
+              <Button onClick={() => setShowConfirmModal(false)} variant="gray">
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
