@@ -65,38 +65,44 @@ const Legions = ({ currentUser }) => {
       <div className={styles.mobileHeader}>
         <DashboardHeader currentUser={currentUser} />
       </div>
-      <div className={styles.title}>Explore Active Legions</div>
-
-      <div className={styles.mainContainer}>
-        <div className={styles.legionsContainer}>
-          {legions.map((legion, index) => (
-            <DashboardCard
-              key={legion.id}
-              legionName={legion.legionName}
-              legionDescription={legion.legionDescription}
-              players={legion.players}
-              maxNumPlayers={legion.maxNumPlayers}
-              numRounds={legion.numRounds}
-              currentRound={legion.currentRound}
-              onClick={() => {
-                handleCardClick(legion.id);
-              }}
-            />
-          ))}
-          {loading && <Loader />}
-          {!loading && hasMore && (
-            <Button onClick={loadMoreLegions} variant="transparentWhite">
-              Load More Legions
-            </Button>
-          )}
-          {!loading && !hasMore && (
-            <div className={styles.noneLeft}>No more legions left to load</div>
-          )}
-        </div>
+      <div className={styles.contentContainer}>
         <div className={styles.createLegionButton}>
           <Button variant="blue" onClick={handleCreateLegion}>
             Create a Legion
           </Button>
+        </div>
+        <div className={styles.title}>Explore Active Legions</div>
+
+        <div className={styles.mainContainer}>
+          <div className={styles.legionsContainer}>
+            {legions.map((legion, index) => (
+              <DashboardCard
+                key={legion.id}
+                legionName={legion.legionName}
+                legionDescription={legion.legionDescription}
+                players={legion.players}
+                maxNumPlayers={legion.maxNumPlayers}
+                numRounds={legion.numRounds}
+                currentRound={legion.currentRound}
+                onClick={() => {
+                  handleCardClick(legion.id);
+                }}
+              />
+            ))}
+            {loading && <Loader />}
+            {!loading && hasMore && (
+              <div className={styles.buttonContainer}>
+                <Button onClick={loadMoreLegions} variant="transparentWhite">
+                  Load More Legions
+                </Button>
+              </div>
+            )}
+            {!loading && !hasMore && (
+              <div className={styles.noneLeft}>
+                No more legions left to load
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>

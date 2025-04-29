@@ -3,8 +3,8 @@
 }
 
 .noneLeft {
-    color: lightslategray;
-    font-style: italic;
+  color: lightslategray;
+  font-style: italic;
 }
 
 .legionsContainer {
@@ -24,10 +24,24 @@
 }
 
 .createLegionButton {
-  position: fixed;
-  bottom: 7rem;
-  right: 1rem;
-  z-index: 1000; /* Ensure it stays above other elements */
+  margin-top: 1rem;
+  padding: 1rem;
+  width: 100%;
+  max-width: 15rem;
+}
+
+.buttonContainer {
+  margin: 1rem;
+  width: 70%;
+}
+
+@media (max-width: 768px) {
+  .contentContainer {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 @media (min-width: 768px) {
@@ -46,7 +60,7 @@
 
   .createLegionButton {
     position: fixed;
-    bottom: 7rem;
+    bottom: 3rem;
     right: 4rem;
   }
 }
