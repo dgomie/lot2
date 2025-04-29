@@ -27,7 +27,7 @@ const DashboardCard = ({
   return (
     <div className={styles['ag-format-container']} onClick={onClick}>
       <div className={styles['ag-courses_item']}>
-        <div className={styles['ag-courses-item_link']} onClick={onClick}>
+        <div className={styles['ag-courses-item_link']}>
           <div
             className={styles['ag-courses-item_bg']}
             style={{ backgroundColor: getRandomColor() }}
