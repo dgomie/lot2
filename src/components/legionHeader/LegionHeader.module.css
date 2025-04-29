@@ -32,7 +32,8 @@
   width: auto;
   position: absolute; /* Add this */
   top: 0.5rem; /* Adjust as needed */
-  right: 0.5rem; /* Adjust as needed */
+  right: .8rem; /* Adjust as needed */
+
 }
 
 .gearIcon:hover {
@@ -43,4 +44,37 @@
   .mainContainer {
     width: 100%;
   }
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 40px;
+  right: 0.5rem;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 150px;
+  opacity: 0; /* Start hidden */
+  transform: scale(0.95); /* Slightly shrink */
+  transition: opacity 0.2s ease, transform 0.2s ease; /* Smooth animation */
+  pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.dropdownMenu.open {
+  opacity: 1; /* Fully visible */
+  transform: scale(1); /* Full size */
+  pointer-events: auto; /* Allow interaction */
+}
+
+.dropdownItem {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
 }

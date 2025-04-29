@@ -21,6 +21,7 @@ const LegionHeader = ({
   const { currentUser } = useContext(AuthContext);
   const [isDisabled, setIsDisabled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const handleJoinLegion = async () => {
     setIsDisabled(true);
@@ -101,19 +102,36 @@ const LegionHeader = ({
     }
   };
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+    setIsDropdownOpen(false); // Close dropdown when opening modal
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator
+        .share({
+          title: 'Check out this Legion!',
+          text: `Join the Legion: ${legionData.legionName}`,
+          url: window.location.href,
+        })
+        .then(() => console.log('Page shared successfully!'))
+        .catch((error) => console.error('Error sharing the page:', error));
+    } else {
+      alert('Sharing is not supported on this device.');
+    }
+    setIsDropdownOpen(false); // Close dropdown after sharing
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen((prev) => !prev);
+  };
+
   const isMember = legionData.players.some(
     (player) => player.userId === currentUser?.uid
   );
   const isAdmin = legionData.legionAdmin.userId === currentUser?.uid;
   const isFull = legionData.players.length >= legionData.maxNumPlayers;
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
 
   return (
     <div className={styles.mainContainer}>
@@ -141,22 +159,38 @@ const LegionHeader = ({
             )
           ))}
       </div>
-      {isAdmin && (
-        <div className={styles.gearIcon}>
-          <Image
-            src={'/img/gear.svg'}
-            width={30}
-            height={30}
-            alt="Legion Settings"
-            onClick={handleOpenModal}
-          />
+
+      {/* Gear Icon and Dropdown */}
+      <div className={styles.gearIconContainer}>
+        <Image
+          src={'/img/more-vert.svg'}
+          width={30}
+          height={30}
+          alt="Legion Options"
+          onClick={toggleDropdown}
+          className={styles.gearIcon}
+        />
+        <div
+          className={`${styles.dropdownMenu} ${
+            isDropdownOpen ? styles.open : ''
+          }`}
+        >
+          {isAdmin && (
+            <div className={styles.dropdownItem} onClick={handleOpenModal}>
+              Legion Settings
+            </div>
+          )}
+          <div className={styles.dropdownItem} onClick={handleShare}>
+            Share
+          </div>
         </div>
-      )}
+      </div>
+
       {isModalOpen && (
         <AdminSettingsModal
           legionData={legionData}
           legionId={legionId}
-          onClose={handleCloseModal}
+          onClose={() => setIsModalOpen(false)}
         />
       )}
     </div>
