@@ -108,7 +108,7 @@ export const ProfileSettings = ({ currentUser }) => {
   };
 
   const handlePasswordCancel = () => {
-    setShowPasswordModal(false); 
+    setShowPasswordModal(false);
   };
 
   return (
@@ -137,8 +137,7 @@ export const ProfileSettings = ({ currentUser }) => {
             {isEditing ? 'Save Settings' : 'Edit Settings'}
           </Button>
           {error && <div className={styles.error}>{error}</div>}
-        </div>
-        <div className={styles.deleteButtonContainer}>
+
           <Button variant="red" onClick={handleDeleteClick}>
             Delete Account
           </Button>

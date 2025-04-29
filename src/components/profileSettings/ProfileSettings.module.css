@@ -5,7 +5,8 @@
 }
 
 .form {
-  width: 20rem;
+  width: 100%;
+  min-width: 20rem;
 }
 
 .title {
@@ -16,9 +17,9 @@
 }
 
 .buttonContainer {
+  display: flex;
+  flex-direction: column;
   margin: 1rem;
+  gap: 1.5rem;
 }
 
-.deleteButtonContainer {
-  margin: 1.5rem 1rem 1rem 1rem;
-}

@@ -19,3 +19,7 @@
     width: 100%;
     max-width: 600px;
 }
+
+.buttonContainer {
+    margin: 0 0 1.5rem 0;
+}
