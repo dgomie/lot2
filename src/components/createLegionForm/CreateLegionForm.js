@@ -13,11 +13,11 @@ const CreateLegionForm = ({ currentUser }) => {
   const [formData, setFormData] = useState({
     legionName: '',
     legionDescription: '',
-    maxNumPlayers: 0,
-    numRounds: 0,
-    voteTime: 0,
-    submitTime: 0,
-    upVotesPerRound: 0,
+    maxNumPlayers: 1,
+    numRounds: 1,
+    voteTime: 1,
+    submitTime: 1,
+    upVotesPerRound: 1,
     downVotesPerRound: 0,
     players: [],
     playerTokens: [],
@@ -54,10 +54,13 @@ const CreateLegionForm = ({ currentUser }) => {
           formData.legionDescription.length < 150
       );
     } else if (step === 2) {
-      setIsStepValid(formData.maxNumPlayers > 0);
+      setIsStepValid(
+        formData.maxNumPlayers > 0 && formData.maxNumPlayers <= 20
+      );
     } else if (step === 3) {
       setIsStepValid(
         formData.numRounds > 0 &&
+          formData.numRounds <= 20 &&
           formData.voteTime > 0 &&
           formData.submitTime > 0
       );
@@ -198,7 +201,7 @@ const CreateLegionForm = ({ currentUser }) => {
             label="Max Number of Players"
             required
             min={1}
-            max={100}
+            max={20}
           />
           <NumberInput
             className={styles.inputField}
@@ -222,7 +225,7 @@ const CreateLegionForm = ({ currentUser }) => {
             label="Song Submission Time (in days)"
             required
             min={1}
-            max={60}
+            max={7}
           />
           <NumberInput
             className={styles.inputField}
@@ -232,7 +235,7 @@ const CreateLegionForm = ({ currentUser }) => {
             label="Vote Time (in days)"
             required
             min={1}
-            max={60}
+            max={7}
           />
         </div>
       )}
