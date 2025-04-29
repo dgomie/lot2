@@ -449,7 +449,7 @@ const fetchLegions = async (lastVisible) => {
       legionsRef,
       where('isActive', '==', true),
       where('isPrivate', '==', false),
-      orderBy('createdAt'),
+      orderBy('createdAt', 'desc'), 
       startAfter(lastVisible),
       limit(10)
     );
@@ -458,7 +458,7 @@ const fetchLegions = async (lastVisible) => {
       legionsRef,
       where('isActive', '==', true),
       where('isPrivate', '==', false),
-      orderBy('createdAt'),
+      orderBy('createdAt', 'desc'),
       limit(5)
     );
   }
