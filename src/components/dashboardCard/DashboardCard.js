@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './DashboardCard.module.css';
 import Image from 'next/image';
 
@@ -10,7 +10,6 @@ const DashboardCard = ({
   numRounds,
   currentRound,
   onClick,
-  backgroundColor,
 }) => {
   const getRandomColor = () => {
     const colors = [
@@ -61,10 +60,6 @@ const DashboardCard = ({
               </div>
             </>
           </div>
-          {/* <div className={styles['ag-courses-item_date-box']}>
-            Start:
-            <span className={styles['ag-courses-item_date']}>04.11.2022</span>
-          </div> */}
         </div>
       </div>
     </div>
