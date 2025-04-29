@@ -345,9 +345,9 @@ export const deleteUserFromFirebase = async (uid, email, password) => {
     const usernameDocRef = doc(db, 'usernames', username.toLowerCase());
     const emailDocRef = doc(db, 'emails', email.toLowerCase());
 
-    await deleteDoc(usernameDocRef); 
+    await deleteDoc(usernameDocRef);
     await deleteDoc(emailDocRef);
-    await deleteDoc(userDocRef); 
+    await deleteDoc(userDocRef);
 
     await deleteUser(user);
 
@@ -573,9 +573,12 @@ const saveRoundData = async (legionId, roundId, updatedRoundData) => {
 export const addRoundToLegion = async (legionId, newRound) => {
   try {
     const legionDocRef = doc(db, 'legions', legionId);
+
     await updateDoc(legionDocRef, {
       rounds: arrayUnion(newRound),
+      numRounds: increment(1),
     });
+
     return { success: true };
   } catch (error) {
     console.error('Error adding new round:', error);
