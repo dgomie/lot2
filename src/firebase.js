@@ -448,6 +448,7 @@ const fetchLegions = async (lastVisible) => {
     q = query(
       legionsRef,
       where('isActive', '==', true),
+      where('isPrivate', '==', false),
       orderBy('createdAt'),
       startAfter(lastVisible),
       limit(10)
@@ -456,6 +457,7 @@ const fetchLegions = async (lastVisible) => {
     q = query(
       legionsRef,
       where('isActive', '==', true),
+      where('isPrivate', '==', false),
       orderBy('createdAt'),
       limit(5)
     );
