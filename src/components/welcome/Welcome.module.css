@@ -31,6 +31,15 @@
   background-color: #005bb5;
 }
 
+.installLink {
+  color: #57bacb;
+  font-weight: bold;
+}
+
+.installLink:hover {
+  color: #e372ed;
+}
+
 .infoCard {
   display: flex;
   justify-content: center;

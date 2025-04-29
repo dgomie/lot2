@@ -92,6 +92,10 @@ const Welcome = () => {
             With iOS and Android optimization you can play on the go. Never miss
             a deadline with notifications when songs and votes are due.
           </p>
+          <br />
+          <Link className={styles.installLink} href="support/installation">
+            Learn how to install on your device.
+          </Link>
         </div>
         <Image
           src="/img/mockup2.png"

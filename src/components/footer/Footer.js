@@ -45,7 +45,7 @@ export const Footer = () => {
 
               <li>
                 <Link href="/support/installation" className={styles.logo}>
-                  How to Install
+                  Installation
                 </Link>
               </li>
               <li>
