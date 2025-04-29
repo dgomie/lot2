@@ -63,6 +63,7 @@ const DashboardFeed = ({ currentUserId }) => {
               players={legion.players}
               maxNumPlayers={legion.maxNumPlayers}
               numRounds={legion.numRounds}
+              currentRound={legion.currentRound}
               onClick={() => handleCardClick(legion.id)}
             />
           ))}
@@ -104,6 +105,7 @@ const DashboardFeed = ({ currentUserId }) => {
                 players={legion.players}
                 maxNumPlayers={legion.maxNumPlayers}
                 numRounds={legion.numRounds}
+                currentRound={legion.currentRound}
                 onClick={() => handleCardClick(legion.id)}
               />
             ))}
