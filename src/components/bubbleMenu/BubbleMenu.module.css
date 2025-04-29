@@ -8,7 +8,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background-color: #007bff;
+  background-color: var(--lightblue100);
   color: white;
   font-size: 24px;
   border: none;
@@ -45,7 +45,7 @@
   width: 70px;
   height: 70px;
   border-radius: 50%;
-  background-color: #ff5722;
+  background-color: #cd3e94;
   color: white;
   border: none;
   cursor: pointer;

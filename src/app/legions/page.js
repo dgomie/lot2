@@ -41,6 +41,10 @@ const Legions = ({ currentUser }) => {
     router.push(`/legions/${legionId}`);
   };
 
+  const handleCreateLegion = () => {
+    router.push('/create-legion');
+  };
+
   const loadMoreLegions = async () => {
     if (isFetching.current || !hasMore) return;
     isFetching.current = true;
@@ -88,6 +92,11 @@ const Legions = ({ currentUser }) => {
           {!loading && !hasMore && (
             <div className={styles.noneLeft}>No more legions left to load</div>
           )}
+        </div>
+        <div className={styles.createLegionButton}>
+          <Button variant="blue" onClick={handleCreateLegion}>
+            Create a Legion
+          </Button>
         </div>
       </div>
     </>
