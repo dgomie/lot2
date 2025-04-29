@@ -88,6 +88,11 @@
   transition: all 0.5s ease;
 }
 
+.ag-courses-item_link:hover .ag-courses-item_title,
+.ag-courses-item_link:hover .ag-courses-item_description {
+  color: white;
+  transition: all 0.5s ease;
+}
 
 @media only screen and (max-width: 979px) {
   .ag-courses_item {
