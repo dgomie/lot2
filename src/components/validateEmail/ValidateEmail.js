@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './ValidateEmail.module.css';
 import Button from '../button/Button';
 import { sendEmailVerification, getAuth } from 'firebase/auth';
+import Image from 'next/image';
 
 export function ValidateEmail() {
   const [verificationSent, setVerificationSent] = useState(false);
@@ -35,6 +36,13 @@ export function ValidateEmail() {
             ? 'Verification Email Sent'
             : 'Resend Verification Email'}
         </Button>
+      </div>
+      <div
+        className={styles.refreshButton}
+        onClick={() => window.location.reload()}
+      >
+        <Image src={'/img/refresh.svg'} width={50} height={50} alt="Refresh" />
+        Refresh Page
       </div>
     </div>
   );
