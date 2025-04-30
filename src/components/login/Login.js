@@ -121,7 +121,7 @@ const Login = () => {
           isVisible={showPassword}
           required
         />
-        {error && <p className={styles.error}>Invalid username or password</p>}
+        {error && <p className={styles.error}>Invalid email or password</p>}
         <Button type="submit" className={styles.button} variant="blue">
           Login
         </Button>
