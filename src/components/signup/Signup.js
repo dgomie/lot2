@@ -23,6 +23,11 @@ export default function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const isUsernameValid = (username) => {
+    const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/;
+    return usernameRegex.test(username);
+  };
+
   const isFormValid = () => {
     const { email, password, confirmPassword, username } = formData;
     return (
@@ -30,7 +35,8 @@ export default function Signup() {
       password.trim() !== '' &&
       confirmPassword.trim() !== '' &&
       username.trim() !== '' &&
-      password === confirmPassword
+      password === confirmPassword &&
+      isUsernameValid(username)
     );
   };
 
@@ -48,6 +54,13 @@ export default function Signup() {
 
     if (!email || !password || !confirmPassword || !username) {
       setError('All fields are required');
+      return;
+    }
+
+    if (!isUsernameValid(username)) {
+      setError(
+        'Username must be 3-20 characters and can only contain letters, numbers, hyphens, and underscores.'
+      );
       return;
     }
 
