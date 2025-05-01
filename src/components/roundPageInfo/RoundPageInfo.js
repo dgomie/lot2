@@ -17,18 +17,36 @@ export const RoundPageInfo = ({
     const now = new Date();
     const deadlineDate = new Date(deadline);
 
-    const isToday = now.toDateString() === deadlineDate.toDateString();
-    const isTomorrow =
+    const isToday =
       new Date(
         now.getFullYear(),
         now.getMonth(),
         now.getDate() + 1
       ).toDateString() === deadlineDate.toDateString();
 
-    const dayName = deadlineDate.toLocaleDateString('en-US', {
+    const isTomorrow =
+      new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 2
+      ).toDateString() === deadlineDate.toDateString();
+
+    // const dayName = deadlineDate.toLocaleDateString('en-US', {
+    //   weekday: 'long',
+    // });
+    // const monthDay = deadlineDate.toLocaleDateString('en-US', {
+    //   month: 'numeric',
+    //   day: 'numeric',
+    // });
+
+    const previousDay = new Date(deadlineDate);
+    previousDay.setDate(deadlineDate.getDate() - 1);
+
+    const previousDayName = previousDay.toLocaleDateString('en-US', {
       weekday: 'long',
     });
-    const monthDay = deadlineDate.toLocaleDateString('en-US', {
+
+    const previousMonthDay = previousDay.toLocaleDateString('en-US', {
       month: 'numeric',
       day: 'numeric',
     });
@@ -38,7 +56,7 @@ export const RoundPageInfo = ({
     } else if (isTomorrow) {
       return `${type} due tomorrow at midnight`;
     } else {
-      return `${type} due ${dayName} ${monthDay} at midnight`;
+      return `${type} due ${previousDayName} ${previousMonthDay} at midnight`;
     }
   };
 
