@@ -145,7 +145,7 @@ export default function Signup() {
             variant={isFormValid() ? 'blue' : 'disabled'}
             disabled={!isFormValid()}
           >
-            Signup
+            Sign Up
           </Button>
         </form>
       </div>
