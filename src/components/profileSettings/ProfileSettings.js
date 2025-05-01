@@ -132,14 +132,14 @@ export const ProfileSettings = ({ currentUser }) => {
           onChange={handleInputChange}
           disabled={!isEditing}
         />
-        <Input
+        {/* <Input
           id="email"
           name="email"
           label="Email"
           value={formData.email}
           onChange={handleInputChange}
           disabled={!isEditing}
-        />
+        /> */}
 
         <div className={styles.buttonContainer}>
           <Button variant="aquamarine" onClick={handleEditClick}>
