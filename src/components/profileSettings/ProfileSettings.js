@@ -23,16 +23,25 @@ export const ProfileSettings = ({ currentUser }) => {
     }));
   };
 
+  const isUsernameValid = (username) => {
+    const usernameRegex = /^[a-zA-Z0-9_-]{3,20}$/; // Allows 3-20 characters, alphanumeric, hyphens, and underscores
+    return usernameRegex.test(username);
+  };
+  
   const validateForm = () => {
-    if (formData.username.length < 3) {
-      setError('Username must be at least 3 characters');
+    if (!isUsernameValid(formData.username)) {
+      setError(
+        'Username must be 3-20 characters and can only contain letters, numbers, hyphens, and underscores.'
+      );
       return false;
     }
+  
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError('Please enter a valid email address');
       return false;
     }
+  
     setError('');
     return true;
   };
@@ -136,11 +145,12 @@ export const ProfileSettings = ({ currentUser }) => {
           <Button variant="aquamarine" onClick={handleEditClick}>
             {isEditing ? 'Save Settings' : 'Edit Settings'}
           </Button>
-          {error && <div className={styles.error}>{error}</div>}
+         
 
           <Button variant="red" onClick={handleDeleteClick}>
             Delete Account
           </Button>
+          {error && <div className={styles.error}>{error}</div>}
         </div>
       </div>
       {showPasswordModal && (
