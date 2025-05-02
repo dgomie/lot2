@@ -142,7 +142,11 @@ const signupUser = async (email, password, username) => {
     const user = userCredential.user;
 
     // Send email verification
-    await sendEmailVerification(user);
+    const actionCodeSettings = {
+      url: 'https://legionoftones.com/dashboard',
+      handleCodeInApp: true,
+    };
+    await sendEmailVerification(user, actionCodeSettings);
 
     // Add the username to the usernames collection
     await setDoc(usernameDocRef, { uid: user.uid });
@@ -449,7 +453,7 @@ const fetchLegions = async (lastVisible) => {
       legionsRef,
       where('isActive', '==', true),
       where('isPrivate', '==', false),
-      orderBy('createdAt', 'desc'), 
+      orderBy('createdAt', 'desc'),
       startAfter(lastVisible),
       limit(10)
     );
