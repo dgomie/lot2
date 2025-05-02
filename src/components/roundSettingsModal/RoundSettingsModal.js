@@ -2,8 +2,7 @@ import React, { useMemo, useState } from 'react';
 import styles from './RoundSettingsModal.module.css';
 import Input from '@/components/input/Input';
 import Button from '@/components/button/Button';
-import Image from 'next/image';
-import { musicLeaguePrompts } from '@/data/defaultPrompts'; // Import prompts
+import { RandomizeButton } from '../randomizeButton/RandomizeButton';
 
 const RoundSettingsModal = ({
   editableRoundData,
@@ -15,22 +14,6 @@ const RoundSettingsModal = ({
   const [submissionError, setSubmissionError] = useState('');
   const [voteError, setVoteError] = useState('');
 
-  // Function to generate a random prompt
-  const handleShufflePrompt = () => {
-    if (musicLeaguePrompts.length === 0) {
-      setEditableRoundData({
-        ...editableRoundData,
-        prompt: 'No prompts available', // Fallback prompt
-      });
-      return;
-    }
-    const randomPrompt =
-      musicLeaguePrompts[Math.floor(Math.random() * musicLeaguePrompts.length)];
-    setEditableRoundData({
-      ...editableRoundData,
-      prompt: randomPrompt,
-    });
-  };
 
   const hasChanges = useMemo(() => {
     if (!editableRoundData || !originalRoundData) return false;
@@ -104,18 +87,10 @@ const RoundSettingsModal = ({
           }
           required
         />
-        <Button variant="aquamarine" onClick={handleShufflePrompt}>
-          <div className={styles.randomizeButtonContent}>
-            <Image
-              src="/img/shuffle.svg"
-              height={20}
-              width={20}
-              alt="shuffle"
-              className={styles.shuffleIcon}
-            />
-            Randomize Prompt
-          </div>
-        </Button>
+        <RandomizeButton
+          setEditableRoundData={setEditableRoundData}
+          editableRoundData={editableRoundData}
+        />
 
         <Input
           id="submissionDeadline"
