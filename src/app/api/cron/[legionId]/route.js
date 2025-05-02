@@ -199,11 +199,25 @@ export async function GET(request, { params }) {
                 .then((response) => {
                   console.log(`Round summary notification sent`, response);
                 })
-                .catch((error) => {
-                  console.error(
-                    `Error sending round summary notification`,
-                    error
-                  );
+                .catch(async (error) => {
+                  if (error.code === 'messaging/registration-token-not-registered') {
+                    console.warn(`Invalid FCM token detected: ${token}`);
+                    const userDoc = await adminDb
+                      .collection('users')
+                      .where('fcmToken', '==', token)
+                      .get();
+                    if (!userDoc.empty) {
+                      userDoc.forEach(async (doc) => {
+                        await doc.ref.update({ fcmToken: FieldValue.delete() });
+                        console.log(`Removed invalid FCM token from user: ${doc.id}`);
+                      });
+                    }
+                  } else {
+                    console.error(
+                      `Error sending round summary notification`,
+                      error
+                    );
+                  }
                 })
             );
           });
