@@ -1,0 +1,11 @@
+.randomizeButtonContent {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .mainContainer {
+    margin-bottom: 1rem;
+    width: 100%;
+  }
