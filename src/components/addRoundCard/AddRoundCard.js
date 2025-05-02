@@ -5,6 +5,7 @@ import Modal from '../modal/Modal';
 import Input from '../input/Input';
 import Button from '../button/Button';
 import { addRoundToLegion } from '@/firebase';
+import { RandomizeButton } from '../randomizeButton/RandomizeButton';
 
 export const AddRoundCard = ({ legionId, rounds = [] }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -85,6 +86,13 @@ export const AddRoundCard = ({ legionId, rounds = [] }) => {
             value={formData.prompt}
             onChange={handleInputChange}
             required
+          />
+          {/* Add RandomizeButton below the prompt input */}
+          <RandomizeButton
+            setEditableRoundData={(data) =>
+              setFormData((prev) => ({ ...prev, ...data }))
+            }
+            editableRoundData={formData}
           />
           <Input
             id="submissionDeadline"
