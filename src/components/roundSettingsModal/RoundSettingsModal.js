@@ -17,6 +17,13 @@ const RoundSettingsModal = ({
 
   // Function to generate a random prompt
   const handleShufflePrompt = () => {
+    if (musicLeaguePrompts.length === 0) {
+      setEditableRoundData({
+        ...editableRoundData,
+        prompt: 'No prompts available', // Fallback prompt
+      });
+      return;
+    }
     const randomPrompt =
       musicLeaguePrompts[Math.floor(Math.random() * musicLeaguePrompts.length)];
     setEditableRoundData({
