@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import styles from './RoundSettingsModal.module.css';
 import Input from '@/components/input/Input';
 import Button from '@/components/button/Button';
+import Image from 'next/image';
+import { musicLeaguePrompts } from '@/data/defaultPrompts'; // Import prompts
 
 const RoundSettingsModal = ({
   editableRoundData,
@@ -13,7 +15,23 @@ const RoundSettingsModal = ({
   const [submissionError, setSubmissionError] = useState('');
   const [voteError, setVoteError] = useState('');
 
-  // Check if there are any changes between editableRoundData and originalRoundData
+  // Function to generate a random prompt
+  const handleShufflePrompt = () => {
+    if (musicLeaguePrompts.length === 0) {
+      setEditableRoundData({
+        ...editableRoundData,
+        prompt: 'No prompts available', // Fallback prompt
+      });
+      return;
+    }
+    const randomPrompt =
+      musicLeaguePrompts[Math.floor(Math.random() * musicLeaguePrompts.length)];
+    setEditableRoundData({
+      ...editableRoundData,
+      prompt: randomPrompt,
+    });
+  };
+
   const hasChanges = useMemo(() => {
     if (!editableRoundData || !originalRoundData) return false;
     return (
@@ -27,34 +45,37 @@ const RoundSettingsModal = ({
   const handleSubmissionDeadlineChange = (e) => {
     const newSubmissionDeadline = new Date(e.target.value).toISOString();
     const now = new Date().toISOString();
-  
+
     if (newSubmissionDeadline <= now) {
       setSubmissionError('Submission deadline must be a future date.');
       return;
     }
-  
-    if (editableRoundData.voteDeadline && newSubmissionDeadline >= editableRoundData.voteDeadline) {
+
+    if (
+      editableRoundData.voteDeadline &&
+      newSubmissionDeadline >= editableRoundData.voteDeadline
+    ) {
       setSubmissionError('');
       setVoteError('Vote deadline must be after the submission deadline.');
     } else {
       setVoteError('');
     }
-  
+
     setSubmissionError('');
     setEditableRoundData({
       ...editableRoundData,
       submissionDeadline: newSubmissionDeadline,
     });
   };
-  
+
   const handleVoteDeadlineChange = (e) => {
     const newVoteDeadline = new Date(e.target.value).toISOString();
-  
+
     if (newVoteDeadline <= editableRoundData.submissionDeadline) {
       setVoteError('Vote deadline must be after the submission deadline.');
       return;
     }
-  
+
     setVoteError('');
     setEditableRoundData({
       ...editableRoundData,
@@ -68,6 +89,7 @@ const RoundSettingsModal = ({
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <div className={styles.title}>Edit Round Settings</div>
+
         <Input
           id="prompt"
           name="prompt"
@@ -82,6 +104,19 @@ const RoundSettingsModal = ({
           }
           required
         />
+        <Button variant="aquamarine" onClick={handleShufflePrompt}>
+          <div className={styles.randomizeButtonContent}>
+            <Image
+              src="/img/shuffle.svg"
+              height={20}
+              width={20}
+              alt="shuffle"
+              className={styles.shuffleIcon}
+            />
+            Randomize Prompt
+          </div>
+        </Button>
+
         <Input
           id="submissionDeadline"
           name="submissionDeadline"
