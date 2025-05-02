@@ -1,3 +1,4 @@
+import nodemailer from 'nodemailer';
 import { adminDb } from '../../../firebaseAdmin';
 import { FieldValue } from 'firebase-admin/firestore';
 import { status, stage } from '../../../utils/status';
@@ -12,6 +13,30 @@ const normalizeDate = (date) => {
   const normalized = new Date(date);
   normalized.setHours(0, 0, 0, 0);
   return normalized;
+};
+
+// Configure nodemailer transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // Use your email service (e.g., Gmail, Outlook, etc.)
+  auth: {
+    user: process.env.EMAIL_USER, // Your email address
+    pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+  },
+});
+
+// Helper function to send emails
+const sendEmail = async (to, subject, text) => {
+  try {
+    await transporter.sendMail({
+      from: `"Legion of Tones" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      text,
+    });
+    console.log(`Email sent to ${to}`);
+  } catch (error) {
+    console.error(`Error sending email to ${to}:`, error);
+  }
 };
 
 export async function GET(request) {
@@ -56,23 +81,37 @@ export async function GET(request) {
 
         // Playlist notification (day after submission deadline)
         if (dayAfterSubmissionDeadline.getTime() === currentDate.getTime()) {
-          // Send playlist notification
           if (legionData.players && legionData.players.length > 0) {
             const playerUids = legionData.players
               .map((player) => player.userId)
               .filter(Boolean);
 
-            // Fetch fcmTokens for all UIDs
+            // Fetch fcmTokens and emails for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
               const userDoc = await adminDb.collection('users').doc(uid).get();
-              return userDoc.exists ? userDoc.data().fcmToken : null;
+              if (userDoc.exists) {
+                const userData = userDoc.data();
+                return {
+                  fcmToken: userData.fcmToken || null,
+                  email: userData.email || null,
+                };
+              }
+              return null;
             });
 
-            // Resolve all promises and filter out null/undefined tokens
-            const tokens = (await Promise.all(tokenFetchPromises)).filter(
+            const userContacts = (await Promise.all(tokenFetchPromises)).filter(
               Boolean
             );
-            const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
+
+            const tokens = userContacts
+              .map((contact) => contact.fcmToken)
+              .filter(Boolean);
+            const emails = userContacts
+              .map((contact) => contact.email)
+              .filter(Boolean);
+
+            const uniqueTokens = [...new Set(tokens)];
+            const uniqueEmails = [...new Set(emails)];
 
             if (uniqueTokens.length === 0) {
               console.warn(
@@ -108,22 +147,30 @@ export async function GET(request) {
                     })
                 );
               });
+            }
 
-              try {
-                await adminUpdateRoundStage(
-                  legionDoc.id,
-                  currentRound.id,
-                  stage.VOTING
-                );
-                console.log(
-                  `Round stage updated to VOTING for legion: ${legionData.legionName}`
-                );
-              } catch (error) {
-                console.error(
-                  `Error updating round stage to VOTING for legion ${legionData.legionName}:`,
-                  error
-                );
-              }
+            if (uniqueEmails.length > 0) {
+              const emailSubject = 'New Playlist 🎶';
+              const emailBody = `A new playlist is ready in ${legionData.legionName}!\n\nGet your votes in before ${formattedDeadline}`;
+              uniqueEmails.forEach((email) => {
+                notifications.push(sendEmail(email, emailSubject, emailBody));
+              });
+            }
+
+            try {
+              await adminUpdateRoundStage(
+                legionDoc.id,
+                currentRound.id,
+                stage.VOTING
+              );
+              console.log(
+                `Round stage updated to VOTING for legion: ${legionData.legionName}`
+              );
+            } catch (error) {
+              console.error(
+                `Error updating round stage to VOTING for legion ${legionData.legionName}:`,
+                error
+              );
             }
           }
         }
@@ -138,17 +185,32 @@ export async function GET(request) {
               .map((player) => player.userId)
               .filter(Boolean);
 
-            // Fetch fcmTokens for all UIDs
+            // Fetch fcmTokens and emails for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
               const userDoc = await adminDb.collection('users').doc(uid).get();
-              return userDoc.exists ? userDoc.data().fcmToken : null;
+              if (userDoc.exists) {
+                const userData = userDoc.data();
+                return {
+                  fcmToken: userData.fcmToken || null,
+                  email: userData.email || null,
+                };
+              }
+              return null;
             });
 
-            // Resolve all promises and filter out null/undefined tokens
-            const tokens = (await Promise.all(tokenFetchPromises)).filter(
+            const userContacts = (await Promise.all(tokenFetchPromises)).filter(
               Boolean
             );
-            const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
+
+            const tokens = userContacts
+              .map((contact) => contact.fcmToken)
+              .filter(Boolean);
+            const emails = userContacts
+              .map((contact) => contact.email)
+              .filter(Boolean);
+
+            const uniqueTokens = [...new Set(tokens)];
+            const uniqueEmails = [...new Set(emails)];
 
             if (uniqueTokens.length === 0) {
               console.warn(
@@ -181,28 +243,48 @@ export async function GET(request) {
                 );
               });
             }
-          }
-        }
 
-        // Vote deadline reminder (day before vote deadline)
-        else if (dayBeforeVoteDeadline.getTime() === currentDate.getTime()) {
+            if (uniqueEmails.length > 0) {
+              const emailSubject = 'Submission Deadline Approaches!';
+              const emailBody = `Don't forget to submit for Round ${currentRound.roundNumber} in ${legionData.legionName}!`;
+              uniqueEmails.forEach((email) => {
+                notifications.push(sendEmail(email, emailSubject, emailBody));
+              });
+            }
+          }
+        } else if (dayBeforeVoteDeadline.getTime() === currentDate.getTime()) {
           // Send vote deadline reminder notification
           if (legionData.players && legionData.players.length > 0) {
             const playerUids = legionData.players
               .map((player) => player.userId)
               .filter(Boolean);
 
-            // Fetch fcmTokens for all UIDs
+            // Fetch fcmTokens and emails for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
               const userDoc = await adminDb.collection('users').doc(uid).get();
-              return userDoc.exists ? userDoc.data().fcmToken : null;
+              if (userDoc.exists) {
+                const userData = userDoc.data();
+                return {
+                  fcmToken: userData.fcmToken || null,
+                  email: userData.email || null,
+                };
+              }
+              return null;
             });
 
-            // Resolve all promises and filter out null/undefined tokens
-            const tokens = (await Promise.all(tokenFetchPromises)).filter(
+            const userContacts = (await Promise.all(tokenFetchPromises)).filter(
               Boolean
             );
-            const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
+
+            const tokens = userContacts
+              .map((contact) => contact.fcmToken)
+              .filter(Boolean);
+            const emails = userContacts
+              .map((contact) => contact.email)
+              .filter(Boolean);
+
+            const uniqueTokens = [...new Set(tokens)];
+            const uniqueEmails = [...new Set(emails)];
 
             if (uniqueTokens.length === 0) {
               console.warn(
@@ -232,28 +314,48 @@ export async function GET(request) {
                 );
               });
             }
-          }
-        }
 
-        // Round summary notification (on vote deadline)
-        else if (voteDeadline.getTime() <= currentDate.getTime()) {
+            if (uniqueEmails.length > 0) {
+              const emailSubject = 'Vote Deadline Approaches!';
+              const emailBody = `Don't forget to cast your votes for Round ${currentRound.roundNumber} in ${legionData.legionName}!`;
+              uniqueEmails.forEach((email) => {
+                notifications.push(sendEmail(email, emailSubject, emailBody));
+              });
+            }
+          }
+        } else if (voteDeadline.getTime() <= currentDate.getTime()) {
           // Send round summary notification
           if (legionData.players && legionData.players.length > 0) {
             const playerUids = legionData.players
               .map((player) => player.userId)
               .filter(Boolean);
 
-            // Fetch fcmTokens for all UIDs
+            // Fetch fcmTokens and emails for all UIDs
             const tokenFetchPromises = playerUids.map(async (uid) => {
               const userDoc = await adminDb.collection('users').doc(uid).get();
-              return userDoc.exists ? userDoc.data().fcmToken : null;
+              if (userDoc.exists) {
+                const userData = userDoc.data();
+                return {
+                  fcmToken: userData.fcmToken || null,
+                  email: userData.email || null,
+                };
+              }
+              return null;
             });
 
-            // Resolve all promises and filter out null/undefined tokens
-            const tokens = (await Promise.all(tokenFetchPromises)).filter(
+            const userContacts = (await Promise.all(tokenFetchPromises)).filter(
               Boolean
             );
-            const uniqueTokens = [...new Set(tokens)]; // Ensure unique tokens
+
+            const tokens = userContacts
+              .map((contact) => contact.fcmToken)
+              .filter(Boolean);
+            const emails = userContacts
+              .map((contact) => contact.email)
+              .filter(Boolean);
+
+            const uniqueTokens = [...new Set(tokens)];
+            const uniqueEmails = [...new Set(emails)];
 
             if (uniqueTokens.length === 0) {
               console.warn(
@@ -281,6 +383,14 @@ export async function GET(request) {
                       );
                     })
                 );
+              });
+            }
+
+            if (uniqueEmails.length > 0) {
+              const emailSubject = 'Votes are In!';
+              const emailBody = `Results for Round ${currentRound.roundNumber} in ${legionData.legionName} are here. Check the app to see how you did!`;
+              uniqueEmails.forEach((email) => {
+                notifications.push(sendEmail(email, emailSubject, emailBody));
               });
             }
           }
