@@ -9,6 +9,8 @@ import { musicLeaguePrompts } from '@/data/defaultPrompts';
 import { status, stage } from '@/utils/status';
 
 const CreateLegionForm = ({ currentUser }) => {
+  console.log('current user', currentUser)
+
   const router = useRouter();
   const [formData, setFormData] = useState({
     legionName: '',
