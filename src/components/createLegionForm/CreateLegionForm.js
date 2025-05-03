@@ -155,6 +155,8 @@ const CreateLegionForm = ({ currentUser }) => {
         };
 
         const result = await submitLegion(updatedFormData);
+        console.log('result', result)
+        console.log('updated form data', updatedFormData)
         if (result.success) {
           await incrementUserLegions(currentUser.uid);
           const newLegionId = result.id;
@@ -163,6 +165,7 @@ const CreateLegionForm = ({ currentUser }) => {
           alert('Error creating legion.');
         }
       } catch (error) {
+        
         console.error('Error creating legion:', error);
         alert('An error occurred while creating the legion.');
       }
