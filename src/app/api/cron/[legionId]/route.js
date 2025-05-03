@@ -27,7 +27,7 @@ const transporter = nodemailer.createTransport({
 const sendEmail = async (to, subject, text) => {
   try {
     await transporter.sendMail({
-      from: `"Legion App" <${process.env.EMAIL_USER}>`,
+      from: `"Legion of Tones" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text,

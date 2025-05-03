@@ -42,7 +42,9 @@ const CreateLegionForm = ({ currentUser }) => {
       [name]:
         name === 'legionName' || name === 'legionDescription'
           ? value
-          : parseInt(value, 10) || 0,
+          : value === ''
+          ? ''
+          : parseInt(value, 10),
     }));
   };
 
@@ -85,31 +87,34 @@ const CreateLegionForm = ({ currentUser }) => {
   const handleSubmit = async () => {
     if (isStepValid) {
       try {
+        const sanitizedFormData = Object.fromEntries(
+          Object.entries(formData).filter(([_, value]) => value !== undefined)
+        );
+
         const rounds = [];
-        for (let index = 0; index < formData.numRounds; index++) {
+        for (let index = 0; index < sanitizedFormData.numRounds; index++) {
           const roundNumber = index + 1;
 
           let submissionDeadline = new Date();
           if (roundNumber === 1) {
-            // First round submission deadline starts from the current date
             submissionDeadline.setDate(
-              submissionDeadline.getDate() + formData.submitTime
+              submissionDeadline.getDate() + sanitizedFormData.submitTime
             );
           } else {
-            // Subsequent rounds' submission deadlines start after the previous round's vote deadline
             const previousVoteDeadline = new Date(
               rounds[index - 1].voteDeadline
             );
             submissionDeadline = new Date(previousVoteDeadline);
             submissionDeadline.setDate(
-              submissionDeadline.getDate() + formData.submitTime
+              submissionDeadline.getDate() + sanitizedFormData.submitTime
             );
           }
 
           const voteDeadline = new Date(submissionDeadline);
-          voteDeadline.setDate(voteDeadline.getDate() + formData.voteTime);
+          voteDeadline.setDate(
+            voteDeadline.getDate() + sanitizedFormData.voteTime
+          );
 
-          // Pick a random prompt
           const randomPrompt =
             musicLeaguePrompts[
               Math.floor(Math.random() * musicLeaguePrompts.length)
@@ -128,21 +133,24 @@ const CreateLegionForm = ({ currentUser }) => {
         }
 
         const updatedFormData = {
-          ...formData,
+          ...sanitizedFormData,
           legionAdmin: {
             userId: currentUser.uid,
             username: currentUser.username,
             profileImg: currentUser.profileImg,
           },
           players: [
-            ...formData.players,
+            ...sanitizedFormData.players,
             {
               userId: currentUser.uid,
               username: currentUser.username,
               profileImg: currentUser.profileImg,
             },
           ],
-          playerTokens: [...formData.playerTokens, currentUser.fcmToken],
+          playerTokens: [
+            ...sanitizedFormData.playerTokens,
+            currentUser.fcmToken,
+          ],
           rounds,
         };
 
@@ -196,7 +204,7 @@ const CreateLegionForm = ({ currentUser }) => {
               <input
                 type="checkbox"
                 name="isPrivate"
-                checked={formData.isPrivate}
+                checked={formData.isPrivate || false}
                 onChange={() =>
                   setFormData((prevData) => ({
                     ...prevData,
