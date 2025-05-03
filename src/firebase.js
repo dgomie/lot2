@@ -368,10 +368,16 @@ export const deleteUserFromFirebase = async (uid, email, password) => {
 
 const submitLegion = async (formData) => {
   try {
+    // Remove undefined fields from formData
+    const sanitizedFormData = Object.fromEntries(
+      Object.entries(formData).filter(([_, value]) => value !== undefined)
+    );
+
     const docRef = await addDoc(collection(db, 'legions'), {
-      ...formData,
+      ...sanitizedFormData,
       createdAt: new Date(),
     });
+
     return { success: true, id: docRef.id };
   } catch (error) {
     console.error('Error creating legion: ', error);
