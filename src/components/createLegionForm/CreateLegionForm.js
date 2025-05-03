@@ -9,7 +9,7 @@ import { musicLeaguePrompts } from '@/data/defaultPrompts';
 import { status, stage } from '@/utils/status';
 
 const CreateLegionForm = ({ currentUser }) => {
-  console.log('current user', currentUser)
+  console.log('current user', currentUser);
 
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -149,16 +149,15 @@ const CreateLegionForm = ({ currentUser }) => {
               profileImg: currentUser.profileImg,
             },
           ],
-          playerTokens: [
-            ...sanitizedFormData.playerTokens,
-            currentUser.fcmToken,
-          ],
+          playerTokens: currentUser.fcmToken
+            ? [...sanitizedFormData.playerTokens, currentUser.fcmToken]
+            : [...sanitizedFormData.playerTokens], // Exclude fcmToken if missing
           rounds,
         };
 
         const result = await submitLegion(updatedFormData);
-        console.log('result', result)
-        console.log('updated form data', updatedFormData)
+        console.log('result', result);
+        console.log('updated form data', updatedFormData);
         if (result.success) {
           await incrementUserLegions(currentUser.uid);
           const newLegionId = result.id;
@@ -167,7 +166,6 @@ const CreateLegionForm = ({ currentUser }) => {
           alert('Error creating legion.');
         }
       } catch (error) {
-        
         console.error('Error creating legion:', error);
         alert('An error occurred while creating the legion.');
       }
