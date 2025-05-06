@@ -49,7 +49,7 @@ export const adminUpdateLegionStandings = async (legionId) => {
         round.submissions.forEach((submission) => {
           const { uid, voteCount } = submission;
 
-          if (uid && voteCount) {
+          if (uid !== undefined) {
             userVotes[uid] = (userVotes[uid] || 0) + voteCount;
           }
         });
