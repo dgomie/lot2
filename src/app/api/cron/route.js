@@ -68,6 +68,7 @@ export async function GET(request) {
         const submissionDeadline = normalizeDate(
           currentRound.submissionDeadline
         );
+        
         const dayBeforeSubmissionDeadline = normalizeDate(
           new Date(submissionDeadline.setDate(submissionDeadline.getDate() - 1))
         );
@@ -78,6 +79,12 @@ export async function GET(request) {
         const dayBeforeVoteDeadline = normalizeDate(
           new Date(voteDeadline.setDate(voteDeadline.getDate() - 1))
         );
+
+        console.log('submission dl', submissionDeadline)
+        console.log('today', currentDate)
+
+        console.log('day before', dayBeforeSubmissionDeadline)
+        console.log('day after', dayAfterSubmissionDeadline)
 
         // Playlist notification (day after submission deadline)
         if (dayAfterSubmissionDeadline.getTime() === currentDate.getTime()) {
