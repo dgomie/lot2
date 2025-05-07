@@ -8,11 +8,13 @@ import {
   adminIncrementUserVictories,
   adminUpdateRoundStage,
 } from '../../../firebaseAdmin';
+import { utcToZonedTime, zonedTimeToUtc, format } from 'date-fns-tz';
 
-const normalizeDate = (date) => {
-  const normalized = new Date(date);
+const normalizeDate = (date, timeZone = 'America/New_York') => {
+  const zonedDate = utcToZonedTime(date, timeZone);
+  const normalized = new Date(zonedDate);
   normalized.setHours(0, 0, 0, 0);
-  return normalized;
+  return zonedTimeToUtc(normalized, timeZone);
 };
 
 // Configure nodemailer transporter
@@ -48,7 +50,7 @@ export async function GET(request) {
   }
 
   try {
-    const currentDate = normalizeDate(new Date());
+    const currentDate = normalizeDate(new Date(), 'America/New_York');
 
     // Query all active legions
     const legionsRef = adminDb.collection('legions');
@@ -66,13 +68,16 @@ export async function GET(request) {
 
       if (currentRound) {
         const submissionDeadline = normalizeDate(
-          currentRound.submissionDeadline
+          currentRound.submissionDeadline,
+          'America/New_York'
         );
         const dayBeforeSubmissionDeadline = normalizeDate(
-          new Date(submissionDeadline.getTime() - 24 * 60 * 60 * 1000) // Subtract 1 day
+          new Date(submissionDeadline.getTime() - 24 * 60 * 60 * 1000),
+          'America/New_York'
         );
         const dayAfterSubmissionDeadline = normalizeDate(
-          new Date(submissionDeadline.getTime() + 24 * 60 * 60 * 1000) // Add 1 day
+          new Date(submissionDeadline.getTime() + 24 * 60 * 60 * 1000),
+          'America/New_York'
         );
         const voteDeadline = normalizeDate(currentRound.voteDeadline);
         const dayBeforeVoteDeadline = normalizeDate(
