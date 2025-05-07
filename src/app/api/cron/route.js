@@ -69,14 +69,14 @@ export async function GET(request) {
           currentRound.submissionDeadline
         );
         const dayBeforeSubmissionDeadline = normalizeDate(
-          new Date(submissionDeadline.setDate(submissionDeadline.getDate() - 1))
+          new Date(submissionDeadline.getTime() - 24 * 60 * 60 * 1000) // Subtract 1 day
         );
         const dayAfterSubmissionDeadline = normalizeDate(
-          new Date(submissionDeadline.setDate(submissionDeadline.getDate() + 1))
+          new Date(submissionDeadline.getTime() + 24 * 60 * 60 * 1000) // Add 1 day
         );
         const voteDeadline = normalizeDate(currentRound.voteDeadline);
         const dayBeforeVoteDeadline = normalizeDate(
-          new Date(voteDeadline.setDate(voteDeadline.getDate() - 1))
+          new Date(voteDeadline.getTime() - 24 * 60 * 60 * 1000) // Subtract 1 day
         );
 
         // Playlist notification (day after submission deadline)
