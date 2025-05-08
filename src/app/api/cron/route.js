@@ -87,12 +87,12 @@ export async function GET(request) {
           day: '2-digit',
         });
 
-        console.log('submission dl', submissionDeadline);
-        console.log('today', currentDate);
+        // console.log('submission dl', submissionDeadline);
+        // console.log('today', currentDate);
 
-        console.log('day before', dayBeforeSubmissionDeadline);
-        console.log('day after', dayAfterSubmissionDeadline);
-        console.log('formatted dl', formattedDeadline);
+        // console.log('day before', dayBeforeSubmissionDeadline);
+        // console.log('day after', dayAfterSubmissionDeadline);
+        // console.log('formatted dl', formattedDeadline);
 
         // Playlist notification (day after submission deadline)
         if (dayAfterSubmissionDeadline.getTime() === currentDate.getTime()) {
