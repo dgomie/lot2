@@ -28,7 +28,15 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
 
         return (
           <div key={submission.uid} className={styles.resultInfo}>
-            <div className={styles.videoTitle}>{submission.videoTitle}</div>
+            <div className={styles.videoTitle}>
+              <a
+                href={submission.youtubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {submission.videoTitle}
+              </a>
+            </div>
             <div className={styles.resultRow}>
               <div
                 className={`${styles.username} ${userStyle(submission.uid)}`}
