@@ -32,35 +32,38 @@ export const StandingsCard = ({ legionStatus, standings, legionPlayers }) => {
       {sortedStandings.map((item, index) => (
         <div key={item.uid || index} className={styles.standingItem}>
           <div className={styles.rank}>#{index + 1}</div>
-          <div
-            className={styles.userInfo}
-            onClick={() => handleImageClick(userProfiles[item.uid]?.username)}
-          >
-        
-            <Image
-              src={userProfiles[item.uid]?.profileImg || '/img/user.png'}
-              alt={`${
-                userProfiles[item.uid]?.username || 'Unknown User'
-              }'s profile`}
-              width={40}
-              height={40}
-              className={styles.profileImage}
-            />
-
-            <div className={styles.name}>
-              {userProfiles[item.uid]?.username || 'Loading...'}
-            </div>
-            {index === 0 && !legionStatus && (
+          <div className={styles.userNames}>
+            <div
+              className={styles.userInfo}
+              onClick={() => handleImageClick(userProfiles[item.uid]?.username)}
+            >
               <Image
-                src="/img/grail.svg"
-                alt="Grail Icon"
-                width={45}
-                height={45}
-                className={styles.grailIcon}
+                src={userProfiles[item.uid]?.profileImg || '/img/user.png'}
+                alt={`${
+                  userProfiles[item.uid]?.username || 'Unknown User'
+                }'s profile`}
+                width={40}
+                height={40}
+                className={styles.profileImage}
               />
-            )}
+
+              <div className={styles.name}>
+                {userProfiles[item.uid]?.username || 'Loading...'}
+              </div>
+              {index === 0 && !legionStatus && (
+                <Image
+                  src="/img/grail.svg"
+                  alt="Grail Icon"
+                  width={45}
+                  height={45}
+                  className={styles.grailIcon}
+                />
+              )}
+            </div>
+            </div>
+            <div className={styles.points}>
+            <div className={styles.votes}>{item.votes}pts</div>
           </div>
-          <div className={styles.votes}>{item.votes}pts</div>
         </div>
       ))}
     </div>

@@ -1,40 +1,55 @@
 .mainContainer {
-    box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
-    padding: 1rem;
-    border-radius: 15px;
-    margin: .5rem;
-    background-color: white;
-  }
+  box-shadow: 1.8px 3.7px 3.7px hsl(0deg 0% 0% / 0.44);
+  padding: 1rem;
+  border-radius: 15px;
+  margin: 0.5rem;
+  background-color: white;
+}
 
-  .standingItem {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-weight: bold;
-    margin: 1rem;
-  }
+.standingItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: bold;
+  margin: 1rem;
+}
 
-  .title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    text-align: center;
-    margin: .5rem 0 .5rem 0;
-  }
+.title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 0.5rem 0 0.5rem 0;
+}
 
-  .profileImage {
-    border-radius: 50%;
-  }
+.userNames {
+  display: flex;
+  margin-left: 2rem;
+  justify-content: flex-start;
+}
 
-  .userInfo {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: .5rem;
-    cursor: pointer;
-  }
+.points {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+}
 
-  @media (min-width: 768px) {
-    .mainContainer {
-      min-width: 50rem;
-    }
+.profileImage {
+  border-radius: 50%;
+}
+
+.userInfo {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+@media (min-width: 768px) {
+  .mainContainer {
+    min-width: 32rem;
   }
+  .userNames {
+    margin-left: 8rem;
+  }
+}
