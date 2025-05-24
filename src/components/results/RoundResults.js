@@ -24,7 +24,7 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
       <div className={styles.title}>Round Results</div>
 
       {sortedSubmissions.map((submission) => {
-        const { username } = getUserDetails(submission.uid);
+        const { username, profileImage } = getUserDetails(submission.uid);
 
         return (
           <div key={submission.uid} className={styles.resultInfo}>
@@ -33,9 +33,19 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
               <div
                 className={`${styles.username} ${userStyle(submission.uid)}`}
               >
-                Submitted by {username}
+                Submitted by:
+                <strong>{username}</strong>
               </div>
-              <div className={styles.votes}>{submission.voteCount}pts</div>
+              <div className={styles.votes}>
+                <Image
+                  src={profileImage}
+                  height={40}
+                  width={40}
+                  alt={username}
+                  className={styles.profileImage}
+                />
+                {submission.voteCount}pts
+              </div>
             </div>
 
             {/* Comments Section */}
@@ -76,8 +86,8 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
                             }}
                           >
                             {comment.vote === 1
-                              ? `+${comment.vote}`
-                              : comment.vote}
+                              ? `+${comment.vote} pt`
+                              : `${comment.vote} pt`}
                           </div>
                         </div>
                       </div>

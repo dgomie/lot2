@@ -38,8 +38,13 @@
 
 .username {
     font-weight: normal;
-    font-size: .85rem;
+    font-size: .9rem;
     color: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .4rem;
+    margin-bottom: 1rem;
   }
   
   .currentUser {
@@ -49,6 +54,9 @@
 
   .votes {
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .commentsSection {
