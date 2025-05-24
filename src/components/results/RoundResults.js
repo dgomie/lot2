@@ -86,8 +86,8 @@ export const RoundResults = ({ currentUser, roundData, userProfiles }) => {
                             }}
                           >
                             {comment.vote === 1
-                              ? `+${comment.vote}`
-                              : comment.vote}
+                              ? `+${comment.vote} pt`
+                              : `${comment.vote} pt`}
                           </div>
                         </div>
                       </div>
