@@ -13,8 +13,8 @@ export const RoundPageInfo = ({
   onPlaylistClick,
   onSubmitClick,
 }) => {
+  const now = new Date();
   const formatDeadline = (deadline, type) => {
-    const now = new Date();
     const deadlineDate = new Date(deadline);
 
     const isToday = now.toDateString() === deadlineDate.toDateString();
@@ -42,6 +42,8 @@ export const RoundPageInfo = ({
     }
   };
 
+  const voteDeadlinePassed = now > new Date(roundData.voteDeadline);
+
   return (
     <div className={styles.roundInfo}>
       <div className={styles.title}>Round {roundData.roundNumber}</div>
@@ -58,7 +60,10 @@ export const RoundPageInfo = ({
         }
       />
 
-      <UserImageContainer title="Still Pondering" users={stillPonderingUsers} />
+      <UserImageContainer
+        title={voteDeadlinePassed ? 'Missed Vote Deadline' : 'Still Pondering'}
+        users={stillPonderingUsers}
+      />
 
       {roundData.roundStage === stage.VOTING ? (
         <div className={styles.submit} onClick={onPlaylistClick}>
