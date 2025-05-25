@@ -811,13 +811,14 @@ export async function GET(request) {
         }
 
         // Update the Firestore document
-        updates.push(
-          legionDocRef.update({
-            rounds: legionData.rounds, // Update the rounds array with updated statuses
-            currentRound: FieldValue.increment(1), // Increment the currentRound
-            isActive: isLegionActive,
-          })
-        );
+        const updateData = {
+          rounds: legionData.rounds, // Update the rounds array with updated statuses
+          isActive: isLegionActive,
+        };
+        if (isLegionActive) {
+          updateData.currentRound = FieldValue.increment(1); // Only increment if still active
+        }
+        updates.push(legionDocRef.update(updateData));
 
         // Update the standings for the legion
         try {
