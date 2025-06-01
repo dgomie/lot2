@@ -3,12 +3,12 @@ import React from 'react';
 import styles from './false-notes.module.css';
 import withAuth from '@/hoc/withAuth';
 
-const FalseNotesLeagues = () => {
+const FalseNotesLeaguesDashboard = () => {
   return (
     <div className={styles.mainContainer}>
-      <div>False Notes League Page</div>
+      <div>False Notes Leagues Dashboard</div>
     </div>
   );
 };
 
-export default withAuth(FalseNotesLeagues);
+export default withAuth(FalseNotesLeaguesDashboard);
