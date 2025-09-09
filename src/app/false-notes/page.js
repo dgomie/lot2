@@ -8,7 +8,6 @@ const FalseNotesLeaguesDashboard = () => {
   return (
     <div className={styles.mainContainer}>
       <div>False Notes Leagues Dashboard</div>
-      <DashboardCard />
     </div>
   );
 };
